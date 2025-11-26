@@ -99,6 +99,7 @@ export default function WelcomeScreen({ navigation }) {
           placeholder="Please enter your name here"
           value={name}
           onChangeText={setName}
+          placeholderTextColor={"#999"}
         />
         <TouchableOpacity onPress={() => clearInput(setName)}>
           <View style={styles.iconBox} />
@@ -113,6 +114,8 @@ export default function WelcomeScreen({ navigation }) {
           placeholder="Please enter your email here"
           value={email}
           onChangeText={setEmail}
+                    placeholderTextColor={"#999"}
+
         />
         <TouchableOpacity onPress={() => clearInput(setEmail)}>
           <View style={styles.iconBox} />
@@ -128,6 +131,8 @@ export default function WelcomeScreen({ navigation }) {
           value={mobile}
           keyboardType="number-pad"
           onChangeText={setMobile}
+                    placeholderTextColor={"#999"}
+
         />
         <TouchableOpacity onPress={() => clearInput(setMobile)}>
           <View style={styles.iconBox} />
@@ -170,6 +175,8 @@ export default function WelcomeScreen({ navigation }) {
           placeholder="Enter Reference code"
           value={reference}
           onChangeText={setReference}
+                    placeholderTextColor={"#999"}
+
         />
         <TouchableOpacity onPress={() => clearInput(setReference)}>
           <View style={styles.iconBox} />
