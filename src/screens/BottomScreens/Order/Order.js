@@ -10,93 +10,87 @@ import {
   Dimensions,
   Modal,
   Alert,
+  Platform,
 } from 'react-native';
+import { useColor } from '../../../util/ColorSwitcher';
 
 const { width, height } = Dimensions.get('window');
-const isSmallDevice = width < 375;
 
-const COLORS = {
-  button: '#15305f',
-  delivered: '#34A853',
-  gray: '#999',
-  lightGray: '#eee',
-  text: '#222',
-  background: '#fff',
-  border: '#EBEBEB',
-  tabBackground: '#F3F6FB',
-};
-
-const orderData = {
-  past: [
-    {
-      id: '#265896',
-      name: 'I Phone 17 Plus',
-      price: '₹ 50000.00',
-      soldBy: 'Grocery Store',
-      status: 'Delivered',
-      image: require('../../../assets/mobile2.png'),
-    },
-    {
-      id: '#265897',
-      name: 'I Phone 17 Plus',
-      price: '₹ 50000.00',
-      soldBy: 'Grocery Store',
-      status: 'Delivered',
-      image: require('../../../assets/mobile2.png'),
-    },
-    {
-      id: '#265898',
-      name: 'I Phone 17 Plus',
-      price: '₹ 50000.00',
-      soldBy: 'Grocery Store',
-      status: 'Delivered',
-      image: require('../../../assets/mobile2.png'),
-    },
-  ],
-  upcoming: [
-    {
-      id: '#265899',
-      name: 'I Phone 17 Plus',
-      price: '₹ 50000.00',
-      soldBy: 'Grocery Store',
-      status: 'On the way',
-      arrival: '25 min',
-      image: require('../../../assets/mobile2.png'),
-    },
-    {
-      id: '#265900',
-      name: 'I Phone 17 Plus',
-      price: '₹ 50000.00',
-      soldBy: 'Grocery Store',
-      status: 'On the way',
-      arrival: '25 min',
-      image: require('../../../assets/mobile2.png'),
-    },
-    {
-      id: '#265901',
-      name: 'I Phone 17 Plus',
-      price: '₹ 50000.00',
-      soldBy: 'Grocery Store',
-      status: 'On the way',
-      arrival: '25 min',
-      image: require('../../../assets/mobile2.png'),
-    },
-    {
-      id: '#265902',
-      name: 'I Phone 17 Plus',
-      price: '₹ 50000.00',
-      soldBy: 'Grocery Store',
-      status: 'On the way',
-      arrival: '25 min',
-      image: require('../../../assets/mobile2.png'),
-    },
-  ],
-};
+// Responsive sizing
+const responsiveSize = (size) => (width / 375) * size;
 
 export default function MyOrdersScreen({ navigation }) {
+  const { bgColor, textColor } = useColor();
   const [activeTab, setActiveTab] = useState('Upcoming');
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const orderData = {
+    past: [
+      {
+        id: '#265896',
+        name: 'I Phone 17 Plus',
+        price: '₹ 50000.00',
+        soldBy: 'Grocery Store',
+        status: 'Delivered',
+        image: require('../../../assets/mobile2.png'),
+      },
+      {
+        id: '#265897',
+        name: 'I Phone 17 Plus',
+        price: '₹ 50000.00',
+        soldBy: 'Grocery Store',
+        status: 'Delivered',
+        image: require('../../../assets/mobile2.png'),
+      },
+      {
+        id: '#265898',
+        name: 'I Phone 17 Plus',
+        price: '₹ 50000.00',
+        soldBy: 'Grocery Store',
+        status: 'Delivered',
+        image: require('../../../assets/mobile2.png'),
+      },
+    ],
+    upcoming: [
+      {
+        id: '#265899',
+        name: 'I Phone 17 Plus',
+        price: '₹ 50000.00',
+        soldBy: 'Grocery Store',
+        status: 'On the way',
+        arrival: '25 min',
+        image: require('../../../assets/mobile2.png'),
+      },
+      {
+        id: '#265900',
+        name: 'I Phone 17 Plus',
+        price: '₹ 50000.00',
+        soldBy: 'Grocery Store',
+        status: 'On the way',
+        arrival: '25 min',
+        image: require('../../../assets/mobile2.png'),
+      },
+      {
+        id: '#265901',
+        name: 'I Phone 17 Plus',
+        price: '₹ 50000.00',
+        soldBy: 'Grocery Store',
+        status: 'On the way',
+        arrival: '25 min',
+        image: require('../../../assets/mobile2.png'),
+      },
+      {
+        id: '#265902',
+        name: 'I Phone 17 Plus',
+        price: '₹ 50000.00',
+        soldBy: 'Grocery Store',
+        status: 'On the way',
+        arrival: '25 min',
+        image: require('../../../assets/mobile2.png'),
+      },
+    ],
+  };
 
   const handleRatePress = (order) => {
     setSelectedOrder(order);
@@ -123,17 +117,11 @@ export default function MyOrdersScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor={'transparent'} translucent />
+      <StatusBar backgroundColor={bgColor} barStyle="light-content" />
       
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity 
-          onPress={() => navigation && navigation.goBack()}
-          style={styles.backButton}
-        >
-        </TouchableOpacity>
+      {/* Header - Same as Cart screen */}
+      <View style={[styles.header, { backgroundColor: bgColor }]}>
         <Text style={styles.headerTitle}>My Orders</Text>
-        <View style={styles.headerPlaceholder} />
       </View>
 
       {/* Tab Switcher */}
@@ -141,7 +129,7 @@ export default function MyOrdersScreen({ navigation }) {
         <TouchableOpacity
           style={[
             styles.tabButton,
-            activeTab === 'Upcoming' && styles.tabActive,
+            activeTab === 'Upcoming' && [styles.tabActive, { backgroundColor: bgColor }],
           ]}
           onPress={() => setActiveTab('Upcoming')}
         >
@@ -155,7 +143,7 @@ export default function MyOrdersScreen({ navigation }) {
         <TouchableOpacity
           style={[
             styles.tabButton,
-            activeTab === 'Past' && styles.tabActive,
+            activeTab === 'Past' && [styles.tabActive, { backgroundColor: bgColor }],
           ]}
           onPress={() => setActiveTab('Past')}
         >
@@ -169,6 +157,7 @@ export default function MyOrdersScreen({ navigation }) {
       </View>
 
       <ScrollView
+        style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
@@ -181,9 +170,9 @@ export default function MyOrdersScreen({ navigation }) {
             >
               <Image source={order.image} style={styles.productImage} />
               <View style={styles.orderContent}>
-                <Text style={styles.orderId}>{order.id}</Text>
+                <Text style={[styles.orderId, { color: bgColor }]}>{order.id}</Text>
                 <Text style={styles.productName}>{order.name}</Text>
-                <Text style={styles.productPrice}>{order.price}</Text>
+                <Text style={[styles.productPrice, { color: bgColor }]}>{order.price}</Text>
                 <Text style={styles.soldBy}>
                   Sold By : <Text style={styles.soldByText}>{order.soldBy}</Text>
                   <Text style={styles.deliveredStatus}> • Delivered</Text>
@@ -196,7 +185,7 @@ export default function MyOrdersScreen({ navigation }) {
                     <Text style={styles.rateText}>Rate</Text>
                   </TouchableOpacity>
                   <TouchableOpacity 
-                    style={styles.reorderButton}
+                    style={[styles.reorderButton, { backgroundColor: bgColor }]}
                     onPress={() => handleReorderPress(order)}
                   >
                     <Text style={styles.reorderText}>Re-Order</Text>
@@ -214,22 +203,22 @@ export default function MyOrdersScreen({ navigation }) {
             >
               <Image source={order.image} style={styles.productImage} />
               <View style={styles.orderContent}>
-                <Text style={styles.orderId}>{order.id}</Text>
-                <Text style={styles.productNameLink}>{order.name}</Text>
-                <Text style={styles.productPrice}>{order.price}</Text>
+                <Text style={[styles.orderId, { color: bgColor }]}>{order.id}</Text>
+                <Text style={[styles.productNameLink, { color: bgColor }]}>{order.name}</Text>
+                <Text style={[styles.productPrice, { color: bgColor }]}>{order.price}</Text>
                 <Text style={styles.soldBy}>
                   Sold By : <Text style={styles.soldByText}>{order.soldBy}</Text>
                 </Text>
                 <View style={styles.arrivalRow}>
                   <Text style={styles.estimateLabel}>Estimate Arrival</Text>
                   <Text style={styles.estimateTime}>{order.arrival}</Text>
-                  <Text style={styles.orderStatus}>{order.status}</Text>
+                  <Text style={[styles.orderStatus, { color: bgColor }]}>{order.status}</Text>
                 </View>
                 <View style={styles.buttonsRow}>
                   <TouchableOpacity style={styles.cancelButton}>
                     <Text style={styles.cancelText}>CANCEL</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.trackButton}>
+                  <TouchableOpacity style={[styles.trackButton, { backgroundColor: bgColor }]}>
                     <Text style={styles.trackText}>TRACK ORDER</Text>
                   </TouchableOpacity>
                 </View>
@@ -237,6 +226,9 @@ export default function MyOrdersScreen({ navigation }) {
             </TouchableOpacity>
           ))
         )}
+
+        {/* Extra padding for bottom tab */}
+        <View style={{ height: responsiveSize(80) }} />
       </ScrollView>
 
       {/* Rate Modal */}
@@ -257,10 +249,10 @@ export default function MyOrdersScreen({ navigation }) {
             </Text>
             <View style={styles.modalButtons}>
               <TouchableOpacity style={styles.modalCancelButton} onPress={closeModal}>
-                <Text style={styles.modalButtonText}>Cancel</Text>
+                <Text style={styles.modalCancelText}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.modalConfirmButton} onPress={confirmRate}>
-                <Text style={styles.modalButtonText}>Rate Now</Text>
+              <TouchableOpacity style={[styles.modalConfirmButton, { backgroundColor: bgColor }]} onPress={confirmRate}>
+                <Text style={styles.modalConfirmText}>Rate Now</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -272,272 +264,269 @@ export default function MyOrdersScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { 
-    flex: 1, 
-    backgroundColor: COLORS.background 
+    flex: 1,
+    backgroundColor: '#FFFFFF'
   },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: Platform.OS === 'ios' ? responsiveSize(100) : responsiveSize(90),
+  },
+
+  /* HEADER - Same as Cart screen */
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: height * 0.06,
-    paddingHorizontal: width * 0.05,
-    justifyContent: 'space-between',
-    paddingBottom: height * 0.0,
+    height: Platform.OS === 'ios' ? responsiveSize(100) : responsiveSize(90),
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: responsiveSize(18),
+    justifyContent: "space-between",
+    paddingTop: Platform.OS === 'ios' ? responsiveSize(50) : responsiveSize(30),
+    paddingBottom: responsiveSize(0),
   },
-  backButton: {
-    padding: 8,
-    marginLeft: -8,
-  },
-  backIcon: { 
-    width: isSmallDevice ? 22 : 26, 
-    height: isSmallDevice ? 22 : 26, 
-    tintColor: COLORS.text 
-  },
-  headerTitle: {
-    fontSize: isSmallDevice ? 16 : 18,
-    fontWeight: '700',
-    color: COLORS.text,
-    letterSpacing: 0.2,
+  headerTitle: { 
+    color: "#fff", 
+    fontSize: responsiveSize(20), 
+    fontWeight: "700",
     textAlign: 'center',
-    
+    flex: 1,
+    marginHorizontal: responsiveSize(10),
   },
-  headerPlaceholder: {
-    width: isSmallDevice ? 24 : 30,
-  },
+
+  /* TAB SWITCHER */
   tabsContainer: {
-    flexDirection: 'row',
-    marginHorizontal: width * 0.05,
-    marginTop: height * 0.02,
-    backgroundColor: COLORS.tabBackground,
-    borderRadius: 12,
-    overflow: 'hidden',
-    minHeight: 50,
+    flexDirection: "row",
+    marginHorizontal: responsiveSize(15),
+    marginTop: responsiveSize(15),
+    backgroundColor: "#F3F6FB",
+    borderRadius: responsiveSize(12),
+    overflow: "hidden",
+    minHeight: responsiveSize(50),
   },
   tabButton: {
     flex: 1,
-    paddingVertical: height * 0.015,
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingVertical: responsiveSize(15),
+    alignItems: "center",
+    justifyContent: "center",
   },
   tabActive: {
-    backgroundColor: COLORS.button,
+    // Background color handled inline with bgColor
   },
   tabText: {
-    fontSize: isSmallDevice ? 14 : 16,
-    color: COLORS.text,
+    fontSize: responsiveSize(14),
+    color: '#222',
     fontWeight: '600',
     textAlign: 'center',
   },
   tabTextActive: {
-    color: COLORS.background,
+    color: '#fff',
   },
-  scrollContent: {
-    paddingTop: height * 0.02,
-    paddingBottom: height * 0.1,
-    paddingHorizontal: width * 0.02,
-  },
+
+  /* ORDER CARDS */
   orderCard: {
-    flexDirection: 'row',
-    backgroundColor: COLORS.background,
-    marginHorizontal: width * 0.04,
-    marginVertical: height * 0.01,
-    borderRadius: 16,
-    padding: width * 0.04,
-    borderColor: COLORS.border,
+    flexDirection: "row",
+    backgroundColor: "#fff",
+    marginHorizontal: responsiveSize(15),
+    marginVertical: responsiveSize(8),
+    borderRadius: responsiveSize(16),
+    padding: responsiveSize(15),
     borderWidth: 1,
-    shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowOffset: { width: 0, height: 3 },
-    shadowRadius: 7,
+    borderColor: "#e0e0e0",
     elevation: 2,
-    minHeight: height * 0.15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   productImage: { 
-    width: isSmallDevice ? 56 : 62, 
-    height: isSmallDevice ? 56 : 62, 
-    borderRadius: 10 
+    width: responsiveSize(70), 
+    height: responsiveSize(70), 
+    borderRadius: responsiveSize(8),
   },
   orderContent: { 
     flex: 1, 
-    marginLeft: width * 0.03,
-    justifyContent: 'space-between',
+    marginLeft: responsiveSize(12),
+    justifyContent: "space-between",
   },
   orderId: { 
-    fontSize: isSmallDevice ? 12 : 13, 
-    color: '#699BF7', 
-    fontWeight: '500' 
+    fontSize: responsiveSize(12), 
+    fontWeight: "600",
+    marginBottom: responsiveSize(4),
   },
   productName: { 
-    fontSize: isSmallDevice ? 15 : 16, 
-    fontWeight: '600', 
-    color: COLORS.text, 
-    marginTop: 2 
+    fontSize: responsiveSize(16), 
+    fontWeight: "700", 
+    color: '#000', 
+    marginBottom: responsiveSize(2),
   },
   productNameLink: {
-    fontSize: isSmallDevice ? 15 : 16,
-    fontWeight: '600',
-    color: COLORS.button,
-    marginTop: 2,
+    fontSize: responsiveSize(16),
+    fontWeight: "700",
+    marginBottom: responsiveSize(2),
     textDecorationLine: 'underline'
   },
   productPrice: { 
-    fontSize: isSmallDevice ? 15 : 16, 
-    fontWeight: '700', 
-    color: COLORS.text, 
-    marginTop: 2 
+    fontSize: responsiveSize(16), 
+    fontWeight: "700", 
+    marginBottom: responsiveSize(4),
   },
   soldBy: { 
-    fontSize: isSmallDevice ? 12 : 13, 
-    color: '#444', 
-    marginTop: 2 
+    fontSize: responsiveSize(12), 
+    color: '#666',
+    marginBottom: responsiveSize(8),
   },
   soldByText: {
-    color: COLORS.gray,
+    color: '#666',
   },
   deliveredStatus: { 
-    color: COLORS.delivered, 
-    fontWeight: '500', 
-    fontSize: isSmallDevice ? 12 : 13 
+    color: '#34A853', 
+    fontWeight: '600', 
+    fontSize: responsiveSize(12),
   },
   arrivalRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 6,
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: responsiveSize(12),
+    flexWrap: "wrap",
   },
   estimateLabel: { 
-    fontSize: isSmallDevice ? 12 : 13, 
-    color: '#888' 
+    fontSize: responsiveSize(12), 
+    color: '#666',
   },
   estimateTime: { 
-    fontSize: isSmallDevice ? 14 : 16, 
-    color: COLORS.text, 
-    marginLeft: 4, 
-    fontWeight: '500' 
+    fontSize: responsiveSize(14), 
+    color: '#000', 
+    marginLeft: responsiveSize(4), 
+    fontWeight: "600",
   },
   orderStatus: { 
-    fontSize: isSmallDevice ? 12 : 13, 
-    color: COLORS.button, 
-    fontWeight: 'bold', 
-    marginLeft: 12 
+    fontSize: responsiveSize(12), 
+    fontWeight: "700", 
+    marginLeft: responsiveSize(12),
   },
   buttonsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: height * 0.015,
-    gap: width * 0.03,
-    flexWrap: 'nowrap',
-    justifyContent: 'flex-start',
+    flexDirection: "row",
+    alignItems: "center",
+    gap: responsiveSize(10),
   },
   rateButton: {
-    backgroundColor: COLORS.background,
+    backgroundColor: "#fff",
     borderWidth: 1,
-    borderColor: '#DEE2EB',
-    borderRadius: 8,
-    paddingHorizontal: isSmallDevice ? 14 : 20,
-    paddingVertical: height * 0.012,
-    minWidth: isSmallDevice ? width * 0.25 : width * 0.28,
-    alignItems: 'center',
+    borderColor: "#ddd",
+    borderRadius: responsiveSize(8),
+    paddingHorizontal: responsiveSize(16),
+    paddingVertical: responsiveSize(10),
+    flex: 1,
+    alignItems: "center",
   },
   rateText: { 
-    color: COLORS.text, 
-    fontWeight: '500', 
-    fontSize: isSmallDevice ? 12 : 15 
+    color: "#000", 
+    fontWeight: "600",
+    fontSize: responsiveSize(13),
   },
   reorderButton: {
-    backgroundColor: COLORS.button,
-    borderRadius: 8,
-    paddingHorizontal: isSmallDevice ? 14 : 20,
-    paddingVertical: height * 0.012,
-    minWidth: isSmallDevice ? width * 0.25 : width * 0.28,
-    alignItems: 'center',
+    borderRadius: responsiveSize(8),
+    paddingHorizontal: responsiveSize(16),
+    paddingVertical: responsiveSize(10),
+    flex: 1,
+    alignItems: "center",
   },
   reorderText: { 
-    color: COLORS.background, 
-    fontWeight: '600', 
-    fontSize: isSmallDevice ? 12 : 15 
+    color: "#fff", 
+    fontWeight: "600",
+    fontSize: responsiveSize(13),
   },
   cancelButton: {
-    backgroundColor: COLORS.background,
+    backgroundColor: "#fff",
     borderWidth: 1,
-    borderColor: '#DEE2EB',
-    borderRadius: 8,
-    paddingHorizontal: isSmallDevice ? 10 : 14,
-    paddingVertical: height * 0.01,
-    minWidth: isSmallDevice ? width * 0.28 : width * 0.3,
-    alignItems: 'center',
+    borderColor: "#ddd",
+    borderRadius: responsiveSize(8),
+    paddingHorizontal: responsiveSize(12),
+    paddingVertical: responsiveSize(10),
+    flex: 1,
+    alignItems: "center",
   },
   cancelText: { 
-    color: COLORS.text, 
-    fontWeight: '500', 
-    fontSize: isSmallDevice ? 11 : 13 
+    color: "#000", 
+    fontWeight: "600",
+    fontSize: responsiveSize(12),
   },
   trackButton: {
-    backgroundColor: COLORS.button,
-    borderRadius: 8,
-    paddingHorizontal: isSmallDevice ? 10 : 14,
-    paddingVertical: height * 0.01,
-    minWidth: isSmallDevice ? width * 0.28 : width * 0.3,
-    alignItems: 'center',
+    borderRadius: responsiveSize(8),
+    paddingHorizontal: responsiveSize(12),
+    paddingVertical: responsiveSize(10),
+    flex: 1,
+    alignItems: "center",
   },
   trackText: { 
-    color: COLORS.background, 
-    fontWeight: '600', 
-    fontSize: isSmallDevice ? 11 : 13 
+    color: "#fff", 
+    fontWeight: "600",
+    fontSize: responsiveSize(12),
   },
 
-  // Modal styles
+  /* MODAL STYLES */
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
+    padding: responsiveSize(20),
   },
   modalContainer: {
-    width: '85%',
-    backgroundColor: COLORS.background,
-    borderRadius: 16,
-    padding: 20,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 10,
+    width: '100%',
+    maxWidth: responsiveSize(300),
+    backgroundColor: "#fff",
+    borderRadius: responsiveSize(16),
+    padding: responsiveSize(20),
+    alignItems: "center",
     elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
   },
   modalTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: COLORS.text,
-    marginBottom: 10,
+    fontSize: responsiveSize(18),
+    fontWeight: "700",
+    color: '#000',
+    marginBottom: responsiveSize(10),
+    textAlign: 'center',
   },
   modalOrderText: {
-    fontSize: 14,
-    color: COLORS.text,
-    marginBottom: 12,
+    fontSize: responsiveSize(14),
+    color: '#666',
+    marginBottom: responsiveSize(8),
     textAlign: 'center',
   },
   modalButtons: {
-    flexDirection: 'row',
-    gap: 16,
+    flexDirection: "row",
+    gap: responsiveSize(12),
     width: '100%',
+    marginTop: responsiveSize(15),
   },
   modalCancelButton: {
     flex: 1,
-    backgroundColor: COLORS.lightGray,
-    borderRadius: 8,
-    paddingVertical: 12,
-    alignItems: 'center',
+    backgroundColor: "#f8f8f8",
+    borderRadius: responsiveSize(8),
+    paddingVertical: responsiveSize(12),
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  modalCancelText: {
+    fontSize: responsiveSize(14),
+    fontWeight: "600",
+    color: '#666',
   },
   modalConfirmButton: {
     flex: 1,
-    backgroundColor: COLORS.button,
-    borderRadius: 8,
-    paddingVertical: 12,
-    alignItems: 'center',
+    borderRadius: responsiveSize(8),
+    paddingVertical: responsiveSize(12),
+    alignItems: "center",
   },
-  modalButtonText: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: COLORS.text,
+  modalConfirmText: {
+    fontSize: responsiveSize(14),
+    fontWeight: "600",
+    color: '#fff',
   },
 });

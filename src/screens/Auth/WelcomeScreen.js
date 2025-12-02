@@ -209,7 +209,7 @@ export default function WelcomeScreen({ navigation }) {
       {/* SUBMIT */}
       <TouchableOpacity
         style={styles.submitButton}
-        onPress={() => navigation.navigate('Main')}
+        onPress={() => navigation.navigate('Location')}
       >
         <Text style={styles.submitText}>Submit</Text>
       </TouchableOpacity>
