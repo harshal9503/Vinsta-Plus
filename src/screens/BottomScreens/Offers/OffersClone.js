@@ -14,72 +14,72 @@ import { useColor } from '../../../util/ColorSwitcher';
 
 const { width, height } = Dimensions.get('window');
 
-// Responsive sizing (from MyOrdersScreen reference)
-const responsiveSize = (size) => (width / 375) * size;
+// Responsive sizing
+const responsiveSize = size => (width / 375) * size;
 
 // Platform detection
 const isIOS = Platform.OS === 'ios';
 
-// Responsive font scaling (adapted from OfferCard)
-const fontScale = (size) => {
+// Responsive font scaling
+const fontScale = size => {
   return isIOS ? size * 0.95 : size;
 };
 
-// Scale size for dimensions (adapted from OfferCard)
-const scaleSize = (size) => {
+// Scale size for dimensions
+const scaleSize = size => {
   return isIOS ? size * 1.02 : size;
 };
 
-// Static Offers Data - FIXED line breaks
+// Static Offers Data
 const offersData = [
   {
     id: 1,
     title: 'Free Delivery',
     description: 'Enjoy exclusive discount on\njewelry today!',
     image: require('../../../assets/offers.png'),
-    buttonText: 'VIEW OFFERS'
+    buttonText: 'VIEW OFFERS',
   },
   {
     id: 2,
     title: '50% OFF Groceries',
     description: 'Get 50% discount on\nfresh groceries & staples!',
     image: require('../../../assets/50.png'),
-    buttonText: 'SHOP NOW'
+    buttonText: 'SHOP NOW',
   },
   {
     id: 3,
     title: '10% Health Discount',
     description: '10% off on medicines\n& healthcare products!',
     image: require('../../../assets/10.png'),
-    buttonText: 'GET DEAL'
+    buttonText: 'GET DEAL',
   },
   {
     id: 4,
     title: 'Electronics Sale',
     description: 'Up to 30% off on\nsmartphones & accessories!',
     image: require('../../../assets/offers.png'),
-    buttonText: 'EXPLORE'
+    buttonText: 'EXPLORE',
   },
   {
     id: 5,
     title: 'Card Payment Offer',
     description: '5% cashback on\nall card payments!',
     image: require('../../../assets/50.png'),
-    buttonText: 'ACTIVATE'
+    buttonText: 'ACTIVATE',
   },
   {
     id: 6,
     title: 'Grocery Combo',
     description: 'Buy 2 get 1 free\non grocery essentials!',
     image: require('../../../assets/10.png'),
-    buttonText: 'VIEW COMBO'
-  }
+    buttonText: 'VIEW COMBO',
+  },
 ];
 
-export default function Offers() {
+export default function OfferClone({ navigation }) {
   const { bgColor, textColor } = useColor();
 
-  const handleViewOffer = (offer) => {
+  const handleViewOffer = offer => {
     console.log(`Navigate to offer: ${offer.title}`);
     // Navigation logic - replace with your navigation
   };
@@ -87,10 +87,22 @@ export default function Offers() {
   return (
     <View style={[styles.container, { backgroundColor: '#FFFFFF' }]}>
       <StatusBar backgroundColor={bgColor} barStyle="light-content" />
-      
-      {/* Header */}
+
+      {/* Header with Back Button */}
       <View style={[styles.header, { backgroundColor: bgColor }]}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={[styles.iconBtn, { backgroundColor: '#FFFFFF' }]}
+        >
+          <Image
+            source={require('../../../assets/back.png')}
+            style={[styles.icon, { tintColor: bgColor }]}
+          />
+        </TouchableOpacity>
+
         <Text style={styles.headerTitle}>Offers</Text>
+
+        <View style={{ width: responsiveSize(40) }} />
       </View>
 
       <ScrollView
@@ -99,18 +111,23 @@ export default function Offers() {
         showsVerticalScrollIndicator={false}
       >
         {offersData.map((offer, index) => (
-          <View 
+          <View
             key={offer.id}
             style={[
               styles.offerCard,
               {
                 backgroundColor: textColor,
-                marginBottom: index === offersData.length - 1 ? responsiveSize(20) : responsiveSize(16),
-              }
+                marginBottom:
+                  index === offersData.length - 1
+                    ? responsiveSize(20)
+                    : responsiveSize(16),
+              },
             ]}
           >
             <View style={styles.offerContent}>
-              <Text style={[styles.offerHeader, { color: bgColor }]}>{offer.title}</Text>
+              <Text style={[styles.offerHeader, { color: bgColor }]}>
+                {offer.title}
+              </Text>
               <Text style={[styles.offerSubTxt, { color: textColor + 'CC' }]}>
                 {offer.description}
               </Text>
@@ -119,16 +136,15 @@ export default function Offers() {
                 onPress={() => handleViewOffer(offer)}
                 activeOpacity={0.8}
               >
-                <Text style={[styles.offerBtnText, { color: textColor }]}>{offer.buttonText}</Text>
+                <Text style={[styles.offerBtnText, { color: textColor }]}>
+                  {offer.buttonText}
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={styles.offerImageWrap}>
               <Image
                 source={offer.image}
-                style={[
-                  styles.offerImage,
-                  { tintColor: bgColor } // Theme primary color tint for images
-                ]}
+                style={[styles.offerImage, { tintColor: bgColor }]}
                 resizeMode="contain"
               />
             </View>
@@ -143,37 +159,61 @@ export default function Offers() {
 }
 
 const styles = StyleSheet.create({
-  container: { 
+  container: {
     flex: 1,
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: Platform.OS === 'ios' ? responsiveSize(100) : responsiveSize(90),
+    paddingBottom:
+      Platform.OS === 'ios' ? responsiveSize(100) : responsiveSize(90),
     paddingHorizontal: responsiveSize(15),
     paddingTop: responsiveSize(10),
   },
 
-  /* HEADER */
+  /* HEADER - Same as HomeFilter */
   header: {
     height: Platform.OS === 'ios' ? responsiveSize(100) : responsiveSize(90),
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: responsiveSize(18),
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     paddingTop: Platform.OS === 'ios' ? responsiveSize(50) : responsiveSize(30),
     paddingBottom: responsiveSize(0),
   },
-  headerTitle: { 
-    color: "#fff", 
-    fontSize: responsiveSize(20), 
-    fontWeight: "700",
+  headerTitle: {
+    color: '#fff',
+    fontSize: responsiveSize(20),
+    fontWeight: '700',
     textAlign: 'center',
     flex: 1,
+    marginHorizontal: responsiveSize(10),
+  },
+  iconBtn: {
+    width: responsiveSize(40),
+    height: responsiveSize(40),
+    borderRadius: responsiveSize(12),
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  icon: {
+    width: responsiveSize(20),
+    height: responsiveSize(20),
   },
 
-  /* OFFER CARD - EXACT from OfferCard with ColorSwitcher adaptation */
+  /* OFFER CARD */
   offerCard: {
     borderRadius: scaleSize(responsiveSize(16)),
     flexDirection: 'row',

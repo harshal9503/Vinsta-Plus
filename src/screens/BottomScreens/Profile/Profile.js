@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState } from 'react';
 import {
   View,
@@ -18,7 +17,7 @@ import { useColor } from '../../../util/ColorSwitcher';
 const { width, height } = Dimensions.get('window');
 
 // Responsive sizing
-const responsiveSize = (size) => (width / 375) * size;
+const responsiveSize = size => (width / 375) * size;
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -29,22 +28,82 @@ const Profile = () => {
 
   // Top options with 4 icons in a row
   const topOptions = [
-    { id: 1, icon: require('../../../assets/address.png'), label: 'Address', route: 'Address' },
-    { id: 2, icon: require('../../../assets/order.png'), label: 'My Order', route: 'MyOrder' },
-    { id: 3, icon: require('../../../assets/subscription.png'), label: 'Subscriptions', route: 'Subscription' },
-    { id: 4, icon: require('../../../assets/wallet.png'), label: 'Wallet', route: 'Wallet' },
+    {
+      id: 1,
+      icon: require('../../../assets/address.png'),
+      label: 'Address',
+      route: 'Address',
+    },
+    {
+      id: 2,
+      icon: require('../../../assets/order.png'),
+      label: 'My Order',
+      route: 'MyOrder',
+    },
+    {
+      id: 3,
+      icon: require('../../../assets/subscription.png'),
+      label: 'Subscriptions',
+      route: 'Subscription',
+    },
+    {
+      id: 4,
+      icon: require('../../../assets/wallet.png'),
+      label: 'Wallet',
+      route: 'Wallet',
+    },
   ];
 
   // Bottom options (list view)
   const bottomOptions = [
-    { id: 1, icon: require('../../../assets/blueprofile.png'), label: 'Profile', route: 'ProfileEdit' },
-    { id: 2, icon: require('../../../assets/fav.png'), label: "Favourite's", route: 'Favourite' },
-    { id: 3, icon: require('../../../assets/offers.png'), label: "My Offer's", route: 'Offers' },
-    { id: 4, icon: require('../../../assets/refer.png'), label: 'Refer To Earn', route: 'Refer' },
-    { id: 5, icon: require('../../../assets/dark.png'), label: 'Dark Mode', route: 'DarkMode' },
-    { id: 6, icon: require('../../../assets/support.png'), label: 'Support', route: 'Support' },
-    { id: 7, icon: require('../../../assets/help.png'), label: 'Help', route: 'Help' }, // Added Help here
-    { id: 8, icon: require('../../../assets/settings.png'), label: "Setting's", route: 'Settings' },
+    {
+      id: 1,
+      icon: require('../../../assets/blueprofile.png'),
+      label: 'Profile',
+      route: 'ProfileEdit',
+    },
+    {
+      id: 2,
+      icon: require('../../../assets/fav.png'),
+      label: "Favourite's",
+      route: 'Favourite',
+    },
+    {
+      id: 3,
+      icon: require('../../../assets/offers.png'),
+      label: "My Offer's",
+      route: 'Offers',
+    },
+    {
+      id: 4,
+      icon: require('../../../assets/refer.png'),
+      label: 'Refer To Earn',
+      route: 'Refer',
+    },
+    {
+      id: 5,
+      icon: require('../../../assets/dark.png'),
+      label: 'Dark Mode',
+      route: 'DarkMode',
+    },
+    {
+      id: 6,
+      icon: require('../../../assets/support.png'),
+      label: 'Support',
+      route: 'Support',
+    },
+    {
+      id: 7,
+      icon: require('../../../assets/help.png'),
+      label: 'Help',
+      route: 'Help',
+    }, // Added Help here
+    {
+      id: 8,
+      icon: require('../../../assets/settings.png'),
+      label: "Setting's",
+      route: 'Settings',
+    },
   ];
 
   const openPopup = (message, onConfirm) => {
@@ -53,20 +112,20 @@ const Profile = () => {
     setShowPopup(true);
   };
 
-  const handleNavigation = (route) => {
+  const handleNavigation = route => {
     navigation.navigate(route);
   };
 
   return (
     <View style={[styles.container, { backgroundColor: '#FFFFFF' }]}>
       <StatusBar backgroundColor={bgColor} barStyle="light-content" />
-      
+
       {/* HEADER */}
       <View style={[styles.header, { backgroundColor: bgColor }]}>
         <Text style={styles.headerTitle}>Profile</Text>
       </View>
 
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
@@ -74,9 +133,9 @@ const Profile = () => {
         {/* Profile Header Section */}
         <View style={styles.profileHeader}>
           <View style={styles.userRow}>
-            <Image 
-              source={require('../../../assets/user2.png')} 
-              style={styles.userImage} 
+            <Image
+              source={require('../../../assets/user2.png')}
+              style={styles.userImage}
             />
             <View style={styles.userInfo}>
               <Text style={styles.userName}>Harshal Sharma</Text>
@@ -88,7 +147,7 @@ const Profile = () => {
 
         {/* Top Options Grid (4 items in a row) */}
         <View style={styles.topOptionsContainer}>
-          {topOptions.map((item) => (
+          {topOptions.map(item => (
             <TouchableOpacity
               key={item.id}
               style={styles.topOption}
@@ -96,9 +155,9 @@ const Profile = () => {
               activeOpacity={0.8}
             >
               <View style={styles.topIconContainer}>
-                <Image 
-                  source={item.icon} 
-                  style={[styles.topIcon, { tintColor: bgColor }]} 
+                <Image
+                  source={item.icon}
+                  style={[styles.topIcon, { tintColor: bgColor }]}
                 />
               </View>
               <Text style={styles.topLabel}>{item.label}</Text>
@@ -108,7 +167,7 @@ const Profile = () => {
 
         {/* Bottom Options List */}
         <View style={styles.bottomSection}>
-          {bottomOptions.map((item) => (
+          {bottomOptions.map(item => (
             <TouchableOpacity
               key={item.id}
               style={styles.optionRow}
@@ -116,17 +175,22 @@ const Profile = () => {
               activeOpacity={0.7}
             >
               <View style={styles.optionLeft}>
-                <View style={[styles.optionIconContainer, { backgroundColor: `${bgColor}15` }]}>
-                  <Image 
-                    source={item.icon} 
-                    style={[styles.optionIcon, { tintColor: bgColor }]} 
+                <View
+                  style={[
+                    styles.optionIconContainer,
+                    { backgroundColor: `${bgColor}15` },
+                  ]}
+                >
+                  <Image
+                    source={item.icon}
+                    style={[styles.optionIcon, { tintColor: bgColor }]}
                   />
                 </View>
                 <Text style={styles.optionLabel}>{item.label}</Text>
               </View>
-              <Image 
-                source={require('../../../assets/arrow-right.png')} 
-                style={[styles.arrowIcon, { tintColor: '#666' }]} 
+              <Image
+                source={require('../../../assets/arrow-right.png')}
+                style={[styles.arrowIcon, { tintColor: '#666' }]}
               />
             </TouchableOpacity>
           ))}
@@ -135,18 +199,27 @@ const Profile = () => {
           <TouchableOpacity
             style={styles.optionRow}
             onPress={() =>
-              openPopup('Are you sure you want to logout?', () => navigation.navigate('SignIn'))
+              openPopup('Are you sure you want to logout?', () =>
+                navigation.navigate('SignIn'),
+              )
             }
             activeOpacity={0.7}
           >
             <View style={styles.optionLeft}>
-              <View style={[styles.optionIconContainer, { backgroundColor: '#E5393515' }]}>
-                <Image 
-                  source={require('../../../assets/logout.png')} 
-                  style={[styles.optionIcon, { tintColor: '#E53935' }]} 
+              <View
+                style={[
+                  styles.optionIconContainer,
+                  { backgroundColor: '#E5393515' },
+                ]}
+              >
+                <Image
+                  source={require('../../../assets/logout.png')}
+                  style={[styles.optionIcon, { tintColor: '#E53935' }]}
                 />
               </View>
-              <Text style={[styles.optionLabel, { color: '#E53935' }]}>Logout</Text>
+              <Text style={[styles.optionLabel, { color: '#E53935' }]}>
+                Logout
+              </Text>
             </View>
           </TouchableOpacity>
 
@@ -154,18 +227,27 @@ const Profile = () => {
           <TouchableOpacity
             style={styles.optionRow}
             onPress={() =>
-              openPopup('Are you sure you want to delete your account?', () => navigation.navigate('SignIn'))
+              openPopup('Are you sure you want to delete your account?', () =>
+                navigation.navigate('SignIn'),
+              )
             }
             activeOpacity={0.7}
           >
             <View style={styles.optionLeft}>
-              <View style={[styles.optionIconContainer, { backgroundColor: '#E5393515' }]}>
-                <Image 
-                  source={require('../../../assets/delete.png')} 
-                  style={[styles.optionIcon, { tintColor: '#E53935' }]} 
+              <View
+                style={[
+                  styles.optionIconContainer,
+                  { backgroundColor: '#E5393515' },
+                ]}
+              >
+                <Image
+                  source={require('../../../assets/delete.png')}
+                  style={[styles.optionIcon, { tintColor: '#E53935' }]}
                 />
               </View>
-              <Text style={[styles.optionLabel, { color: '#E53935' }]}>Delete Account</Text>
+              <Text style={[styles.optionLabel, { color: '#E53935' }]}>
+                Delete Account
+              </Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -189,16 +271,24 @@ const Profile = () => {
                 style={[styles.popupButton, styles.popupCancelButton]}
                 onPress={() => setShowPopup(false)}
               >
-                <Text style={[styles.popupButtonText, { color: '#333' }]}>Cancel</Text>
+                <Text style={[styles.popupButtonText, { color: '#333' }]}>
+                  Cancel
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.popupButton, styles.popupConfirmButton, { backgroundColor: bgColor }]}
+                style={[
+                  styles.popupButton,
+                  styles.popupConfirmButton,
+                  { backgroundColor: bgColor },
+                ]}
                 onPress={() => {
                   setShowPopup(false);
                   popupAction && popupAction();
                 }}
               >
-                <Text style={[styles.popupButtonText, { color: '#fff' }]}>OK</Text>
+                <Text style={[styles.popupButtonText, { color: '#fff' }]}>
+                  OK
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -211,51 +301,52 @@ const Profile = () => {
 export default Profile;
 
 const styles = StyleSheet.create({
-  container: { 
+  container: {
     flex: 1,
-    backgroundColor: '#FFFFFF'
+    backgroundColor: '#FFFFFF',
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: Platform.OS === 'ios' ? responsiveSize(100) : responsiveSize(90),
+    paddingBottom:
+      Platform.OS === 'ios' ? responsiveSize(100) : responsiveSize(90),
   },
 
   /* HEADER */
   header: {
     height: Platform.OS === 'ios' ? responsiveSize(100) : responsiveSize(90),
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: responsiveSize(18),
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     paddingTop: Platform.OS === 'ios' ? responsiveSize(50) : responsiveSize(30),
     paddingBottom: responsiveSize(0),
   },
-  headerTitle: { 
-    color: "#fff", 
-    fontSize: responsiveSize(20), 
-    fontWeight: "700",
+  headerTitle: {
+    color: '#fff',
+    fontSize: responsiveSize(20),
+    fontWeight: '700',
     textAlign: 'center',
     flex: 1,
     marginHorizontal: responsiveSize(10),
   },
 
   // Profile Header Section
-  profileHeader: { 
-    width: '100%', 
+  profileHeader: {
+    width: '100%',
     paddingTop: responsiveSize(15),
     paddingBottom: responsiveSize(15),
     backgroundColor: '#FFFFFF',
   },
-  userRow: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
+  userRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: responsiveSize(20),
   },
-  userImage: { 
-    width: responsiveSize(85), 
-    height: responsiveSize(85), 
+  userImage: {
+    width: responsiveSize(85),
+    height: responsiveSize(85),
     borderRadius: responsiveSize(42.5),
     borderWidth: 3,
     borderColor: '#FFFFFF',
@@ -266,8 +357,8 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  userInfo: { 
-    flex: 1, 
+  userInfo: {
+    flex: 1,
     marginLeft: responsiveSize(15),
   },
   userName: {
@@ -332,8 +423,8 @@ const styles = StyleSheet.create({
   },
 
   // Bottom Options List
-  bottomSection: { 
-    marginTop: responsiveSize(5), 
+  bottomSection: {
+    marginTop: responsiveSize(5),
     paddingHorizontal: responsiveSize(20),
   },
   optionRow: {
@@ -344,8 +435,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#F0F0F0',
   },
-  optionLeft: { 
-    flexDirection: 'row', 
+  optionLeft: {
+    flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
   },
@@ -373,10 +464,10 @@ const styles = StyleSheet.create({
   },
 
   // Popup Modal Styles
-  popupOverlay: { 
-    flex: 1, 
-    backgroundColor: 'rgba(0,0,0,0.5)', 
-    alignItems: 'center', 
+  popupOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: responsiveSize(20),
   },
@@ -398,58 +489,35 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  popupText: { 
-    fontSize: responsiveSize(16), 
-    textAlign: 'center', 
+  popupText: {
+    fontSize: responsiveSize(16),
+    textAlign: 'center',
     marginBottom: responsiveSize(25),
     color: '#333333',
     fontWeight: '500',
     lineHeight: responsiveSize(22),
   },
-  popupButtonsContainer: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    width: '100%' 
+  popupButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
   },
-  popupButton: { 
-    borderRadius: responsiveSize(10), 
+  popupButton: {
+    borderRadius: responsiveSize(10),
     paddingVertical: responsiveSize(12),
     paddingHorizontal: responsiveSize(20),
     minWidth: responsiveSize(100),
     alignItems: 'center',
   },
-  popupCancelButton: { 
+  popupCancelButton: {
     backgroundColor: '#F0F0F0',
     marginRight: responsiveSize(10),
   },
-  popupConfirmButton: { 
+  popupConfirmButton: {
     // Background color is set inline with bgColor
   },
-  popupButtonText: { 
-    fontSize: responsiveSize(14), 
+  popupButtonText: {
+    fontSize: responsiveSize(14),
     fontWeight: '600',
   },
 });
-=======
-// ...existing code...
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { useColor } from '../../../util/ColorSwitcher';
-
-export default function Profile() {
-  const { bgColor, textColor } = useColor();
-  return (
-    <View style={[styles.container, { backgroundColor: bgColor }]}> 
-      <Text style={{ color: textColor }}>Profile Screen</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
->>>>>>> 865f4032a1f9d3ec46ab79bfb377e3beba6833e2

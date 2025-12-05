@@ -5,7 +5,7 @@ import { View, Image, StyleSheet } from 'react-native';
 export default function SplashScreen({ navigation }) {
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.replace('Login');
+      navigation.replace('Login'); //Main  // Login
     }, 3000);
 
     return () => clearTimeout(timer); // prevent memory leak
@@ -14,7 +14,7 @@ export default function SplashScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Image
-        source={require('../../assets/splash.png')} 
+        source={require('../../assets/splash.png')}
         style={styles.logo}
         resizeMode="contain" // keeps aspect ratio
       />
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: '60%',   // responsive width
-    height: '30%',  // responsive height
+    width: '60%', // responsive width
+    height: '30%', // responsive height
   },
 });
