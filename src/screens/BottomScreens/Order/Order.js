@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-// ...existing code...
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { useColor } from '../../../util/ColorSwitcher';
-
-export default function Order() {
-  const { bgColor, textColor } = useColor();
-  return (
-    <View style={[styles.container, { backgroundColor: bgColor }]}> 
-      <Text style={{ color: textColor }}>Order Screen</Text>
-=======
 import React, { useState } from 'react';
 import {
   View,
@@ -270,18 +258,11 @@ export default function MyOrdersScreen({ navigation }) {
           </View>
         </View>
       </Modal>
->>>>>>> cfaff0c6ffec6ab197e4517481802ceb038990cd
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-<<<<<<< HEAD
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-=======
   container: { 
     flex: 1,
     backgroundColor: '#FFFFFF'
@@ -289,11 +270,6 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-  scrollContent: {
-    paddingBottom: Platform.OS === 'ios' ? responsiveSize(100) : responsiveSize(90),
-  },
-
-  /* HEADER - Same as Cart screen */
   header: {
     height: Platform.OS === 'ios' ? responsiveSize(100) : responsiveSize(90),
     flexDirection: "row",
@@ -547,6 +523,5 @@ const styles = StyleSheet.create({
     fontSize: responsiveSize(14),
     fontWeight: "600",
     color: '#fff',
->>>>>>> cfaff0c6ffec6ab197e4517481802ceb038990cd
   },
 });

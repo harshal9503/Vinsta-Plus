@@ -221,7 +221,7 @@ export default function AllHome({ activeTab, setActiveTab }) {
 
   // Handle special offers see all press
   const handleSeeAllOffers = () => {
-    navigation.navigate('Offers');
+    navigation.navigate('OffersClone');
   };
 
   // Handle category item press - Navigate to Items screen with complete item data

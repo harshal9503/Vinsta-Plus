@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-// ...existing code...
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { useColor } from '../../../util/ColorSwitcher';
-
-export default function MyCart() {
-  const { bgColor, textColor } = useColor();
-  return (
-    <View style={[styles.container, { backgroundColor: bgColor }]}> 
-      <Text style={{ color: textColor }}>My Cart Screen</Text>
-=======
 // screens/MyCart.js
 import React, { useState } from "react";
 import {
@@ -298,20 +286,11 @@ export default function MyCart({ navigation }) {
 
         <View style={{ height: 40 }} />
       </ScrollView>
->>>>>>> cfaff0c6ffec6ab197e4517481802ceb038990cd
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-<<<<<<< HEAD
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
-=======
   container: { 
     flex: 1,
     backgroundColor: '#FFFFFF'
@@ -742,4 +721,3 @@ const styles = StyleSheet.create({
     fontWeight: "700" 
   },
 });
->>>>>>> cfaff0c6ffec6ab197e4517481802ceb038990cd

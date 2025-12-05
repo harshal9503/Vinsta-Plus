@@ -191,7 +191,7 @@ export default function ElectronicsHome({ activeTab, setActiveTab }) {
 
   // Handle special offers see all press
   const handleSeeAllOffers = () => {
-    navigation.navigate('Offers');
+    navigation.navigate('OffersClone');
   };
 
   // Handle personal device press

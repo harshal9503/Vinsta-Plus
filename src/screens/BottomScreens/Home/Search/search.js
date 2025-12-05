@@ -445,7 +445,7 @@ export default function Search({ navigation }) {
                               styles.addTxt, 
                               { color: isAdded ? '#fff' : bgColor }
                             ]}>
-                              {isAdded ? 'ADDED' : 'ADD'}
+                              {isAdded ? 'ADDED' : '+ ADD'}
                             </Text>
                           </TouchableOpacity>
                         </Animated.View>

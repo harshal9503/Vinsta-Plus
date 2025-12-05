@@ -1,36 +1,15 @@
-<<<<<<< HEAD
-// ...existing code...
-import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-=======
 // BottomNavigator.js
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { CurvedBottomBar } from 'react-native-curved-bottom-bar';
 import { useColor } from '../util/ColorSwitcher';
 
->>>>>>> cfaff0c6ffec6ab197e4517481802ceb038990cd
 import Home from '../screens/BottomScreens/Home/Home';
 import Offers from '../screens/BottomScreens/Offers/Offers';
 import MyCart from '../screens/BottomScreens/MyCart/MyCart';
 import Order from '../screens/BottomScreens/Order/Order';
 import Profile from '../screens/BottomScreens/Profile/Profile';
 
-<<<<<<< HEAD
-const Tab = createBottomTabNavigator();
-
-export default function BottomNavigator() {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} />
-      <Tab.Screen name="Offers" component={Offers} options={{ headerShown: false }} />
-      <Tab.Screen name="MyCart" component={MyCart} options={{ headerShown: false }} />
-      <Tab.Screen name="Order" component={Order} options={{ headerShown: false }} />
-      <Tab.Screen name="Profile" component={Profile} options={{ headerShown: false }} />
-    </Tab.Navigator>
-  );
-}
-=======
 export default function BottomNavigator() {
   const { bgColor } = useColor();
 
@@ -159,4 +138,3 @@ const styles = StyleSheet.create({
     marginTop: -30
   },
 });
->>>>>>> cfaff0c6ffec6ab197e4517481802ceb038990cd

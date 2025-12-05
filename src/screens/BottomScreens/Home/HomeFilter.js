@@ -15,12 +15,16 @@ import { useColor } from '../../../util/ColorSwitcher';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
 const { width } = Dimensions.get('window');
-const responsiveSize = (size) => (width / 375) * size;
+const responsiveSize = size => (width / 375) * size;
 
 // Category data specific for home screen
 const HOME_CATEGORIES = [
   { id: '1', title: 'Grocery', img: require('../../../assets/grocery.png') },
-  { id: '2', title: 'Electronics', img: require('../../../assets/electronics.png') },
+  {
+    id: '2',
+    title: 'Electronics',
+    img: require('../../../assets/electronics.png'),
+  },
   { id: '3', title: 'Health', img: require('../../../assets/health.png') },
   { id: '4', title: 'Food', img: require('../../../assets/fruit.png') },
   { id: '6', title: 'Home', img: require('../../../assets/store.png') },
@@ -38,40 +42,40 @@ export default function HomeFilter({ navigation }) {
     setSelectedCategories(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const handlePriceChange = (values) => {
+  const handlePriceChange = values => {
     setPriceRange(values);
   };
 
-  const handleDistanceChange = (values) => {
+  const handleDistanceChange = values => {
     setDistance(values);
   };
 
-  const formatCurrency = (amount) => {
+  const formatCurrency = amount => {
     return `₹${amount.toLocaleString('en-IN')}`;
   };
 
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={bgColor} barStyle="light-content" />
-      
+
       {/* HEADER */}
       <View style={[styles.header, { backgroundColor: bgColor }]}>
-        <TouchableOpacity 
-          onPress={() => navigation.goBack()} 
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
           style={[styles.iconBtn, { backgroundColor: '#FFFFFF' }]}
         >
-          <Image 
-            source={require('../../../assets/back.png')} 
-            style={[styles.icon, { tintColor: bgColor }]} 
+          <Image
+            source={require('../../../assets/back.png')}
+            style={[styles.icon, { tintColor: bgColor }]}
           />
         </TouchableOpacity>
 
         <Text style={styles.headerTitle}>Home Filters</Text>
-        
+
         <View style={{ width: responsiveSize(40) }} />
       </View>
 
-      <ScrollView 
+      <ScrollView
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
@@ -84,12 +88,20 @@ export default function HomeFilter({ navigation }) {
               key={cat.id}
               onPress={() => toggleCategory(cat.id)}
               style={[
-                styles.catBox, 
-                selectedCategories[cat.id] && [styles.catActive, { backgroundColor: bgColor }]
+                styles.catBox,
+                selectedCategories[cat.id] && [
+                  styles.catActive,
+                  { backgroundColor: bgColor },
+                ],
               ]}
             >
               <Image source={cat.img} style={styles.catImg} />
-              <Text style={[styles.catTxt, selectedCategories[cat.id] && { color: '#fff' }]}>
+              <Text
+                style={[
+                  styles.catTxt,
+                  selectedCategories[cat.id] && { color: '#fff' },
+                ]}
+              >
                 {cat.title}
               </Text>
             </TouchableOpacity>
@@ -97,19 +109,32 @@ export default function HomeFilter({ navigation }) {
         </View>
 
         {/* Sort By */}
-        <Text style={[styles.sectionTitle, { marginTop: responsiveSize(20) }]}>Sort by</Text>
+        <Text style={[styles.sectionTitle, { marginTop: responsiveSize(20) }]}>
+          Sort by
+        </Text>
 
         <View style={styles.sortRow}>
-          {['Popular', 'Free delivery', 'Nearest me', 'Rating high to low', 'Delivery time'].map(option => (
+          {[
+            'Popular',
+            'Free delivery',
+            'Nearest me',
+            'Rating high to low',
+            'Delivery time',
+          ].map(option => (
             <TouchableOpacity
               key={option}
               style={[
-                styles.sortBox, 
-                sortBy === option && [styles.sortActive, { backgroundColor: bgColor }]
+                styles.sortBox,
+                sortBy === option && [
+                  styles.sortActive,
+                  { backgroundColor: bgColor },
+                ],
               ]}
               onPress={() => setSortBy(option)}
             >
-              <Text style={[styles.sortTxt, sortBy === option && { color: '#fff' }]}>
+              <Text
+                style={[styles.sortTxt, sortBy === option && { color: '#fff' }]}
+              >
                 {option}
               </Text>
             </TouchableOpacity>
@@ -117,19 +142,26 @@ export default function HomeFilter({ navigation }) {
         </View>
 
         {/* Rating */}
-        <Text style={[styles.sectionTitle, { marginTop: responsiveSize(20) }]}>Minimum Rating</Text>
+        <Text style={[styles.sectionTitle, { marginTop: responsiveSize(20) }]}>
+          Minimum Rating
+        </Text>
 
         <View style={styles.ratingContainer}>
           {[5, 4, 3, 2, 1].map(num => (
             <TouchableOpacity
               key={num}
               style={[
-                styles.ratingBtn, 
-                rating === num && [styles.ratingActive, { backgroundColor: bgColor }]
+                styles.ratingBtn,
+                rating === num && [
+                  styles.ratingActive,
+                  { backgroundColor: bgColor },
+                ],
               ]}
               onPress={() => setRating(num)}
             >
-              <Text style={[styles.ratingTxt, rating === num && { color: '#fff' }]}>
+              <Text
+                style={[styles.ratingTxt, rating === num && { color: '#fff' }]}
+              >
                 {num} ★
               </Text>
             </TouchableOpacity>
@@ -137,14 +169,20 @@ export default function HomeFilter({ navigation }) {
         </View>
 
         {/* Price Range */}
-        <Text style={[styles.sectionTitle, { marginTop: responsiveSize(20) }]}>Price Range</Text>
-        
+        <Text style={[styles.sectionTitle, { marginTop: responsiveSize(20) }]}>
+          Price Range
+        </Text>
+
         <View style={styles.rangeContainer}>
           <View style={styles.rangeLabels}>
-            <Text style={styles.rangeLabel}>Min: {formatCurrency(priceRange[0])}</Text>
-            <Text style={styles.rangeLabel}>Max: {formatCurrency(priceRange[1])}</Text>
+            <Text style={styles.rangeLabel}>
+              Min: {formatCurrency(priceRange[0])}
+            </Text>
+            <Text style={styles.rangeLabel}>
+              Max: {formatCurrency(priceRange[1])}
+            </Text>
           </View>
-          
+
           <View style={styles.sliderContainer}>
             <MultiSlider
               values={[priceRange[0], priceRange[1]]}
@@ -159,10 +197,13 @@ export default function HomeFilter({ navigation }) {
               selectedStyle={{ backgroundColor: bgColor }}
               unselectedStyle={{ backgroundColor: '#E0E0E0' }}
               trackStyle={styles.trackStyle}
-              pressedMarkerStyle={[styles.pressedMarkerStyle, { backgroundColor: bgColor }]}
+              pressedMarkerStyle={[
+                styles.pressedMarkerStyle,
+                { backgroundColor: bgColor },
+              ]}
             />
           </View>
-          
+
           <View style={styles.rangeLimitLabels}>
             <Text style={styles.rangeLimitText}>{formatCurrency(100)}</Text>
             <Text style={styles.rangeLimitText}>{formatCurrency(10000)}</Text>
@@ -170,14 +211,16 @@ export default function HomeFilter({ navigation }) {
         </View>
 
         {/* Distance Range */}
-        <Text style={[styles.sectionTitle, { marginTop: responsiveSize(20) }]}>Distance (km)</Text>
-        
+        <Text style={[styles.sectionTitle, { marginTop: responsiveSize(20) }]}>
+          Distance (km)
+        </Text>
+
         <View style={styles.rangeContainer}>
           <View style={styles.rangeLabels}>
             <Text style={styles.rangeLabel}>Min: {distance[0]} km</Text>
             <Text style={styles.rangeLabel}>Max: {distance[1]} km</Text>
           </View>
-          
+
           <View style={styles.sliderContainer}>
             <MultiSlider
               values={[distance[0], distance[1]]}
@@ -192,10 +235,13 @@ export default function HomeFilter({ navigation }) {
               selectedStyle={{ backgroundColor: bgColor }}
               unselectedStyle={{ backgroundColor: '#E0E0E0' }}
               trackStyle={styles.trackStyle}
-              pressedMarkerStyle={[styles.pressedMarkerStyle, { backgroundColor: bgColor }]}
+              pressedMarkerStyle={[
+                styles.pressedMarkerStyle,
+                { backgroundColor: bgColor },
+              ]}
             />
           </View>
-          
+
           <View style={styles.rangeLimitLabels}>
             <Text style={styles.rangeLimitText}>0 km</Text>
             <Text style={styles.rangeLimitText}>20 km</Text>
@@ -203,7 +249,9 @@ export default function HomeFilter({ navigation }) {
         </View>
 
         {/* Additional Filters */}
-        <Text style={[styles.sectionTitle, { marginTop: responsiveSize(20) }]}>Additional Filters</Text>
+        <Text style={[styles.sectionTitle, { marginTop: responsiveSize(20) }]}>
+          Additional Filters
+        </Text>
 
         <View style={styles.additionalFilters}>
           {[
@@ -211,7 +259,7 @@ export default function HomeFilter({ navigation }) {
             'Open Now',
             'Offers Available',
             'Credit Card Accepted',
-            'Home Delivery'
+            'Home Delivery',
           ].map((filter, index) => (
             <TouchableOpacity
               key={filter}
@@ -253,9 +301,9 @@ export default function HomeFilter({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: '#fff' 
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
   },
 
   /* HEADER */
@@ -268,10 +316,10 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'ios' ? responsiveSize(50) : responsiveSize(30),
     paddingBottom: responsiveSize(0),
   },
-  headerTitle: { 
-    color: "#fff", 
-    fontSize: responsiveSize(20), 
-    fontWeight: "700",
+  headerTitle: {
+    color: '#fff',
+    fontSize: responsiveSize(20),
+    fontWeight: '700',
     textAlign: 'center',
     flex: 1,
     marginHorizontal: responsiveSize(10),
@@ -294,26 +342,26 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  icon: { 
-    width: responsiveSize(20), 
-    height: responsiveSize(20) 
+  icon: {
+    width: responsiveSize(20),
+    height: responsiveSize(20),
   },
 
-  content: { 
-    padding: responsiveSize(16) 
+  content: {
+    padding: responsiveSize(16),
   },
-  sectionTitle: { 
-    fontSize: responsiveSize(16), 
-    fontWeight: '700', 
+  sectionTitle: {
+    fontSize: responsiveSize(16),
+    fontWeight: '700',
     marginBottom: responsiveSize(10),
     color: '#000',
   },
 
   /* Categories */
-  catWrap: { 
-    flexDirection: 'row', 
-    flexWrap: 'wrap', 
-    gap: responsiveSize(10) 
+  catWrap: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: responsiveSize(10),
   },
   catBox: {
     flexDirection: 'row',
@@ -335,22 +383,22 @@ const styles = StyleSheet.create({
     }),
   },
   catActive: {},
-  catImg: { 
-    width: responsiveSize(28), 
-    height: responsiveSize(28), 
-    marginRight: responsiveSize(8) 
+  catImg: {
+    width: responsiveSize(28),
+    height: responsiveSize(28),
+    marginRight: responsiveSize(8),
   },
-  catTxt: { 
+  catTxt: {
     color: '#000',
     fontSize: responsiveSize(13),
     fontWeight: '500',
   },
 
   /* Sort By */
-  sortRow: { 
-    flexDirection: 'row', 
-    flexWrap: 'wrap', 
-    gap: responsiveSize(10) 
+  sortRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: responsiveSize(10),
   },
   sortBox: {
     paddingHorizontal: responsiveSize(12),
@@ -370,16 +418,16 @@ const styles = StyleSheet.create({
     }),
   },
   sortActive: {},
-  sortTxt: { 
+  sortTxt: {
     fontSize: responsiveSize(12),
     color: '#000',
     fontWeight: '500',
   },
 
   /* Rating */
-  ratingContainer: { 
-    flexDirection: 'row', 
-    flexWrap: 'wrap' 
+  ratingContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   ratingBtn: {
     paddingVertical: responsiveSize(12),
@@ -401,7 +449,7 @@ const styles = StyleSheet.create({
     }),
   },
   ratingActive: {},
-  ratingTxt: { 
+  ratingTxt: {
     fontWeight: '700',
     fontSize: responsiveSize(14),
     color: '#000',
@@ -501,9 +549,9 @@ const styles = StyleSheet.create({
   },
 
   /* Buttons */
-  buttonContainer: { 
-    flexDirection: 'row', 
-    marginTop: responsiveSize(30) 
+  buttonContainer: {
+    flexDirection: 'row',
+    marginTop: responsiveSize(30),
   },
   resetBtn: {
     flex: 1,
@@ -527,7 +575,7 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  resetTxt: { 
+  resetTxt: {
     fontWeight: '700',
     fontSize: responsiveSize(14),
     color: '#000',
@@ -550,8 +598,8 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  applyTxt: { 
-    fontWeight: '700', 
+  applyTxt: {
+    fontWeight: '700',
     color: '#fff',
     fontSize: responsiveSize(14),
   },
