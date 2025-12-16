@@ -42,9 +42,9 @@ const Profile = () => {
     },
     {
       id: 3,
-      icon: require('../../../assets/subscription.png'),
-      label: 'Subscriptions',
-      route: 'Subscription',
+      icon: require('../../../assets/settings.png'),
+      label: 'Settings',
+      route: 'Setting',
     },
     {
       id: 4,
@@ -60,7 +60,7 @@ const Profile = () => {
       id: 1,
       icon: require('../../../assets/blueprofile.png'),
       label: 'Profile',
-      route: 'ProfileEdit',
+      route: 'MyProfile',
     },
     {
       id: 2,
@@ -72,20 +72,20 @@ const Profile = () => {
       id: 3,
       icon: require('../../../assets/offers.png'),
       label: "My Offer's",
-      route: 'Offers',
+      route: 'MyOffer',
     },
     {
       id: 4,
       icon: require('../../../assets/refer.png'),
       label: 'Refer To Earn',
-      route: 'Refer',
+      route: 'Refertoearn',
     },
-    {
-      id: 5,
-      icon: require('../../../assets/dark.png'),
-      label: 'Dark Mode',
-      route: 'DarkMode',
-    },
+    // {
+    //   id: 5,
+    //   icon: require('../../../assets/dark.png'),
+    //   label: 'Dark Mode',
+    //   route: 'DarkMode',
+    // },
     {
       id: 6,
       icon: require('../../../assets/support.png'),
@@ -145,25 +145,26 @@ const Profile = () => {
           </View>
         </View>
 
-        {/* Top Options Grid (4 items in a row) */}
-        <View style={styles.topOptionsContainer}>
-          {topOptions.map(item => (
-            <TouchableOpacity
-              key={item.id}
-              style={styles.topOption}
-             onPress={() => handleNavigation('Address')}
-              activeOpacity={0.8}
-            >
-              <View style={styles.topIconContainer}>
-                <Image
-                  source={item.icon}
-                  style={[styles.topIcon, { tintColor: bgColor }]}
-                />
-              </View>
-              <Text style={styles.topLabel}>{item.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+       
+
+<View style={styles.topOptionsContainer}>
+  {topOptions.map(item => (
+    <TouchableOpacity
+      key={item.id}
+      style={styles.topOption}
+      onPress={() => handleNavigation(item.route)} // use route from array
+      activeOpacity={0.8}
+    >
+      <View style={styles.topIconContainer}>
+        <Image
+          source={item.icon}
+          style={[styles.topIcon, { tintColor: bgColor }]}
+        />
+      </View>
+      <Text style={styles.topLabel}>{item.label}</Text>
+    </TouchableOpacity>
+  ))}
+</View>
 
         {/* Bottom Options List */}
         <View style={styles.bottomSection}>

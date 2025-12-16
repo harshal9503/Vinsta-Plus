@@ -15,7 +15,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
+import { useColor } from '../../../util/ColorSwitcher';
 const { width } = Dimensions.get('window');
 const responsiveSize = size => (width / 375) * size;
 
@@ -66,12 +66,14 @@ const [addressType, setAddressType] = useState('Home');
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()}
+             style={styles.backBtn}>
           <Image
             source={require('../../../assets/back.png')}
             style={styles.backIcon}
           />
         </TouchableOpacity>
+
         <Text style={styles.headerTitle}>My Addresses</Text>
       </View>
 
@@ -146,11 +148,16 @@ const [addressType, setAddressType] = useState('Home');
       
       {/* Header */}
       <View style={styles.sheetHeader}>
-        <Text style={styles.sheetTitle}>Add New Address</Text>
-        <TouchableOpacity onPress={() => setIsDeleteModalVisible(false)}>
-          <Text style={styles.close}>✕</Text>
-        </TouchableOpacity>
-      </View>
+  <Text style={styles.sheetTitle}>Add New Address</Text>
+
+  <TouchableOpacity
+    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+    onPress={() => setIsAddModalVisible(false)}
+  >
+    <Text style={styles.close}>✕</Text>
+  </TouchableOpacity>
+</View>
+
 
       <ScrollView showsVerticalScrollIndicator={false}>
         
@@ -232,7 +239,9 @@ const styles = StyleSheet.create({
   flex: 1,
   backgroundColor: '#fff',
 },
-
+backBtn: {
+  zIndex: 10, // 👈 must
+},
 header: {
   flexDirection: 'row',
   alignItems: 'center',

@@ -34,7 +34,16 @@ import CancelOrder from '../screens/BottomScreens/Order/CancelOrder';
 
 // Profile
 import Address from '../screens/BottomScreens/Profile/Address';
-
+import MyOrder from '../screens/BottomScreens/Profile/Myorder';
+import Setting from '../screens/BottomScreens/Profile/Setting';
+import Wallet from '../screens/BottomScreens/Profile/Wallet';
+import MyProfile from '../screens/BottomScreens/Profile/MyProfile';
+import Favourite from '../screens/BottomScreens/Profile/Favourite';
+import MyOffer from '../screens/BottomScreens/Profile/MyOffer';
+import ReferToEarn from '../screens/BottomScreens/Profile/Refertoearn';
+import Support from '../screens/BottomScreens/Profile/Support';
+import Help from '../screens/BottomScreens/Profile/Help';
+import Settings from '../screens/BottomScreens/Profile/Settings';
 const Stack = createStackNavigator();
 
 export default function AppNavigator() {
@@ -68,6 +77,16 @@ export default function AppNavigator() {
 
         {/* PROFILE */}
         <Stack.Screen name="Address" component={Address} />
+        <Stack.Screen name="MyOrder" component={MyOrder} />
+        <Stack.Screen name="Setting" component={Setting} />
+        <Stack.Screen name="Wallet" component={Wallet} />
+        <Stack.Screen name="MyProfile" component={MyProfile} />
+        <Stack.Screen name="Favourite" component={Favourite} />
+        <Stack.Screen name="MyOffer" component={MyOffer} />
+        <Stack.Screen name="Refertoearn" component={ReferToEarn} />
+        <Stack.Screen name="Support" component={Support} />
+        <Stack.Screen name="Help" component={Help} />
+        <Stack.Screen name="Settings" component={Settings} />
       </Stack.Navigator>
     </NavigationContainer>
   );
