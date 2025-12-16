@@ -42,15 +42,15 @@ const Profile = () => {
     },
     {
       id: 3,
-      icon: require('../../../assets/subscription.png'),
-      label: 'Subscriptions',
-      route: 'Subscription',
-    },
-    {
-      id: 4,
       icon: require('../../../assets/wallet.png'),
       label: 'Wallet',
       route: 'Wallet',
+    },
+    {
+      id: 4,
+      icon: require('../../../assets/settings.png'),
+      label: 'Settings',
+      route: 'Setting',
     },
   ];
 
@@ -60,7 +60,7 @@ const Profile = () => {
       id: 1,
       icon: require('../../../assets/blueprofile.png'),
       label: 'Profile',
-      route: 'ProfileEdit',
+      route: 'MyProfile',
     },
     {
       id: 2,
@@ -72,20 +72,20 @@ const Profile = () => {
       id: 3,
       icon: require('../../../assets/offers.png'),
       label: "My Offer's",
-      route: 'Offers',
+      route: 'OffersClone',
     },
     {
       id: 4,
       icon: require('../../../assets/refer.png'),
       label: 'Refer To Earn',
-      route: 'Refer',
+      route: 'Refertoearn',
     },
-    {
-      id: 5,
-      icon: require('../../../assets/dark.png'),
-      label: 'Dark Mode',
-      route: 'DarkMode',
-    },
+    // {
+    //   id: 5,
+    //   icon: require('../../../assets/dark.png'),
+    //   label: 'Dark Mode',
+    //   route: 'DarkMode',
+    // },
     {
       id: 6,
       icon: require('../../../assets/support.png'),
@@ -145,13 +145,12 @@ const Profile = () => {
           </View>
         </View>
 
-        {/* Top Options Grid (4 items in a row) */}
         <View style={styles.topOptionsContainer}>
           {topOptions.map(item => (
             <TouchableOpacity
               key={item.id}
               style={styles.topOption}
-             onPress={() => handleNavigation('Address')}
+              onPress={() => handleNavigation(item.route)} // use route from array
               activeOpacity={0.8}
             >
               <View style={styles.topIconContainer}>
@@ -224,7 +223,7 @@ const Profile = () => {
           </TouchableOpacity>
 
           {/* Delete Account Option */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.optionRow}
             onPress={() =>
               openPopup('Are you sure you want to delete your account?', () =>
@@ -249,7 +248,7 @@ const Profile = () => {
                 Delete Account
               </Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         {/* Extra padding for bottom tab */}
