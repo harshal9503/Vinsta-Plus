@@ -13,12 +13,22 @@ import {
   StatusBar,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useColor } from '../../../util/ColorSwitcher';
 
 const { width, height } = Dimensions.get('window');
-const rs = v => (width / 375) * v;
+const rs = size => (width / 375) * size;
+
+// Platform detection
+const isIOS = Platform.OS === 'ios';
+
+// Responsive font scaling
+const fontScale = size => {
+  return isIOS ? size * 0.95 : size;
+};
 
 const Support = () => {
   const navigation = useNavigation();
+  const { bgColor, textColor } = useColor();
 
   const openEmail = () => {
     Linking.openURL('mailto:support@vinsta.com').catch(() =>
@@ -59,19 +69,19 @@ const Support = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      <StatusBar backgroundColor={bgColor} barStyle="light-content" />
 
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+      <View style={[styles.header, { backgroundColor: bgColor }]}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconBtn}>
           <Image
             source={require('../../../assets/back.png')}
-            style={styles.backIcon}
+            style={[styles.icon, { tintColor: bgColor }]}
           />
         </TouchableOpacity>
 
         <Text style={styles.headerTitle}>Support</Text>
-        <View style={{ width: rs(22) }} />
+        <View style={{ width: rs(40) }} />
       </View>
 
       <ScrollView
@@ -80,7 +90,7 @@ const Support = () => {
       >
         {/* Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Contact Options </Text>
+          <Text style={styles.sectionTitle}>Contact Options</Text>
 
           {/* Email */}
           <TouchableOpacity style={styles.contactItem} onPress={openEmail}>
@@ -99,7 +109,7 @@ const Support = () => {
 
             <Image
               source={require('../../../assets/right-arrow.png')}
-              style={styles.chevronIcon}
+              style={[styles.chevronIcon, { tintColor: '#8b8b8bff' }]}
             />
           </TouchableOpacity>
 
@@ -120,7 +130,7 @@ const Support = () => {
 
             <Image
               source={require('../../../assets/right-arrow.png')}
-              style={styles.chevronIcon}
+              style={[styles.chevronIcon, { tintColor: '#8b8b8bff' }]}
             />
           </TouchableOpacity>
 
@@ -141,7 +151,7 @@ const Support = () => {
 
             <Image
               source={require('../../../assets/right-arrow.png')}
-              style={styles.chevronIcon}
+              style={[styles.chevronIcon, { tintColor: '#8b8b8bff' }]}
             />
           </TouchableOpacity>
 
@@ -162,7 +172,7 @@ const Support = () => {
 
             <Image
               source={require('../../../assets/right-arrow.png')}
-              style={styles.chevronIcon}
+              style={[styles.chevronIcon, { tintColor: '#8b8b8bff' }]}
             />
           </TouchableOpacity>
         </View>
@@ -180,39 +190,59 @@ const Support = () => {
 };
 
 export default Support;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
 
+  /* Header */
   header: {
+    height: isIOS ? rs(100) : rs(90),
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: rs(18),
     justifyContent: 'space-between',
-    paddingTop: Platform.OS === 'ios' ? rs(55) : rs(45),
-    paddingBottom: rs(15),
-    paddingHorizontal: rs(20),
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    paddingTop: isIOS ? rs(50) : rs(30),
+    paddingBottom: rs(0),
   },
-
-  backIcon: {
-    width: rs(22),
-    height: rs(22),
-    resizeMode: 'contain',
-  },
-
   headerTitle: {
-    fontSize: rs(18),
-    fontFamily: 'Figtree-Bold',
-    color: '#000',
+    color: '#fff',
+    fontSize: fontScale(rs(20)),
     fontWeight: '700',
+    textAlign: 'center',
+    flex: 1,
+    marginHorizontal: rs(10),
+  },
+  iconBtn: {
+    width: rs(40),
+    height: rs(40),
+    borderRadius: rs(12),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  icon: {
+    width: rs(20),
+    height: rs(20),
   },
 
   scrollContent: {
-    paddingBottom: rs(50),
+    paddingBottom: isIOS ? rs(100) : rs(90),
     paddingHorizontal: rs(20),
+    paddingTop: rs(10),
   },
 
   section: {
@@ -220,13 +250,11 @@ const styles = StyleSheet.create({
   },
 
   sectionTitle: {
-    fontSize: rs(15),
+    fontSize: fontScale(rs(15)),
     fontWeight: '700',
-    fontFamily: 'Figtree-SemiBold',
     marginBottom: rs(15),
     marginLeft: rs(5),
     color: '#000',
-    
   },
 
   contactItem: {
@@ -236,7 +264,7 @@ const styles = StyleSheet.create({
     borderRadius: rs(12),
     padding: rs(16),
     marginBottom: rs(12),
-    backgroundColor: '#fff',
+    backgroundColor: '#F7F7F7',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -259,7 +287,6 @@ const styles = StyleSheet.create({
   contactIcon: {
     width: rs(24),
     height: rs(24),
-    resizeMode: 'contain',
     marginRight: rs(12),
   },
 
@@ -268,15 +295,13 @@ const styles = StyleSheet.create({
   },
 
   contactTitle: {
-    fontSize: rs(14),
-    fontFamily: 'Figtree-SemiBold',
+    fontSize: fontScale(rs(14)),
     color: '#000',
     fontWeight: '700',
   },
 
   contactDescription: {
-    fontSize: rs(12),
-    fontFamily: 'Figtree-Regular',
+    fontSize: fontScale(rs(12)),
     color: '#666',
     marginTop: rs(2),
   },
@@ -284,7 +309,6 @@ const styles = StyleSheet.create({
   chevronIcon: {
     width: rs(16),
     height: rs(16),
-    resizeMode: 'contain',
   },
 
   supportInfo: {
@@ -296,14 +320,12 @@ const styles = StyleSheet.create({
   },
 
   supportHours: {
-    fontSize: rs(13),
-    fontFamily: 'Figtree-Medium',
+    fontSize: fontScale(rs(13)),
     color: '#000',
   },
 
   responseTime: {
-    fontSize: rs(13),
-    fontFamily: 'Figtree-Medium',
+    fontSize: fontScale(rs(13)),
     color: '#000',
     marginTop: rs(6),
   },
