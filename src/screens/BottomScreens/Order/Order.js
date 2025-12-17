@@ -8,11 +8,11 @@ import {
   ScrollView,
   StatusBar,
   Dimensions,
-  Modal,
   Alert,
   Platform,
 } from 'react-native';
 import { useColor } from '../../../util/ColorSwitcher';
+import RatingModal from '../Order/RatingModal'; // Adjust the path as needed
 
 const { width, height } = Dimensions.get('window');
 
@@ -22,8 +22,10 @@ const responsiveSize = size => (width / 375) * size;
 export default function MyOrdersScreen({ navigation }) {
   const { bgColor, textColor } = useColor();
   const [activeTab, setActiveTab] = useState('Upcoming');
-  const [modalVisible, setModalVisible] = useState(false);
+  const [ratingModalVisible, setRatingModalVisible] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedStars, setSelectedStars] = useState(0);
+  const [reviewText, setReviewText] = useState('');
 
   const orderData = {
     past: [
@@ -94,28 +96,59 @@ export default function MyOrdersScreen({ navigation }) {
 
   const handleRatePress = order => {
     setSelectedOrder(order);
-    setModalVisible(true);
+    setSelectedStars(0);
+    setReviewText('');
+    setRatingModalVisible(true);
   };
 
-   const handleReorderPress = order => {
-     navigation.navigate('OrderDetail', { order });
-   
-   };
+  const handleReorderPress = order => {
+    navigation.navigate('OrderDetail', { order });
+  };
 
   const handleCardPress = order => {
     navigation.navigate('OrderDetail', { order });
   };
 
-  
-
-  const closeModal = () => {
-    setModalVisible(false);
-    setSelectedOrder(null);
+  const handleStarPress = star => {
+    setSelectedStars(star);
   };
 
-  const confirmRate = () => {
-    Alert.alert('Rated', `You rated order ${selectedOrder?.id}`);
-    closeModal();
+  const handleSubmitRating = () => {
+    if (selectedStars === 0) {
+      Alert.alert('Please select a rating', 'Tap on the stars to rate this order.');
+      return;
+    }
+
+    Alert.alert(
+      'Thank You!',
+      `You rated ${selectedOrder?.name} with ${selectedStars} star${selectedStars > 1 ? 's' : ''}.${reviewText ? '\n\nReview: ' + reviewText : ''}`,
+      [
+        {
+          text: 'OK',
+          onPress: () => {
+            // Here you would typically send the rating to your backend
+            console.log('Rating submitted:', {
+              orderId: selectedOrder?.id,
+              stars: selectedStars,
+              review: reviewText,
+            });
+            
+            // Reset and close
+            setRatingModalVisible(false);
+            setSelectedStars(0);
+            setReviewText('');
+            setSelectedOrder(null);
+          },
+        },
+      ]
+    );
+  };
+
+  const closeRatingModal = () => {
+    setRatingModalVisible(false);
+    setSelectedStars(0);
+    setReviewText('');
+    setSelectedOrder(null);
   };
 
   return (
@@ -180,6 +213,7 @@ export default function MyOrdersScreen({ navigation }) {
                 key={idx}
                 style={styles.orderCard}
                 onPress={() => handleCardPress(order)}
+                activeOpacity={0.7}
               >
                 <Image source={order.image} style={styles.productImage} />
                 <View style={styles.orderContent}>
@@ -199,17 +233,18 @@ export default function MyOrdersScreen({ navigation }) {
                     <TouchableOpacity
                       style={styles.rateButton}
                       onPress={() => handleRatePress(order)}
+                      activeOpacity={0.8}
                     >
                       <Text style={styles.rateText}>Rate</Text>
                     </TouchableOpacity>
-                   <TouchableOpacity
-  style={[
-    styles.reorderButton,
-    { backgroundColor: bgColor },
-  ]}
-  onPress={() => handleReorderPress(order)}
->
-
+                    <TouchableOpacity
+                      style={[
+                        styles.reorderButton,
+                        { backgroundColor: bgColor },
+                      ]}
+                      onPress={() => handleReorderPress(order)}
+                      activeOpacity={0.8}
+                    >
                       <Text style={styles.reorderText}>Re-Order</Text>
                     </TouchableOpacity>
                   </View>
@@ -221,6 +256,7 @@ export default function MyOrdersScreen({ navigation }) {
                 key={idx}
                 style={styles.orderCard}
                 onPress={() => handleCardPress(order)}
+                activeOpacity={0.7}
               >
                 <Image source={order.image} style={styles.productImage} />
                 <View style={styles.orderContent}>
@@ -250,6 +286,7 @@ export default function MyOrdersScreen({ navigation }) {
                       onPress={() =>
                         navigation.navigate('CancelOrder', { order })
                       }
+                      activeOpacity={0.8}
                     >
                       <Text style={styles.cancelText}>CANCEL</Text>
                     </TouchableOpacity>
@@ -259,6 +296,7 @@ export default function MyOrdersScreen({ navigation }) {
                       onPress={() =>
                         navigation.navigate('TrackOrder', { order })
                       }
+                      activeOpacity={0.8}
                     >
                       <Text style={styles.trackText}>TRACK ORDER</Text>
                     </TouchableOpacity>
@@ -271,40 +309,18 @@ export default function MyOrdersScreen({ navigation }) {
         <View style={{ height: responsiveSize(80) }} />
       </ScrollView>
 
-      {/* Rate Modal */}
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={closeModal}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Rate this order</Text>
-            <Text style={styles.modalOrderText}>
-              Order: {selectedOrder?.id}
-            </Text>
-            <Text style={styles.modalOrderText}>{selectedOrder?.name}</Text>
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={styles.modalCancelButton}
-                onPress={closeModal}
-              >
-                <Text style={styles.modalCancelText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.modalConfirmButton,
-                  { backgroundColor: bgColor },
-                ]}
-                onPress={confirmRate}
-              >
-                <Text style={styles.modalConfirmText}>Rate Now</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      {/* Rating Modal */}
+      <RatingModal
+        visible={ratingModalVisible}
+        onClose={closeRatingModal}
+        selectedStars={selectedStars}
+        onStarPress={handleStarPress}
+        reviewText={reviewText}
+        setReviewText={setReviewText}
+        onSubmit={handleSubmitRating}
+        bgColor={bgColor}
+        orderData={selectedOrder}
+      />
     </View>
   );
 }
@@ -504,71 +520,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '600',
     fontSize: responsiveSize(12),
-  },
-
-  /* MODAL STYLES */
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: responsiveSize(20),
-  },
-  modalContainer: {
-    width: '100%',
-    maxWidth: responsiveSize(300),
-    backgroundColor: '#fff',
-    borderRadius: responsiveSize(16),
-    padding: responsiveSize(20),
-    alignItems: 'center',
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-  },
-  modalTitle: {
-    fontSize: responsiveSize(18),
-    fontWeight: '700',
-    color: '#000',
-    marginBottom: responsiveSize(10),
-    textAlign: 'center',
-  },
-  modalOrderText: {
-    fontSize: responsiveSize(14),
-    color: '#666',
-    marginBottom: responsiveSize(8),
-    textAlign: 'center',
-  },
-  modalButtons: {
-    flexDirection: 'row',
-    gap: responsiveSize(12),
-    width: '100%',
-    marginTop: responsiveSize(15),
-  },
-  modalCancelButton: {
-    flex: 1,
-    backgroundColor: '#f8f8f8',
-    borderRadius: responsiveSize(8),
-    paddingVertical: responsiveSize(12),
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-  },
-  modalCancelText: {
-    fontSize: responsiveSize(14),
-    fontWeight: '600',
-    color: '#666',
-  },
-  modalConfirmButton: {
-    flex: 1,
-    borderRadius: responsiveSize(8),
-    paddingVertical: responsiveSize(12),
-    alignItems: 'center',
-  },
-  modalConfirmText: {
-    fontSize: responsiveSize(14),
-    fontWeight: '600',
-    color: '#fff',
   },
 });

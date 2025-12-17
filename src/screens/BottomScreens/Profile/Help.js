@@ -11,31 +11,44 @@ import {
   StatusBar,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useColor } from '../../../util/ColorSwitcher';
 
 const { width, height } = Dimensions.get('window');
-const rs = v => (width / 375) * v;
+const rs = size => (width / 375) * size;
+
+// Platform detection
+const isIOS = Platform.OS === 'ios';
+
+// Responsive font scaling
+const fontScale = size => {
+  return isIOS ? size * 0.95 : size;
+};
 
 const HelpScreen = () => {
   const navigation = useNavigation();
+  const { bgColor, textColor } = useColor();
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      <StatusBar backgroundColor={bgColor} barStyle="light-content" />
 
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+      <View style={[styles.header, { backgroundColor: bgColor }]}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconBtn}>
           <Image
             source={require('../../../assets/back.png')}
-            style={styles.backIcon}
+            style={[styles.icon, { tintColor: bgColor }]}
           />
         </TouchableOpacity>
 
         <Text style={styles.headerTitle}>Help</Text>
-        <View style={{ width: rs(22) }} />
+        <View style={{ width: rs(40) }} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        contentContainerStyle={styles.content} 
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.title}>Help & Support</Text>
 
         <Text style={styles.paragraph}>
@@ -60,51 +73,70 @@ const HelpScreen = () => {
 };
 
 export default HelpScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
 
-  content: {
-    padding: rs(20),
-  },
-
+  /* Header */
   header: {
+    height: isIOS ? rs(100) : rs(90),
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: rs(18),
     justifyContent: 'space-between',
-    paddingTop: Platform.OS === 'ios' ? rs(55) : rs(45),
-    paddingBottom: rs(15),
-    paddingHorizontal: rs(20),
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    paddingTop: isIOS ? rs(50) : rs(30),
+    paddingBottom: rs(0),
   },
-
-  backIcon: {
-    width: rs(22),
-    height: rs(22),
-    resizeMode: 'contain',
-  },
-
   headerTitle: {
-    fontSize: rs(18),
-    fontFamily: 'Figtree-Bold',
-    color: '#000',
-    fontWeight: 'bold',
+    color: '#fff',
+    fontSize: fontScale(rs(20)),
+    fontWeight: '700',
+    textAlign: 'center',
+    flex: 1,
+    marginHorizontal: rs(10),
+  },
+  iconBtn: {
+    width: rs(40),
+    height: rs(40),
+    borderRadius: rs(12),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  icon: {
+    width: rs(20),
+    height: rs(20),
+  },
+
+  content: {
+    padding: rs(20),
+    paddingBottom: isIOS ? rs(100) : rs(90),
+    paddingTop: rs(10),
   },
 
   title: {
-    fontSize: rs(22),
-    fontFamily: 'Figtree-Bold',
+    fontSize: fontScale(rs(22)),
     marginBottom: rs(15),
     color: '#000',
     fontWeight: 'bold',
   },
 
   paragraph: {
-    fontSize: rs(14),
-    fontFamily: 'Figtree-Regular',
+    fontSize: fontScale(rs(14)),
     marginBottom: rs(20),
     lineHeight: rs(22),
     color: '#444',
@@ -114,12 +146,22 @@ const styles = StyleSheet.create({
     padding: rs(16),
     borderRadius: rs(12),
     marginBottom: rs(12),
-    backgroundColor: '#f7f7f7',
+    backgroundColor: '#F7F7F7',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
 
   boxText: {
-    fontSize: rs(14),
-    fontFamily: 'Figtree-SemiBold',
+    fontSize: fontScale(rs(14)),
     color: '#171717ff',
     fontWeight: '700',
     marginLeft: rs(8),

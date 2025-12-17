@@ -10,14 +10,25 @@ import {
   StatusBar,
   Dimensions,
   Alert,
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useColor } from '../../../util/ColorSwitcher';
 
-const { width } = Dimensions.get('window');
-const rs = v => (width / 375) * v;
+const { width, height } = Dimensions.get('window');
+const rs = size => (width / 375) * size;
+
+// Platform detection
+const isIOS = Platform.OS === 'ios';
+
+// Responsive font scaling
+const fontScale = size => {
+  return isIOS ? size * 0.95 : size;
+};
 
 const MyProfile = () => {
   const navigation = useNavigation();
+  const { bgColor, textColor } = useColor();
 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -64,7 +75,7 @@ const MyProfile = () => {
               textAlignVertical: 'top',
             },
           ]}
-          blurOnSubmit={false}       // ✅ KEYBOARD FIX
+          blurOnSubmit={false}
           returnKeyType="done"
         />
 
@@ -79,25 +90,26 @@ const MyProfile = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar backgroundColor={bgColor} barStyle="light-content" />
 
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+      <View style={[styles.header, { backgroundColor: bgColor }]}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconBtn}>
           <Image
             source={require('../../../assets/back.png')}
-            style={styles.backIcon}
+            style={[styles.icon, { tintColor: bgColor }]}
           />
         </TouchableOpacity>
 
         <Text style={styles.headerTitle}>My Profile</Text>
 
-        <View style={{ width: rs(24) }} />
+        <View style={{ width: rs(40) }} />
       </View>
 
       <ScrollView
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
       >
         {/* Profile Image */}
         <View style={styles.profileWrapper}>
@@ -151,8 +163,8 @@ const MyProfile = () => {
             multiline
           />
 
-          <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
-            <Text style={styles.saveText}>Save</Text>
+          <TouchableOpacity style={[styles.saveBtn, { backgroundColor: bgColor }]} onPress={handleSave}>
+            <Text style={[styles.saveText, { color: textColor }]}>Save</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -161,30 +173,59 @@ const MyProfile = () => {
 };
 
 export default MyProfile;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
 
+  scrollContent: {
+    paddingBottom: isIOS ? rs(100) : rs(90),
+    paddingHorizontal: rs(20),
+    paddingTop: rs(10),
+  },
+
+  /* Header */
   header: {
+    height: isIOS ? rs(100) : rs(90),
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: rs(18),
     justifyContent: 'space-between',
-    paddingHorizontal: rs(20),
-    paddingTop: rs(45),
-    paddingBottom: rs(10),
+    paddingTop: isIOS ? rs(50) : rs(30),
+    paddingBottom: rs(0),
   },
-
-  backIcon: {
-    width: rs(22),
-    height: rs(22),
-  },
-
   headerTitle: {
-    fontSize: rs(18),
-    fontWeight: '600',
-    color: '#000',
+    color: '#fff',
+    fontSize: fontScale(rs(20)),
+    fontWeight: '700',
+    textAlign: 'center',
+    flex: 1,
+    marginHorizontal: rs(10),
+  },
+  iconBtn: {
+    width: rs(40),
+    height: rs(40),
+    borderRadius: rs(12),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  icon: {
+    width: rs(20),
+    height: rs(20),
   },
 
   profileWrapper: {
@@ -201,6 +242,17 @@ const styles = StyleSheet.create({
     borderColor: '#F2A365',
     alignItems: 'center',
     justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
 
   profileImage: {
@@ -222,12 +274,10 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
 
-  form: {
-    paddingHorizontal: rs(20),
-  },
+  form: {},
 
   label: {
-    fontSize: rs(14),
+    fontSize: fontScale(rs(14)),
     fontWeight: '500',
     marginBottom: rs(6),
     marginTop: rs(10),
@@ -243,7 +293,7 @@ const styles = StyleSheet.create({
 
   input: {
     flex: 1,
-    fontSize: rs(14),
+    fontSize: fontScale(rs(14)),
     paddingVertical: rs(12),
     color: '#000',
   },
@@ -255,7 +305,6 @@ const styles = StyleSheet.create({
   },
 
   saveBtn: {
-    backgroundColor: '#15305F',
     height: rs(50),
     borderRadius: rs(12),
     alignItems: 'center',
@@ -265,8 +314,7 @@ const styles = StyleSheet.create({
   },
 
   saveText: {
-    color: '#fff',
-    fontSize: rs(16),
+    fontSize: fontScale(rs(16)),
     fontWeight: '600',
   },
 });

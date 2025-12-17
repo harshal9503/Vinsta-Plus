@@ -56,7 +56,7 @@ const TrackOrder = () => {
   };
 
   const handleMessage = () => {
-    navigation.navigate('chat');
+    navigation.navigate('Chat');
   };
 
   return (

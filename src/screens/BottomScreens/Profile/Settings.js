@@ -5,13 +5,29 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  ScrollView,
   Dimensions,
   StatusBar,
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useColor } from '../../../util/ColorSwitcher';
 
 const { width, height } = Dimensions.get('window');
 const rs = size => (width / 375) * size;
+
+// Platform detection
+const isIOS = Platform.OS === 'ios';
+
+// Responsive font scaling
+const fontScale = size => {
+  return isIOS ? size * 0.95 : size;
+};
+
+// Scale size for dimensions
+const scaleSize = size => {
+  return isIOS ? size * 1.02 : size;
+};
 
 const settingsData = [
   { id: 1, title: 'Account Setting', icon: require('../../../assets/ac.png') },
@@ -25,46 +41,54 @@ const settingsData = [
 
 const Settings = () => {
   const navigation = useNavigation();
+  const { bgColor, textColor } = useColor();
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      <StatusBar backgroundColor={bgColor} barStyle="light-content" />
 
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+      <View style={[styles.header, { backgroundColor: bgColor }]}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconBtn}>
           <Image
             source={require('../../../assets/back.png')}
-            style={styles.backIcon}
+            style={[styles.icon, { tintColor: bgColor }]}
           />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Setting's</Text>
-        <View style={{ width: 24 }} />
+        <Text style={styles.headerTitle}>Settings</Text>
+        <View style={{ width: rs(40) }} />
       </View>
 
-      {/* List */}
-      {settingsData.map(item => (
-        <TouchableOpacity key={item.id} style={styles.row}>
-          <View style={styles.rowLeft}>
-            <Image source={item.icon} style={styles.rowIcon} />
-            <Text style={styles.rowText}>{item.title}</Text>
-          </View>
+      <ScrollView 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {/* Settings List */}
+        {settingsData.map(item => (
+          <TouchableOpacity key={item.id} style={styles.row}>
+            <View style={styles.rowLeft}>
+              <Image source={item.icon} style={styles.rowIcon} />
+              <Text style={styles.rowText}>{item.title}</Text>
+            </View>
+            <Image
+              source={require('../../../assets/arrow-right.png')}
+              style={styles.arrow}
+            />
+          </TouchableOpacity>
+        ))}
 
+        {/* Delete Account */}
+        <TouchableOpacity style={styles.deleteAccountRow}>
           <Image
-            source={require('../../../assets/arrow-right.png')}
-            style={styles.arrow}
+            source={require('../../../assets/delete.png')}
+            style={[styles.rowIcon, { tintColor: '#d32f2f' }]}
           />
+          <Text style={styles.deleteAccountText}>Delete Account</Text>
         </TouchableOpacity>
-      ))}
 
-      {/* Logout */}
-      <TouchableOpacity style={styles.logoutRow}>
-        <Image
-          source={require('../../../assets/logout.png')}
-          style={[styles.rowIcon, { tintColor: '#d32f2f' }]}
-        />
-        <Text style={styles.logoutText}>Log out</Text>
-      </TouchableOpacity>
+        {/* Extra padding for bottom tab */}
+        <View style={{ height: rs(80) }} />
+      </ScrollView>
     </View>
   );
 };
@@ -77,35 +101,75 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 
-  /* Header */
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: height * 0.06,
-    paddingBottom: rs(15),
+  scrollContent: {
+    paddingBottom: isIOS ? rs(100) : rs(90),
     paddingHorizontal: rs(16),
-  },
-  backIcon: {
-    width: rs(22),
-    height: rs(22),
-    tintColor: '#000',
-  },
-  headerTitle: {
-    fontSize: rs(20),
-    fontWeight: '600',
-    color: '#000',
+    paddingTop: rs(10),
   },
 
-  /* Rows */
+  /* Header - Address Screen Style */
+  header: {
+    height: isIOS ? rs(100) : rs(90),
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: rs(18),
+    justifyContent: 'space-between',
+    paddingTop: isIOS ? rs(50) : rs(30),
+    paddingBottom: rs(0),
+  },
+  headerTitle: {
+    color: '#fff',
+    fontSize: fontScale(rs(20)),
+    fontWeight: '700',
+    textAlign: 'center',
+    flex: 1,
+    marginHorizontal: rs(10),
+  },
+  iconBtn: {
+    width: rs(40),
+    height: rs(40),
+    borderRadius: rs(12),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  icon: {
+    width: rs(20),
+    height: rs(20),
+  },
+
+  /* Settings Rows - Card Style */
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: rs(14),
     paddingHorizontal: rs(16),
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    backgroundColor: '#F7F7F7',
+    marginBottom: rs(12),
+    borderRadius: rs(14),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   rowLeft: {
     flexDirection: 'row',
@@ -118,8 +182,9 @@ const styles = StyleSheet.create({
     marginRight: rs(14),
   },
   rowText: {
-    fontSize: rs(15),
+    fontSize: fontScale(rs(15)),
     color: '#000',
+    fontWeight: '500',
   },
   arrow: {
     width: rs(20),
@@ -127,17 +192,29 @@ const styles = StyleSheet.create({
     tintColor: '#8b8b8bff',
   },
 
-  /* Logout */
-  logoutRow: {
+  /* Delete Account Row */
+  deleteAccountRow: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: rs(16),
     paddingHorizontal: rs(16),
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
+    backgroundColor: '#FFE6E6',
+    borderRadius: rs(14),
+    marginBottom: rs(12),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
-  logoutText: {
-    fontSize: rs(15),
+  deleteAccountText: {
+    fontSize: fontScale(rs(15)),
     color: '#d32f2f',
     marginLeft: rs(14),
     fontWeight: '500',

@@ -12,263 +12,193 @@ import {
   Alert,
   Platform,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useColor } from '../../../util/ColorSwitcher';
 
 const { width, height } = Dimensions.get('window');
+const rs = size => (width / 375) * size;
 
-// Responsive sizing
-const responsiveSize = size => (width / 375) * size;
+// Platform detection
+const isIOS = Platform.OS === 'ios';
 
-export default function MyOrdersScreen({ navigation }) {
+// Responsive font scaling
+const fontScale = size => {
+  return isIOS ? size * 0.95 : size;
+};
+
+export default function FavouritesScreen({ navigation }) {
+  const useNav = useNavigation();
   const { bgColor, textColor } = useColor();
-  const [activeTab, setActiveTab] = useState('Upcoming');
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
 
-  const orderData = {
-    past: [
-      {
-        id: '#265896',
-        name: 'I Phone 17 Plus',
-        price: '₹ 50000.00',
-        soldBy: 'Grocery Store',
-        status: 'Delivered',
-        image: require('../../../assets/mobile2.png'),
-      },
-      {
-        id: '#265897',
-        name: 'I Phone 17 Plus',
-        price: '₹ 50000.00',
-        soldBy: 'Grocery Store',
-        status: 'Delivered',
-        image: require('../../../assets/mobile2.png'),
-      },
-      {
-        id: '#265898',
-        name: 'I Phone 17 Plus',
-        price: '₹ 50000.00',
-        soldBy: 'Grocery Store',
-        status: 'Delivered',
-        image: require('../../../assets/mobile2.png'),
-      },
-    ],
-    upcoming: [
-      {
-        id: '#265899',
-        name: 'I Phone 17 Plus',
-        price: '₹ 50000.00',
-        soldBy: 'Grocery Store',
-        status: 'On the way',
-        arrival: '25 min',
-        image: require('../../../assets/mobile2.png'),
-      },
-      {
-        id: '#265900',
-        name: 'I Phone 17 Plus',
-        price: '₹ 50000.00',
-        soldBy: 'Grocery Store',
-        status: 'On the way',
-        arrival: '25 min',
-        image: require('../../../assets/mobile2.png'),
-      },
-      {
-        id: '#265901',
-        name: 'I Phone 17 Plus',
-        price: '₹ 50000.00',
-        soldBy: 'Grocery Store',
-        status: 'On the way',
-        arrival: '25 min',
-        image: require('../../../assets/mobile2.png'),
-      },
-      {
-        id: '#265902',
-        name: 'I Phone 17 Plus',
-        price: '₹ 50000.00',
-        soldBy: 'Grocery Store',
-        status: 'On the way',
-        arrival: '25 min',
-        image: require('../../../assets/mobile2.png'),
-      },
-    ],
+  const favouritesData = [
+    {
+      id: '1',
+      name: 'iPhone 17 Pro Max',
+      price: '₹89,999',
+      originalPrice: '₹99,999',
+      image: require('../../../assets/mobile2.png'),
+      brand: 'Apple',
+      discount: '10%',
+    },
+    {
+      id: '2',
+      name: 'Samsung Galaxy S25 Ultra',
+      price: '₹1,24,999',
+      originalPrice: '₹1,34,999',
+      image: require('../../../assets/mobile2.png'),
+      brand: 'Samsung',
+      discount: '8%',
+    },
+    {
+      id: '3',
+      name: 'OnePlus 13 Pro',
+      price: '₹69,999',
+      originalPrice: '₹79,999',
+      image: require('../../../assets/mobile2.png'),
+      brand: 'OnePlus',
+      discount: '12%',
+    },
+    {
+      id: '4',
+      name: 'Google Pixel 10 Pro',
+      price: '₹79,999',
+      originalPrice: '₹89,999',
+      image: require('../../../assets/mobile2.png'),
+      brand: 'Google',
+      discount: '11%',
+    },
+    {
+      id: '5',
+      name: 'iPhone 17 Plus',
+      price: '₹79,999',
+      originalPrice: '₹89,999',
+      image: require('../../../assets/mobile2.png'),
+      brand: 'Apple',
+      discount: '10%',
+    },
+  ];
+
+  const handleAddToCart = (item) => {
+    Alert.alert('Added to Cart', `${item.name} added to your cart!`);
   };
 
-  const handleRatePress = order => {
-    setSelectedOrder(order);
-    setModalVisible(true);
+  const handleRemoveFromFavourites = (item) => {
+    setSelectedItem(item);
+    setShowRemoveModal(true);
   };
 
-   const handleReorderPress = order => {
-     navigation.navigate('OrderDetail', { order });
-   
-   };
-
-  const handleCardPress = order => {
-    navigation.navigate('OrderDetail', { order });
+  const confirmRemove = () => {
+    Alert.alert('Removed', `${selectedItem?.name} removed from favourites`);
+    setShowRemoveModal(false);
+    setSelectedItem(null);
   };
-
-  
 
   const closeModal = () => {
-    setModalVisible(false);
-    setSelectedOrder(null);
+    setShowRemoveModal(false);
+    setSelectedItem(null);
   };
 
-  const confirmRate = () => {
-    Alert.alert('Rated', `You rated order ${selectedOrder?.id}`);
-    closeModal();
+  const handleItemPress = (item) => {
+    navigation.navigate('ProductDetail', { product: item });
   };
 
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={bgColor} barStyle="light-content" />
 
-      {/* Header - Same as Cart screen */}
+      {/* Header */}
       <View style={[styles.header, { backgroundColor: bgColor }]}>
-        <Text style={styles.headerTitle}>Favourite's</Text>
-      </View>
+        <TouchableOpacity onPress={() => useNav.goBack()} style={styles.iconBtn}>
+          <Image
+            source={require('../../../assets/back.png')}
+            style={[styles.icon, { tintColor: bgColor }]}
+          />
+        </TouchableOpacity>
 
-      {/* Tab Switcher */}
-      <View style={styles.tabsContainer}>
-        <TouchableOpacity
-          style={[
-            styles.tabButton,
-            activeTab === 'Upcoming' && [
-              styles.tabActive,
-              { backgroundColor: bgColor },
-            ],
-          ]}
-          onPress={() => setActiveTab('Upcoming')}
-        >
-          <Text
-            style={[
-              styles.tabText,
-              activeTab === 'Upcoming' && styles.tabTextActive,
-            ]}
-          >
-            Upcoming Order
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.tabButton,
-            activeTab === 'Past' && [
-              styles.tabActive,
-              { backgroundColor: bgColor },
-            ],
-          ]}
-          onPress={() => setActiveTab('Past')}
-        >
-          <Text
-            style={[
-              styles.tabText,
-              activeTab === 'Past' && styles.tabTextActive,
-            ]}
-          >
-            Past Orders
-          </Text>
-        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Favourites</Text>
+        <View style={{ width: rs(40) }} />
       </View>
 
       <ScrollView
-        style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {activeTab === 'Past'
-          ? orderData.past.map((order, idx) => (
-              <TouchableOpacity
-                key={idx}
-                style={styles.orderCard}
-                onPress={() => handleCardPress(order)}
-              >
-                <Image source={order.image} style={styles.productImage} />
-                <View style={styles.orderContent}>
-                  <Text style={[styles.orderId, { color: bgColor }]}>
-                    {order.id}
-                  </Text>
-                  <Text style={styles.productName}>{order.name}</Text>
-                  <Text style={[styles.productPrice, { color: bgColor }]}>
-                    {order.price}
-                  </Text>
-                  <Text style={styles.soldBy}>
-                    Sold By :{' '}
-                    <Text style={styles.soldByText}>{order.soldBy}</Text>
-                    <Text style={styles.deliveredStatus}> • Delivered</Text>
-                  </Text>
-                 
-                  </View>
+        {favouritesData.map((item, idx) => (
+          <TouchableOpacity
+            key={idx}
+            style={styles.favouriteCard}
+            onPress={() => handleItemPress(item)}
+            activeOpacity={0.8}
+          >
+            <Image source={item.image} style={styles.productImage} />
+            
+            <View style={styles.productInfo}>
+              <Text style={[styles.brandName, { color: bgColor }]}>
+                {item.brand}
+              </Text>
+              
+              <Text style={styles.productName} numberOfLines={2}>
+                {item.name}
+              </Text>
+              
+              <View style={styles.priceContainer}>
+                <Text style={styles.currentPrice}>{item.price}</Text>
+                <Text style={styles.originalPrice}>{item.originalPrice}</Text>
                
-              </TouchableOpacity>
-            ))
-          : orderData.upcoming.map((order, idx) => (
-              <TouchableOpacity
-                key={idx}
-                style={styles.orderCard}
-                onPress={() => handleCardPress(order)}
-              >
-                <Image source={order.image} style={styles.productImage} />
-                <View style={styles.orderContent}>
-                  <Text style={[styles.orderId, { color: bgColor }]}>
-                    {order.id}
-                  </Text>
-                  <Text style={[styles.productNameLink, { color: bgColor }]}>
-                    {order.name}
-                  </Text>
-                  <Text style={[styles.productPrice, { color: bgColor }]}>
-                    {order.price}
-                  </Text>
-                  <Text style={styles.soldBy}>
-                    Sold By :{' '}
-                    <Text style={styles.soldByText}>{order.soldBy}</Text>
-                  </Text>
-                  <View style={styles.arrivalRow}>
-                    <Text style={styles.estimateLabel}>Estimate Arrival</Text>
-                    <Text style={styles.estimateTime}>{order.arrival}</Text>
-                    <Text style={[styles.orderStatus, { color: bgColor }]}>
-                      {order.status}
-                    </Text>
-                  </View>
-                  <View style={styles.buttonsRow}>
-                    <TouchableOpacity
-                      style={styles.cancelButton}
-                      onPress={() =>
-                        navigation.navigate('CancelOrder', { order })
-                      }
-                    >
-                      <Text style={styles.cancelText}>CANCEL</Text>
-                    </TouchableOpacity>
+              </View>
+            </View>
 
-                    <TouchableOpacity
-                      style={[styles.trackButton, { backgroundColor: bgColor }]}
-                      onPress={() =>
-                        navigation.navigate('TrackOrder', { order })
-                      }
-                    >
-                      <Text style={styles.trackText}>TRACK ORDER</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
+            <View style={styles.actionButtons}>
+              <TouchableOpacity
+                style={[styles.addToCartBtn, { backgroundColor: bgColor }]}
+                onPress={(e) => {
+                  e.stopPropagation();
+                  handleAddToCart(item);
+                }}
+              >
+                <Text style={styles.addToCartText}>ADD</Text>
               </TouchableOpacity>
-            ))}
+
+              <TouchableOpacity
+                style={styles.removeBtn}
+                onPress={(e) => {
+                  e.stopPropagation();
+                  handleRemoveFromFavourites(item);
+                }}
+              >
+                <Image
+                  source={require('../../../assets/delete.png')}
+                  style={styles.deleteIcon}
+                />
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        ))}
 
         {/* Extra padding for bottom tab */}
-        <View style={{ height: responsiveSize(80) }} />
+        <View style={{ height: isIOS ? rs(100) : rs(90) }} />
       </ScrollView>
 
-      {/* Rate Modal */}
+      {/* Remove Confirmation Modal */}
       <Modal
         animationType="fade"
         transparent={true}
-        visible={modalVisible}
+        visible={showRemoveModal}
         onRequestClose={closeModal}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Rate this order</Text>
-            <Text style={styles.modalOrderText}>
-              Order: {selectedOrder?.id}
+            <Image
+              source={require('../../../assets/delete.png')}
+              style={styles.modalIcon}
+            />
+            <Text style={styles.modalTitle}>Remove from Favourites?</Text>
+            <Text style={styles.modalMessage}>
+              {selectedItem?.name} will be removed from your favourites list
             </Text>
-            <Text style={styles.modalOrderText}>{selectedOrder?.name}</Text>
+            
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={styles.modalCancelButton}
@@ -277,13 +207,10 @@ export default function MyOrdersScreen({ navigation }) {
                 <Text style={styles.modalCancelText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[
-                  styles.modalConfirmButton,
-                  { backgroundColor: bgColor },
-                ]}
-                onPress={confirmRate}
+                style={[styles.modalConfirmButton, { backgroundColor: '#d32f2f' }]}
+                onPress={confirmRemove}
               >
-                <Text style={styles.modalConfirmText}>Rate Now</Text>
+                <Text style={styles.modalConfirmText}>Remove</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -298,196 +225,156 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
-  scrollView: {
-    flex: 1,
-  },
+
+  /* Header */
   header: {
-    height: Platform.OS === 'ios' ? responsiveSize(100) : responsiveSize(90),
+    height: isIOS ? rs(100) : rs(90),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: responsiveSize(18),
+    paddingHorizontal: rs(18),
     justifyContent: 'space-between',
-    paddingTop: Platform.OS === 'ios' ? responsiveSize(50) : responsiveSize(30),
-    paddingBottom: responsiveSize(0),
+    paddingTop: isIOS ? rs(50) : rs(30),
+    paddingBottom: rs(0),
   },
   headerTitle: {
     color: '#fff',
-    fontSize: responsiveSize(20),
+    fontSize: fontScale(rs(20)),
     fontWeight: '700',
     textAlign: 'center',
     flex: 1,
-    marginHorizontal: responsiveSize(10),
+    marginHorizontal: rs(10),
   },
-
-  /* TAB SWITCHER */
-  tabsContainer: {
-    flexDirection: 'row',
-    marginHorizontal: responsiveSize(15),
-    marginTop: responsiveSize(15),
-    backgroundColor: '#F3F6FB',
-    borderRadius: responsiveSize(12),
-    overflow: 'hidden',
-    minHeight: responsiveSize(50),
-  },
-  tabButton: {
-    flex: 1,
-    paddingVertical: responsiveSize(15),
-    alignItems: 'center',
+  iconBtn: {
+    width: rs(40),
+    height: rs(40),
+    borderRadius: rs(12),
     justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
-  tabActive: {
-    // Background color handled inline with bgColor
-  },
-  tabText: {
-    fontSize: responsiveSize(14),
-    color: '#222',
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  tabTextActive: {
-    color: '#fff',
+  icon: {
+    width: rs(20),
+    height: rs(20),
   },
 
-  /* ORDER CARDS */
-  orderCard: {
+  scrollContent: {
+    paddingHorizontal: rs(15),
+    paddingBottom: isIOS ? rs(100) : rs(90),
+    paddingTop: rs(10),
+  },
+
+  /* FAVOURITES CARDS */
+  favouriteCard: {
     flexDirection: 'row',
     backgroundColor: '#fff',
-    marginHorizontal: responsiveSize(15),
-    marginVertical: responsiveSize(8),
-    borderRadius: responsiveSize(16),
-    padding: responsiveSize(15),
+    marginVertical: rs(8),
+    borderRadius: rs(16),
+    padding: rs(15),
     borderWidth: 1,
     borderColor: '#e0e0e0',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   productImage: {
-    width: responsiveSize(70),
-    height: responsiveSize(70),
-    borderRadius: responsiveSize(8),
+    width: rs(80),
+    height: rs(80),
+    borderRadius: rs(10),
+    marginRight: rs(12),
   },
-  orderContent: {
+  productInfo: {
     flex: 1,
-    marginLeft: responsiveSize(12),
     justifyContent: 'space-between',
   },
-  orderId: {
-    fontSize: responsiveSize(12),
+  brandName: {
+    fontSize: fontScale(rs(12)),
     fontWeight: '600',
-    marginBottom: responsiveSize(4),
+    marginBottom: rs(4),
   },
   productName: {
-    fontSize: responsiveSize(16),
+    fontSize: fontScale(rs(16)),
     fontWeight: '700',
     color: '#000',
-    marginBottom: responsiveSize(2),
+    lineHeight: rs(22),
+    marginBottom: rs(8),
   },
-  productNameLink: {
-    fontSize: responsiveSize(16),
-    fontWeight: '700',
-    marginBottom: responsiveSize(2),
-    textDecorationLine: 'underline',
-  },
-  productPrice: {
-    fontSize: responsiveSize(16),
-    fontWeight: '700',
-    marginBottom: responsiveSize(4),
-  },
-  soldBy: {
-    fontSize: responsiveSize(12),
-    color: '#666',
-    marginBottom: responsiveSize(8),
-  },
-  soldByText: {
-    color: '#666',
-  },
-  deliveredStatus: {
-    color: '#34A853',
-    fontWeight: '600',
-    fontSize: responsiveSize(12),
-  },
-  arrivalRow: {
+  priceContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: responsiveSize(12),
-    flexWrap: 'wrap',
   },
-  estimateLabel: {
-    fontSize: responsiveSize(12),
-    color: '#666',
-  },
-  estimateTime: {
-    fontSize: responsiveSize(14),
-    color: '#000',
-    marginLeft: responsiveSize(4),
-    fontWeight: '600',
-  },
-  orderStatus: {
-    fontSize: responsiveSize(12),
+  currentPrice: {
+    fontSize: fontScale(rs(16)),
     fontWeight: '700',
-    marginLeft: responsiveSize(12),
-  },
-  buttonsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: responsiveSize(10),
-  },
-  rateButton: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: responsiveSize(8),
-    paddingHorizontal: responsiveSize(16),
-    paddingVertical: responsiveSize(10),
-    flex: 1,
-    alignItems: 'center',
-  },
-  rateText: {
     color: '#000',
-    fontWeight: '600',
-    fontSize: responsiveSize(13),
+    marginRight: rs(8),
   },
-  reorderButton: {
-    borderRadius: responsiveSize(8),
-    paddingHorizontal: responsiveSize(16),
-    paddingVertical: responsiveSize(10),
-    flex: 1,
-    alignItems: 'center',
+  originalPrice: {
+    fontSize: fontScale(rs(14)),
+    color: '#999',
+    textDecorationLine: 'line-through',
+    marginRight: rs(8),
   },
-  reorderText: {
+  discountBadge: {
+    backgroundColor: '#4CAF50',
+    paddingHorizontal: rs(8),
+    paddingVertical: rs(4),
+    borderRadius: rs(6),
+  },
+  discountText: {
+    fontSize: fontScale(rs(10)),
     color: '#fff',
     fontWeight: '600',
-    fontSize: responsiveSize(13),
   },
-  cancelButton: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: responsiveSize(8),
-    paddingHorizontal: responsiveSize(12),
-    paddingVertical: responsiveSize(10),
-    flex: 1,
+  actionButtons: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    paddingLeft: rs(10),
+  },
+  addToCartBtn: {
+    borderRadius: rs(8),
+    paddingVertical: rs(10),
+    paddingHorizontal: rs(16),
+    marginBottom: rs(8),
     alignItems: 'center',
+    minWidth: rs(60),
   },
-  cancelText: {
-    color: '#000',
-    fontWeight: '600',
-    fontSize: responsiveSize(12),
-  },
-  trackButton: {
-    borderRadius: responsiveSize(8),
-    paddingHorizontal: responsiveSize(12),
-    paddingVertical: responsiveSize(10),
-    flex: 1,
-    alignItems: 'center',
-  },
-  trackText: {
+  addToCartText: {
     color: '#fff',
+    fontSize: fontScale(rs(12)),
     fontWeight: '600',
-    fontSize: responsiveSize(12),
+  },
+  removeBtn: {
+    width: rs(36),
+    height: rs(36),
+    borderRadius: rs(18),
+    backgroundColor: '#ffebee',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  deleteIcon: {
+    width: rs(18),
+    height: rs(18),
+    tintColor: '#d32f2f',
   },
 
   /* MODAL STYLES */
@@ -496,62 +383,74 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: responsiveSize(20),
+    padding: rs(20),
   },
   modalContainer: {
     width: '100%',
-    maxWidth: responsiveSize(300),
+    maxWidth: rs(320),
     backgroundColor: '#fff',
-    borderRadius: responsiveSize(16),
-    padding: responsiveSize(20),
+    borderRadius: rs(16),
+    padding: rs(24),
     alignItems: 'center',
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
+  },
+  modalIcon: {
+    width: rs(48),
+    height: rs(48),
+    tintColor: '#d32f2f',
+    marginBottom: rs(12),
   },
   modalTitle: {
-    fontSize: responsiveSize(18),
+    fontSize: fontScale(rs(18)),
     fontWeight: '700',
     color: '#000',
-    marginBottom: responsiveSize(10),
+    marginBottom: rs(8),
     textAlign: 'center',
   },
-  modalOrderText: {
-    fontSize: responsiveSize(14),
+  modalMessage: {
+    fontSize: fontScale(rs(14)),
     color: '#666',
-    marginBottom: responsiveSize(8),
     textAlign: 'center',
+    marginBottom: rs(24),
+    lineHeight: rs(20),
   },
   modalButtons: {
     flexDirection: 'row',
-    gap: responsiveSize(12),
+    gap: rs(12),
     width: '100%',
-    marginTop: responsiveSize(15),
   },
   modalCancelButton: {
     flex: 1,
     backgroundColor: '#f8f8f8',
-    borderRadius: responsiveSize(8),
-    paddingVertical: responsiveSize(12),
+    borderRadius: rs(10),
+    paddingVertical: rs(14),
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#e0e0e0',
   },
   modalCancelText: {
-    fontSize: responsiveSize(14),
+    fontSize: fontScale(rs(14)),
     fontWeight: '600',
     color: '#666',
   },
   modalConfirmButton: {
     flex: 1,
-    borderRadius: responsiveSize(8),
-    paddingVertical: responsiveSize(12),
+    borderRadius: rs(10),
+    paddingVertical: rs(14),
     alignItems: 'center',
   },
   modalConfirmText: {
-    fontSize: responsiveSize(14),
+    fontSize: fontScale(rs(14)),
     fontWeight: '600',
     color: '#fff',
   },
