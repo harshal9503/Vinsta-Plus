@@ -18,9 +18,14 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import { useColor } from '../../../util/ColorSwitcher'; // Import ColorSwitcher
+import { useColor } from '../../../util/ColorSwitcher';
 
 const { width, height } = Dimensions.get('window');
+
+// Slightly compact scaling
+const BASE_WIDTH = 375;
+const scale = width / BASE_WIDTH;
+const rs = size => size * scale;
 
 const MAP_HEIGHT = height * 0.32;
 const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 44 : StatusBar.currentHeight;
@@ -41,7 +46,7 @@ const IMAGES = {
 
 const CancelOrder = () => {
   const navigation = useNavigation();
-  const { bgColor, textColor } = useColor(); // Use ColorSwitcher
+  const { bgColor, textColor } = useColor();
   const [showCancelPopup, setShowCancelPopup] = useState(false);
   const [showCanceledPopup, setShowCanceledPopup] = useState(false);
   const [showImagePickerPopup, setShowImagePickerPopup] = useState(false);
@@ -80,21 +85,26 @@ const CancelOrder = () => {
     setMaxImagesReached(false);
   };
 
-  // Request camera permissions for Android
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
       try {
         const getCheckPermissionPromise = () => {
           if (Platform.Version >= 33) {
             return Promise.all([
-              PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES),
-              PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO),
+              PermissionsAndroid.check(
+                PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+              ),
+              PermissionsAndroid.check(
+                PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO,
+              ),
             ]).then(
               ([hasReadMediaImagesPermission, hasReadMediaVideoPermission]) =>
                 hasReadMediaImagesPermission && hasReadMediaVideoPermission,
             );
           } else {
-            return PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE);
+            return PermissionsAndroid.check(
+              PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+            );
           }
         };
 
@@ -110,7 +120,7 @@ const CancelOrder = () => {
               PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO,
               PermissionsAndroid.PERMISSIONS.CAMERA,
             ]).then(
-              (statuses) =>
+              statuses =>
                 statuses[PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES] ===
                   PermissionsAndroid.RESULTS.GRANTED &&
                 statuses[PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO] ===
@@ -122,11 +132,13 @@ const CancelOrder = () => {
             return PermissionsAndroid.requestMultiple([
               PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
               PermissionsAndroid.PERMISSIONS.CAMERA,
-            ]).then((statuses) => 
-              statuses[PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE] ===
-                PermissionsAndroid.RESULTS.GRANTED &&
-              statuses[PermissionsAndroid.PERMISSIONS.CAMERA] ===
-                PermissionsAndroid.RESULTS.GRANTED
+            ]).then(
+              statuses =>
+                statuses[
+                  PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
+                ] === PermissionsAndroid.RESULTS.GRANTED &&
+                statuses[PermissionsAndroid.PERMISSIONS.CAMERA] ===
+                  PermissionsAndroid.RESULTS.GRANTED,
             );
           }
         };
@@ -138,18 +150,18 @@ const CancelOrder = () => {
         return false;
       }
     }
-    return true; // iOS handles permissions differently via Info.plist
+    return true;
   };
 
   const openCamera = async () => {
     closeImagePickerPopup();
-    
+
     const hasPermission = await requestCameraPermission();
     if (!hasPermission) {
       Alert.alert(
         'Permission Required',
         'Camera permission is required to take photos',
-        [{ text: 'OK' }]
+        [{ text: 'OK' }],
       );
       return;
     }
@@ -164,7 +176,7 @@ const CancelOrder = () => {
         cameraType: 'back',
         quality: 0.8,
       },
-      (response) => {
+      response => {
         if (response.didCancel) {
           console.log('User cancelled camera');
         } else if (response.error) {
@@ -180,20 +192,20 @@ const CancelOrder = () => {
             setMaxImagesReached(true);
           }
         }
-      }
+      },
     );
   };
 
   const openGallery = async () => {
     closeImagePickerPopup();
-    
+
     if (Platform.OS === 'android') {
       const hasPermission = await requestCameraPermission();
       if (!hasPermission) {
         Alert.alert(
           'Permission Required',
           'Storage permission is required to access photos',
-          [{ text: 'OK' }]
+          [{ text: 'OK' }],
         );
         return;
       }
@@ -208,7 +220,7 @@ const CancelOrder = () => {
         selectionLimit: MAX_IMAGES - uploadedImages.length,
         quality: 0.8,
       },
-      (response) => {
+      response => {
         if (response.didCancel) {
           console.log('User cancelled image picker');
         } else if (response.error) {
@@ -224,11 +236,11 @@ const CancelOrder = () => {
             setMaxImagesReached(true);
           }
         }
-      }
+      },
     );
   };
 
-  const removeImage = (id) => {
+  const removeImage = id => {
     setUploadedImages(prev => prev.filter(img => img.id !== id));
     if (maxImagesReached && uploadedImages.length <= MAX_IMAGES) {
       setMaxImagesReached(false);
@@ -237,8 +249,8 @@ const CancelOrder = () => {
 
   const renderImageItem = ({ item }) => (
     <View style={styles.imageItemContainer}>
-      <Image 
-        source={{ uri: item.uri }} 
+      <Image
+        source={{ uri: item.uri }}
         style={styles.uploadedImageThumb}
         resizeMode="cover"
       />
@@ -261,13 +273,15 @@ const CancelOrder = () => {
 
   const renderUploadButton = () => {
     const buttonPosition = getUploadButtonPosition();
-    
+
     if (uploadedImages.length < MAX_IMAGES) {
       return (
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[
             styles.uploadButtonContainer,
-            buttonPosition === 'center' ? styles.uploadButtonCenter : styles.uploadButtonRight
+            buttonPosition === 'center'
+              ? styles.uploadButtonCenter
+              : styles.uploadButtonRight,
           ]}
           onPress={openImagePickerPopup}
           activeOpacity={0.7}
@@ -285,10 +299,14 @@ const CancelOrder = () => {
       );
     } else {
       return (
-        <View style={[
-          styles.uploadButtonContainer,
-          buttonPosition === 'center' ? styles.uploadButtonCenter : styles.uploadButtonRight
-        ]}>
+        <View
+          style={[
+            styles.uploadButtonContainer,
+            buttonPosition === 'center'
+              ? styles.uploadButtonCenter
+              : styles.uploadButtonRight,
+          ]}
+        >
           <View style={[styles.uploadButton, styles.uploadButtonDisabled]}>
             <Image
               source={IMAGES.upload}
@@ -303,7 +321,7 @@ const CancelOrder = () => {
     }
   };
 
-  const markerSize = Math.min(34, width * 0.085);
+  const markerSize = Math.min(rs(26), width * 0.08);
   const startX = width * 0.5 - markerSize / 2;
   const startY = MAP_HEIGHT * 0.32;
   const verticalLength = MAP_HEIGHT * 0.18;
@@ -329,7 +347,7 @@ const CancelOrder = () => {
         <Image source={IMAGES.mapbg} style={styles.mapBg} />
 
         {/* Header */}
-        <View style={[styles.header, { top: STATUS_BAR_HEIGHT + 10 }]}>
+        <View style={[styles.header, { top: STATUS_BAR_HEIGHT + rs(6) }]}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={[styles.iconBtn, { backgroundColor: textColor }]}
@@ -340,7 +358,7 @@ const CancelOrder = () => {
               style={[styles.backIcon, { tintColor: bgColor }]}
             />
           </TouchableOpacity>
-          <View style={{ width: 40 }} />
+          <View style={{ width: rs(30) }} />
         </View>
 
         {/* Route Map */}
@@ -416,9 +434,9 @@ const CancelOrder = () => {
             style={[
               styles.boyIcon,
               {
-                width: Math.min(44, width * 0.12),
-                height: Math.min(44, width * 0.12),
-                borderRadius: Math.min(22, (width * 0.12) / 2),
+                width: Math.min(rs(32), width * 0.1),
+                height: Math.min(rs(32), width * 0.1),
+                borderRadius: Math.min(rs(16), (width * 0.1) / 2),
                 position: 'absolute',
                 top: boyY,
                 left: boyX,
@@ -452,17 +470,27 @@ const CancelOrder = () => {
               style={[
                 styles.bikeImg,
                 {
-                  width: Math.min(38, width * 0.1),
-                  height: Math.min(38, width * 0.1),
+                  width: Math.min(rs(28), width * 0.08),
+                  height: Math.min(rs(28), width * 0.08),
                   tintColor: bgColor,
                 },
               ]}
             />
             <View style={styles.orderStatusTextContainer}>
-              <Text style={[styles.orderStatusText, { fontSize: Math.min(16, width * 0.045) }]}>
+              <Text
+                style={[
+                  styles.orderStatusText,
+                  { fontSize: Math.min(rs(12.5), width * 0.04) },
+                ]}
+              >
                 Your order is Delivered
               </Text>
-              <Text style={[styles.orderStatusTime, { fontSize: Math.min(14, width * 0.038) }]}>
+              <Text
+                style={[
+                  styles.orderStatusTime,
+                  { fontSize: Math.min(rs(11), width * 0.034) },
+                ]}
+              >
                 at 5.52 p.m.
               </Text>
             </View>
@@ -472,7 +500,7 @@ const CancelOrder = () => {
 
       <ScrollView
         style={styles.scrollArea}
-        contentContainerStyle={{ paddingBottom: 50 }}
+        contentContainerStyle={{ paddingBottom: rs(40) }}
       >
         {/* Store and Address Section */}
         <View style={[styles.storeAddressCard, { backgroundColor: '#f8f8f8' }]}>
@@ -483,15 +511,20 @@ const CancelOrder = () => {
                 style={[
                   styles.addressIcon,
                   {
-                    width: Math.min(24, width * 0.06),
-                    height: Math.min(24, width * 0.06),
+                    width: Math.min(rs(18), width * 0.05),
+                    height: Math.min(rs(18), width * 0.05),
                     tintColor: bgColor,
                   },
                 ]}
               />
             </View>
             <View style={styles.addressTextContainer}>
-              <Text style={[styles.addressLabel, { fontSize: Math.min(14, width * 0.037) }]}>
+              <Text
+                style={[
+                  styles.addressLabel,
+                  { fontSize: Math.min(rs(11), width * 0.034) },
+                ]}
+              >
                 From :-{' '}
                 <Text style={[styles.addressValue, { color: 'black' }]}>
                   Rahat Grocery Store
@@ -500,22 +533,27 @@ const CancelOrder = () => {
             </View>
           </View>
 
-          <View style={[styles.storeAddressRow, { marginTop: 12 }]}>
+          <View style={[styles.storeAddressRow, { marginTop: rs(10) }]}>
             <View style={styles.addressIconContainer}>
               <Image
                 source={IMAGES.h2}
                 style={[
                   styles.addressIcon,
                   {
-                    width: Math.min(24, width * 0.06),
-                    height: Math.min(24, width * 0.06),
+                    width: Math.min(rs(18), width * 0.05),
+                    height: Math.min(rs(18), width * 0.05),
                     tintColor: bgColor,
                   },
                 ]}
               />
             </View>
             <View style={styles.addressTextContainer}>
-              <Text style={[styles.addressLabel, { fontSize: Math.min(14, width * 0.037) }]}>
+              <Text
+                style={[
+                  styles.addressLabel,
+                  { fontSize: Math.min(rs(11), width * 0.034) },
+                ]}
+              >
                 To :-{' '}
                 <Text style={[styles.addressValue, { color: 'black' }]}>
                   Behria sector 8, building 6.8 Apart 37 D
@@ -527,22 +565,33 @@ const CancelOrder = () => {
 
         {/* Upload Image Section */}
         <View style={styles.uploadSection}>
-          <Text style={[styles.uploadTitle, { fontSize: Math.min(15, width * 0.04) }]}>
+          <Text
+            style={[
+              styles.uploadTitle,
+              { fontSize: Math.min(rs(12.5), width * 0.038) },
+            ]}
+          >
             Upload images ({uploadedImages.length}/{MAX_IMAGES})
           </Text>
-          <Text style={[styles.uploadSubtitle, { fontSize: Math.min(13, width * 0.035) }]}>
-            {uploadedImages.length > 0 
-              ? `${uploadedImages.length} image${uploadedImages.length > 1 ? 's' : ''} uploaded` 
+          <Text
+            style={[
+              styles.uploadSubtitle,
+              { fontSize: Math.min(rs(10.5), width * 0.032) },
+            ]}
+          >
+            {uploadedImages.length > 0
+              ? `${uploadedImages.length} image${
+                  uploadedImages.length > 1 ? 's' : ''
+                } uploaded`
               : 'Upload images as proof'}
           </Text>
 
-          {/* Upload Container */}
           <View style={styles.uploadContainer}>
             {uploadedImages.length > 0 && (
               <FlatList
                 data={uploadedImages}
                 renderItem={renderImageItem}
-                keyExtractor={(item) => item.id}
+                keyExtractor={item => item.id}
                 numColumns={4}
                 scrollEnabled={false}
                 columnWrapperStyle={styles.imagesGridRow}
@@ -556,8 +605,14 @@ const CancelOrder = () => {
 
         {/* Note Section */}
         <View style={styles.noteSection}>
-          <Text style={[styles.noteText, { fontSize: Math.min(13, width * 0.035) }]}>
-            Please note: This order can only be back only when product is damaged or defective.
+          <Text
+            style={[
+              styles.noteText,
+              { fontSize: Math.min(rs(10.5), width * 0.032) },
+            ]}
+          >
+            Please note: This order can only be back only when product is
+            damaged or defective.
           </Text>
         </View>
 
@@ -566,10 +621,11 @@ const CancelOrder = () => {
           <TouchableOpacity
             style={[
               styles.cancelBtn,
-              { 
-                backgroundColor: uploadedImages.length > 0 ? bgColor : '#f3f3f3',
-                opacity: uploadedImages.length > 0 ? 1 : 0.5
-              }
+              {
+                backgroundColor:
+                  uploadedImages.length > 0 ? bgColor : '#f3f3f3',
+                opacity: uploadedImages.length > 0 ? 1 : 0.5,
+              },
             ]}
             onPress={uploadedImages.length > 0 ? handlePressCancel : null}
             disabled={uploadedImages.length === 0}
@@ -577,9 +633,10 @@ const CancelOrder = () => {
             <Text
               style={[
                 styles.cancelBtnText,
-                { 
-                  color: uploadedImages.length > 0 ? textColor : '#000'
-                }
+                {
+                  color: uploadedImages.length > 0 ? textColor : '#000',
+                  fontSize: rs(12.5),
+                },
               ]}
             >
               Cancel Order
@@ -593,7 +650,7 @@ const CancelOrder = () => {
               style={[
                 styles.keepBtnText,
                 {
-                  fontSize: Math.min(16, width * 0.04),
+                  fontSize: Math.min(rs(13.5), width * 0.038),
                   color: textColor,
                 },
               ]}
@@ -613,30 +670,38 @@ const CancelOrder = () => {
       >
         <View style={styles.popupOverlay}>
           <View style={styles.popupBox}>
-            <Text style={[styles.popupTitle, { color: textColor }]}>Upload Image</Text>
+            <Text style={[styles.popupTitle, { color: textColor }]}>
+              Upload Image
+            </Text>
             <Text style={[styles.popupSubtitle, { color: '#666' }]}>
               Choose an option to upload image
             </Text>
-            
+
             <TouchableOpacity
               style={[styles.imageOptionBtn, { backgroundColor: bgColor }]}
               onPress={openCamera}
             >
-              <Text style={[styles.imageOptionText, { color: textColor }]}>Take a Photo</Text>
+              <Text style={[styles.imageOptionText, { color: textColor }]}>
+                Take a Photo
+              </Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={[styles.imageOptionBtn, { backgroundColor: bgColor }]}
               onPress={openGallery}
             >
-              <Text style={[styles.imageOptionText, { color: textColor }]}>Choose from Gallery</Text>
+              <Text style={[styles.imageOptionText, { color: textColor }]}>
+                Choose from Gallery
+              </Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={[styles.imageOptionBtn, { backgroundColor: '#f0f0f0' }]}
               onPress={closeImagePickerPopup}
             >
-              <Text style={[styles.imageOptionText, { color: '#000' }]}>Cancel</Text>
+              <Text style={[styles.imageOptionText, { color: '#000' }]}>
+                Cancel
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -651,15 +716,20 @@ const CancelOrder = () => {
       >
         <View style={styles.popupOverlay}>
           <View style={styles.popupBox}>
-            <Text style={[styles.popupTitle, { color: textColor }]}>Maximum Images Reached</Text>
+            <Text style={[styles.popupTitle, { color: textColor }]}>
+              Maximum Images Reached
+            </Text>
             <Text style={[styles.maxImagesPopupText, { color: '#666' }]}>
-              You can only upload up to {MAX_IMAGES} images. Please remove some images to add more.
+              You can only upload up to {MAX_IMAGES} images. Please remove some
+              images to add more.
             </Text>
             <TouchableOpacity
               style={[styles.popupBtn, { backgroundColor: bgColor }]}
               onPress={() => setMaxImagesReached(false)}
             >
-              <Text style={[styles.popupBtnText, { color: textColor }]}>OK</Text>
+              <Text style={[styles.popupBtnText, { color: textColor }]}>
+                OK
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -680,13 +750,17 @@ const CancelOrder = () => {
                 style={[styles.popupBtn, { backgroundColor: bgColor }]}
                 onPress={handleConfirmCancel}
               >
-                <Text style={[styles.popupBtnText, { color: textColor }]}>Yes, Cancel</Text>
+                <Text style={[styles.popupBtnText, { color: textColor }]}>
+                  Yes, Cancel
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.popupBtn, { backgroundColor: '#f0f0f0' }]}
                 onPress={() => setShowCancelPopup(false)}
               >
-                <Text style={[styles.popupBtnText, { color: '#000' }]}>No, Keep</Text>
+                <Text style={[styles.popupBtnText, { color: '#000' }]}>
+                  No, Keep
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -699,10 +773,7 @@ const CancelOrder = () => {
           <View style={styles.popupBox}>
             <Image
               source={IMAGES.tick}
-              style={[
-                styles.tickIconLarge,
-                { tintColor: bgColor },
-              ]}
+              style={[styles.tickIconLarge, { tintColor: bgColor }]}
             />
             <Text style={[styles.popupTitle, { color: textColor }]}>
               Order Canceled
@@ -747,19 +818,19 @@ const styles = StyleSheet.create({
   },
   header: {
     position: 'absolute',
-    left: 20,
-    right: 20,
+    left: rs(16),
+    right: rs(16),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     zIndex: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop: rs(6),
+    paddingBottom: rs(6),
   },
   iconBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
+    width: rs(32),
+    height: rs(32),
+    borderRadius: rs(10),
     justifyContent: 'center',
     alignItems: 'center',
     ...Platform.select({
@@ -775,8 +846,9 @@ const styles = StyleSheet.create({
     }),
   },
   backIcon: {
-    width: 20,
-    height: 20,
+    width: rs(16),
+    height: rs(16),
+    resizeMode: 'contain',
   },
   absFill: { ...StyleSheet.absoluteFillObject, zIndex: 2 },
   markerIcon: { resizeMode: 'contain' },
@@ -790,24 +862,24 @@ const styles = StyleSheet.create({
   },
   timerSection: {
     backgroundColor: '#fff',
-    borderTopLeftRadius: 18,
-    borderTopRightRadius: 18,
-    marginTop: -10,
-    paddingTop: 20,
-    paddingBottom: 20,
+    borderTopLeftRadius: rs(14),
+    borderTopRightRadius: rs(14),
+    marginTop: -rs(8),
+    paddingTop: rs(14),
+    paddingBottom: rs(14),
   },
   orderStatusSection: {
-    marginHorizontal: 20,
+    marginHorizontal: rs(16),
   },
   orderStatusRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 12,
-    padding: 15,
+    borderRadius: rs(10),
+    padding: rs(11),
   },
   bikeImg: {
     resizeMode: 'contain',
-    marginRight: 15,
+    marginRight: rs(11),
   },
   orderStatusTextContainer: {
     flex: 1,
@@ -828,17 +900,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   storeAddressCard: {
-    borderRadius: 12,
-    padding: 18,
-    marginHorizontal: 20,
-    marginBottom: 20,
+    borderRadius: rs(10),
+    padding: rs(14),
+    marginHorizontal: rs(16),
+    marginBottom: rs(14),
   },
   storeAddressRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
   addressIconContainer: {
-    width: 30,
+    width: rs(24),
     alignItems: 'center',
   },
   addressIcon: {
@@ -846,12 +918,12 @@ const styles = StyleSheet.create({
   },
   addressTextContainer: {
     flex: 1,
-    marginLeft: 10,
+    marginLeft: rs(8),
   },
   addressLabel: {
     color: '#444',
     fontWeight: '500',
-    lineHeight: 20,
+    lineHeight: rs(16),
     fontFamily: 'Figtree-Medium',
   },
   addressValue: {
@@ -859,8 +931,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Figtree-SemiBold',
   },
   uploadSection: {
-    marginHorizontal: 20,
-    marginBottom: 20,
+    marginHorizontal: rs(16),
+    marginBottom: rs(16),
   },
   uploadTitle: {
     fontWeight: '600',
@@ -870,7 +942,7 @@ const styles = StyleSheet.create({
   },
   uploadSubtitle: {
     color: '#888',
-    marginBottom: 15,
+    marginBottom: rs(11),
     fontWeight: '500',
     fontFamily: 'Figtree-Medium',
   },
@@ -878,55 +950,55 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     borderStyle: 'dashed',
-    borderRadius: 10,
+    borderRadius: rs(8),
     backgroundColor: '#f9f9f9',
-    padding: 15,
-    minHeight: 100,
+    padding: rs(11),
+    minHeight: rs(80),
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
   uploadedImageThumb: {
-    width: 60,
-    height: 60,
-    borderRadius: 8,
-    margin: 4,
+    width: rs(48),
+    height: rs(48),
+    borderRadius: rs(6),
+    margin: rs(3),
   },
   imagesGridContainer: {
     flex: 1,
   },
   imagesGridRow: {
     justifyContent: 'flex-start',
-    marginBottom: 8,
+    marginBottom: rs(6),
   },
   imageItemContainer: {
     position: 'relative',
-    margin: 4,
+    margin: rs(3),
   },
   removeImageBtn: {
     position: 'absolute',
     top: 0,
     right: 0,
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: rs(16),
+    height: rs(16),
+    borderRadius: rs(8),
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     justifyContent: 'center',
     alignItems: 'center',
-    transform: [{ translateX: 5 }, { translateY: -5 }],
+    transform: [{ translateX: 4 }, { translateY: -4 }],
   },
   removeIcon: {
-    width: 10,
-    height: 10,
+    width: rs(8),
+    height: rs(8),
     resizeMode: 'contain',
   },
   uploadButtonContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 8,
-    width: 60,
-    height: 80,
+    margin: rs(6),
+    width: rs(52),
+    height: rs(70),
   },
   uploadButtonCenter: {
     alignSelf: 'center',
@@ -935,62 +1007,61 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   uploadButton: {
-    width: 60,
-    height: 60,
-    borderRadius: 10,
+    width: rs(52),
+    height: rs(52),
+    borderRadius: rs(8),
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 5,
+    marginBottom: rs(4),
   },
   uploadButtonDisabled: {
     backgroundColor: '#f0f0f0',
   },
   uploadButtonIcon: {
-    width: 24,
-    height: 24,
+    width: rs(18),
+    height: rs(18),
     resizeMode: 'contain',
   },
   uploadButtonText: {
-    fontSize: 12,
+    fontSize: rs(10),
     fontWeight: '500',
     fontFamily: 'Figtree-Medium',
     textAlign: 'center',
   },
   noteSection: {
-    marginHorizontal: 20,
-    marginBottom: 25,
+    marginHorizontal: rs(16),
+    marginBottom: rs(18),
   },
   noteText: {
     color: '#F44336',
     fontWeight: '500',
     textAlign: 'center',
-    lineHeight: 18,
+    lineHeight: rs(14),
     fontFamily: 'Figtree-Medium',
   },
   btnRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginHorizontal: 20,
+    marginHorizontal: rs(16),
   },
   cancelBtn: {
     flex: 1,
-    paddingVertical: 15,
+    paddingVertical: rs(11),
     alignItems: 'center',
-    borderRadius: 10,
-    marginRight: 9,
+    borderRadius: rs(8),
+    marginRight: rs(7),
   },
   cancelBtnText: {
     fontWeight: '600',
     fontFamily: 'Figtree-SemiBold',
-    fontSize: 16,
   },
   keepBtn: {
     flex: 1,
-    paddingVertical: 15,
+    paddingVertical: rs(11),
     alignItems: 'center',
-    borderRadius: 10,
-    marginLeft: 9,
+    borderRadius: rs(8),
+    marginLeft: rs(7),
   },
   keepBtnText: {
     fontWeight: '600',
@@ -1001,12 +1072,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: rs(16),
   },
   popupBox: {
     backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 24,
+    borderRadius: rs(14),
+    padding: rs(18),
     width: '100%',
     maxWidth: width * 0.85,
     alignItems: 'center',
@@ -1018,61 +1089,61 @@ const styles = StyleSheet.create({
   },
   popupTitle: {
     fontWeight: '700',
-    fontSize: 18,
-    marginBottom: 8,
+    fontSize: rs(14),
+    marginBottom: rs(6),
     fontFamily: 'Figtree-Bold',
     textAlign: 'center',
   },
   popupSubtitle: {
-    fontSize: 14,
+    fontSize: rs(11),
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: rs(14),
     fontFamily: 'Figtree-Medium',
-    lineHeight: 20,
+    lineHeight: rs(16),
   },
   popupBtnRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    marginTop: 10,
+    marginTop: rs(8),
   },
   popupBtn: {
     flex: 1,
-    marginHorizontal: 6,
-    paddingVertical: 12,
+    marginHorizontal: rs(5),
+    paddingVertical: rs(10),
     alignItems: 'center',
-    borderRadius: 10,
-    minHeight: 44,
+    borderRadius: rs(8),
+    minHeight: rs(36),
     justifyContent: 'center',
   },
   popupBtnText: {
     fontWeight: '600',
-    fontSize: 16,
+    fontSize: rs(12),
     fontFamily: 'Figtree-SemiBold',
   },
   tickIconLarge: {
-    width: 50,
-    height: 50,
+    width: rs(36),
+    height: rs(36),
     resizeMode: 'contain',
-    marginBottom: 15,
+    marginBottom: rs(10),
   },
   imageOptionBtn: {
     width: '100%',
-    paddingVertical: 15,
+    paddingVertical: rs(11),
     alignItems: 'center',
-    borderRadius: 10,
-    marginBottom: 10,
+    borderRadius: rs(8),
+    marginBottom: rs(8),
   },
   imageOptionText: {
     fontWeight: '600',
-    fontSize: 16,
+    fontSize: rs(12),
     fontFamily: 'Figtree-SemiBold',
   },
   maxImagesPopupText: {
-    fontSize: 14,
+    fontSize: rs(11),
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: rs(14),
     fontFamily: 'Figtree-Medium',
-    lineHeight: 20,
+    lineHeight: rs(16),
   },
 });

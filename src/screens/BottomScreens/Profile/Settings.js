@@ -14,27 +14,34 @@ import { useNavigation } from '@react-navigation/native';
 import { useColor } from '../../../util/ColorSwitcher';
 
 const { width, height } = Dimensions.get('window');
-const rs = size => (width / 375) * size;
 
-// Platform detection
+// Swiggy-style tighter scaling
+const rs = size => (width / 400) * size;
+
 const isIOS = Platform.OS === 'ios';
 
-// Responsive font scaling
-const fontScale = size => {
-  return isIOS ? size * 0.95 : size;
-};
+const fontScale = size => (isIOS ? size * 0.95 : size);
 
-// Scale size for dimensions
-const scaleSize = size => {
-  return isIOS ? size * 1.02 : size;
-};
+const scaleSize = size => (isIOS ? size * 1.02 : size);
 
 const settingsData = [
   { id: 1, title: 'Account Setting', icon: require('../../../assets/ac.png') },
-  { id: 2, title: "Sound's and voice", icon: require('../../../assets/sound.png') },
+  {
+    id: 2,
+    title: "Sound's and voice",
+    icon: require('../../../assets/sound.png'),
+  },
   { id: 3, title: 'Language', icon: require('../../../assets/language.png') },
-  { id: 4, title: 'Notification Setting', icon: require('../../../assets/notisetting.png') },
-  { id: 5, title: 'Account management', icon: require('../../../assets/acmanage.png') },
+  {
+    id: 4,
+    title: 'Notification Setting',
+    icon: require('../../../assets/notisetting.png'),
+  },
+  {
+    id: 5,
+    title: 'Account management',
+    icon: require('../../../assets/acmanage.png'),
+  },
   { id: 6, title: 'About us', icon: require('../../../assets/aboutus.png') },
   { id: 7, title: 'Share app', icon: require('../../../assets/share1.png') },
 ];
@@ -49,7 +56,10 @@ const Settings = () => {
 
       {/* Header */}
       <View style={[styles.header, { backgroundColor: bgColor }]}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconBtn}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.iconBtn}
+        >
           <Image
             source={require('../../../assets/back.png')}
             style={[styles.icon, { tintColor: bgColor }]}
@@ -59,7 +69,7 @@ const Settings = () => {
         <View style={{ width: rs(40) }} />
       </View>
 
-      <ScrollView 
+      <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
@@ -87,7 +97,7 @@ const Settings = () => {
         </TouchableOpacity>
 
         {/* Extra padding for bottom tab */}
-        <View style={{ height: rs(80) }} />
+        <View style={{ height: rs(72) }} />
       </ScrollView>
     </View>
   );
@@ -102,33 +112,33 @@ const styles = StyleSheet.create({
   },
 
   scrollContent: {
-    paddingBottom: isIOS ? rs(100) : rs(90),
-    paddingHorizontal: rs(16),
-    paddingTop: rs(10),
+    paddingBottom: isIOS ? rs(80) : rs(70),
+    paddingHorizontal: rs(13),
+    paddingTop: rs(8),
   },
 
-  /* Header - Address Screen Style */
+  /* Header - Swiggy compact */
   header: {
-    height: isIOS ? rs(100) : rs(90),
+    height: isIOS ? rs(90) : rs(82),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: rs(18),
+    paddingHorizontal: rs(16),
     justifyContent: 'space-between',
-    paddingTop: isIOS ? rs(50) : rs(30),
+    paddingTop: isIOS ? rs(44) : rs(26),
     paddingBottom: rs(0),
   },
   headerTitle: {
     color: '#fff',
-    fontSize: fontScale(rs(20)),
+    fontSize: fontScale(rs(16)),
     fontWeight: '700',
     textAlign: 'center',
     flex: 1,
     marginHorizontal: rs(10),
   },
   iconBtn: {
-    width: rs(40),
-    height: rs(40),
-    borderRadius: rs(12),
+    width: rs(36),
+    height: rs(36),
+    borderRadius: rs(10),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
@@ -137,34 +147,34 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowRadius: 3,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
   icon: {
-    width: rs(20),
-    height: rs(20),
+    width: rs(18),
+    height: rs(18),
   },
 
-  /* Settings Rows - Card Style */
+  /* Settings Rows - Compact card style */
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: rs(14),
-    paddingHorizontal: rs(16),
+    paddingVertical: rs(12),
+    paddingHorizontal: rs(13),
     backgroundColor: '#F7F7F7',
-    marginBottom: rs(12),
-    borderRadius: rs(14),
+    marginBottom: rs(10),
+    borderRadius: rs(12),
     ...Platform.select({
       ios: {
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
       },
       android: {
         elevation: 2,
@@ -176,37 +186,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   rowIcon: {
-    width: rs(22),
-    height: rs(22),
+    width: rs(19),
+    height: rs(19),
     tintColor: '#000',
-    marginRight: rs(14),
+    marginRight: rs(12),
   },
   rowText: {
-    fontSize: fontScale(rs(15)),
+    fontSize: fontScale(rs(13.5)),
     color: '#000',
     fontWeight: '500',
+    flex: 1,
   },
   arrow: {
-    width: rs(20),
-    height: rs(20),
+    width: rs(16),
+    height: rs(16),
     tintColor: '#8b8b8bff',
   },
 
-  /* Delete Account Row */
+  /* Delete Account Row - Compact */
   deleteAccountRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: rs(16),
-    paddingHorizontal: rs(16),
+    paddingVertical: rs(14),
+    paddingHorizontal: rs(13),
     backgroundColor: '#FFE6E6',
-    borderRadius: rs(14),
-    marginBottom: rs(12),
+    borderRadius: rs(12),
+    marginBottom: rs(10),
     ...Platform.select({
       ios: {
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
       },
       android: {
         elevation: 2,
@@ -214,9 +225,10 @@ const styles = StyleSheet.create({
     }),
   },
   deleteAccountText: {
-    fontSize: fontScale(rs(15)),
+    fontSize: fontScale(rs(13.5)),
     color: '#d32f2f',
-    marginLeft: rs(14),
+    marginLeft: rs(12),
     fontWeight: '500',
+    flex: 1,
   },
 });

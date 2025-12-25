@@ -18,7 +18,13 @@ import { useNavigation } from '@react-navigation/native';
 import { useColor } from '../../../util/ColorSwitcher';
 
 const { width } = Dimensions.get('window');
-const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 44 : StatusBar.currentHeight || 24;
+const STATUS_BAR_HEIGHT =
+  Platform.OS === 'ios' ? 44 : StatusBar.currentHeight || 24;
+
+// compact responsive size
+const BASE_WIDTH = 375;
+const scale = width / BASE_WIDTH;
+const rs = size => size * scale;
 
 const Chat = () => {
   const navigation = useNavigation();
@@ -53,7 +59,10 @@ const Chat = () => {
     const userMsg = {
       id: Date.now(),
       text: message.trim(),
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      time: new Date().toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
       isUser: true,
     };
 
@@ -64,7 +73,10 @@ const Chat = () => {
       const autoReply = {
         id: Date.now() + 1,
         text: "Sure, I'll be waiting at the main gate.",
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        time: new Date().toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
         isUser: false,
       };
       setMessages(prev => [...prev, autoReply]);
@@ -80,9 +92,20 @@ const Chat = () => {
       />
 
       {/* HEADER */}
-      <View style={[styles.header, { backgroundColor: bgColor, paddingTop: STATUS_BAR_HEIGHT + 10 }]}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Image source={require('../../../assets/back.png')} style={styles.backIcon} />
+      <View
+        style={[
+          styles.header,
+          { backgroundColor: bgColor, paddingTop: STATUS_BAR_HEIGHT + rs(6) },
+        ]}
+      >
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
+          <Image
+            source={require('../../../assets/back.png')}
+            style={styles.backIcon}
+          />
         </TouchableOpacity>
 
         <View style={styles.headerInfo}>
@@ -91,7 +114,10 @@ const Chat = () => {
         </View>
 
         <TouchableOpacity style={styles.callButton}>
-          <Image source={require('../../../assets/call.png')} style={styles.callIcon} />
+          <Image
+            source={require('../../../assets/call.png')}
+            style={styles.callIcon}
+          />
         </TouchableOpacity>
       </View>
 
@@ -106,7 +132,9 @@ const Chat = () => {
           style={styles.messagesContainer}
           contentContainerStyle={styles.messagesContent}
           showsVerticalScrollIndicator={false}
-          onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
+          onContentSizeChange={() =>
+            scrollViewRef.current?.scrollToEnd({ animated: true })
+          }
         >
           {messages.map(msg => (
             <View
@@ -165,68 +193,102 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingBottom: 15,
+    paddingHorizontal: rs(14),
+    paddingBottom: rs(10),
   },
-  backButton: { padding: 5 },
-  backIcon: { width: 22, height: 22, tintColor: '#fff' },
-  headerInfo: { flex: 1, marginLeft: 15 },
-  agentName: { color: '#fff', fontSize: 16, fontWeight: '700' },
-  agentStatus: { color: '#fff', fontSize: 12, marginTop: 2 },
+  backButton: { padding: rs(4) },
+  backIcon: {
+    width: rs(16),
+    height: rs(16),
+    tintColor: '#fff',
+    resizeMode: 'contain',
+  },
+  headerInfo: { flex: 1, marginLeft: rs(10) },
+  agentName: { color: '#fff', fontSize: rs(13), fontWeight: '700' },
+  agentStatus: {
+    color: '#fff',
+    fontSize: rs(10),
+    marginTop: 2,
+    opacity: 0.9,
+  },
   callButton: {
-    padding: 8,
+    padding: rs(6),
     backgroundColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 20,
+    borderRadius: rs(14),
   },
-  callIcon: { width: 20, height: 20, tintColor: '#fff' },
+  callIcon: {
+    width: rs(16),
+    height: rs(16),
+    tintColor: '#fff',
+    resizeMode: 'contain',
+  },
 
   chatContainer: { flex: 1 },
   messagesContainer: { flex: 1 },
-  messagesContent: { padding: 20, paddingBottom: 10 },
+  messagesContent: {
+    paddingHorizontal: rs(14),
+    paddingTop: rs(12),
+    paddingBottom: rs(6),
+  },
 
   messageBubble: {
-    maxWidth: '80%',
-    padding: 12,
-    borderRadius: 18,
-    marginBottom: 15,
+    maxWidth: '78%',
+    paddingVertical: rs(7),
+    paddingHorizontal: rs(10),
+    borderRadius: rs(14),
+    marginBottom: rs(10),
   },
   userBubble: {
     alignSelf: 'flex-end',
-    borderBottomRightRadius: 5,
+    borderBottomRightRadius: rs(4),
   },
   agentBubble: {
     alignSelf: 'flex-start',
     backgroundColor: '#f0f0f0',
-    borderBottomLeftRadius: 5,
+    borderBottomLeftRadius: rs(4),
   },
-  messageText: { fontSize: 14, lineHeight: 20, color: '#000' },
+  messageText: {
+    fontSize: rs(12),
+    lineHeight: rs(17),
+    color: '#000',
+  },
   userText: { color: '#fff' },
-  messageTime: { fontSize: 10, marginTop: 5, opacity: 0.7 },
+  messageTime: {
+    fontSize: rs(9),
+    marginTop: rs(3),
+    opacity: 0.7,
+  },
   userTime: { color: '#fff', textAlign: 'right' },
 
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    padding: 15,
+    paddingHorizontal: rs(12),
+    paddingVertical: rs(8),
     borderTopWidth: 1,
     borderTopColor: '#eee',
   },
   textInput: {
     flex: 1,
     backgroundColor: '#f8f8f8',
-    borderRadius: 25,
-    paddingHorizontal: 15,
-    paddingVertical: 12,
-    maxHeight: 100,
-    marginRight: 10,
-    fontSize: 14,
+    borderRadius: rs(18),
+    paddingHorizontal: rs(12),
+    paddingVertical: rs(8),
+    maxHeight: rs(80),
+    marginRight: rs(8),
+    fontSize: rs(12),
   },
   sendButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: rs(36),
+    height: rs(36),
+    borderRadius: rs(18),
     alignItems: 'center',
     justifyContent: 'center',
   },
-  sendIcon: { width: 20, height: 20, tintColor: '#fff' },
+  sendIcon: {
+    width: rs(16),
+    height: rs(16),
+    tintColor: '#fff',
+    resizeMode: 'contain',
+  },
 });

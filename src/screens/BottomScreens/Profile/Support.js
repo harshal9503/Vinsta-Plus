@@ -16,15 +16,13 @@ import { useNavigation } from '@react-navigation/native';
 import { useColor } from '../../../util/ColorSwitcher';
 
 const { width, height } = Dimensions.get('window');
-const rs = size => (width / 375) * size;
 
-// Platform detection
+// Swiggy-style tighter scaling
+const rs = size => (width / 400) * size;
+
 const isIOS = Platform.OS === 'ios';
 
-// Responsive font scaling
-const fontScale = size => {
-  return isIOS ? size * 0.95 : size;
-};
+const fontScale = size => (isIOS ? size * 0.95 : size);
 
 const Support = () => {
   const navigation = useNavigation();
@@ -73,7 +71,10 @@ const Support = () => {
 
       {/* Header */}
       <View style={[styles.header, { backgroundColor: bgColor }]}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconBtn}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.iconBtn}
+        >
           <Image
             source={require('../../../assets/back.png')}
             style={[styles.icon, { tintColor: bgColor }]}
@@ -122,9 +123,7 @@ const Support = () => {
               />
               <View style={styles.contactTextContainer}>
                 <Text style={styles.contactTitle}>Phone Support</Text>
-                <Text style={styles.contactDescription}>
-                  +91 1234567890
-                </Text>
+                <Text style={styles.contactDescription}>+91 1234567890</Text>
               </View>
             </View>
 
@@ -197,28 +196,28 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 
-  /* Header */
+  /* Header - Swiggy compact */
   header: {
-    height: isIOS ? rs(100) : rs(90),
+    height: isIOS ? rs(90) : rs(82),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: rs(18),
+    paddingHorizontal: rs(16),
     justifyContent: 'space-between',
-    paddingTop: isIOS ? rs(50) : rs(30),
+    paddingTop: isIOS ? rs(44) : rs(26),
     paddingBottom: rs(0),
   },
   headerTitle: {
     color: '#fff',
-    fontSize: fontScale(rs(20)),
+    fontSize: fontScale(rs(16)),
     fontWeight: '700',
     textAlign: 'center',
     flex: 1,
     marginHorizontal: rs(10),
   },
   iconBtn: {
-    width: rs(40),
-    height: rs(40),
-    borderRadius: rs(12),
+    width: rs(36),
+    height: rs(36),
+    borderRadius: rs(10),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
@@ -227,33 +226,33 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowRadius: 3,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
   icon: {
-    width: rs(20),
-    height: rs(20),
+    width: rs(18),
+    height: rs(18),
   },
 
   scrollContent: {
-    paddingBottom: isIOS ? rs(100) : rs(90),
-    paddingHorizontal: rs(20),
-    paddingTop: rs(10),
+    paddingBottom: isIOS ? rs(80) : rs(70),
+    paddingHorizontal: rs(13),
+    paddingTop: rs(8),
   },
 
   section: {
-    marginTop: rs(25),
+    marginTop: rs(20),
   },
 
   sectionTitle: {
-    fontSize: fontScale(rs(15)),
+    fontSize: fontScale(rs(13.5)),
     fontWeight: '700',
-    marginBottom: rs(15),
-    marginLeft: rs(5),
+    marginBottom: rs(12),
+    marginLeft: rs(4),
     color: '#000',
   },
 
@@ -262,8 +261,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderRadius: rs(12),
-    padding: rs(16),
-    marginBottom: rs(12),
+    padding: rs(13),
+    marginBottom: rs(10),
     backgroundColor: '#F7F7F7',
     ...Platform.select({
       ios: {
@@ -285,9 +284,9 @@ const styles = StyleSheet.create({
   },
 
   contactIcon: {
-    width: rs(24),
-    height: rs(24),
-    marginRight: rs(12),
+    width: rs(20),
+    height: rs(20),
+    marginRight: rs(10),
   },
 
   contactTextContainer: {
@@ -295,38 +294,38 @@ const styles = StyleSheet.create({
   },
 
   contactTitle: {
-    fontSize: fontScale(rs(14)),
+    fontSize: fontScale(rs(13)),
     color: '#000',
     fontWeight: '700',
   },
 
   contactDescription: {
-    fontSize: fontScale(rs(12)),
+    fontSize: fontScale(rs(11)),
     color: '#666',
-    marginTop: rs(2),
+    marginTop: rs(1.5),
   },
 
   chevronIcon: {
-    width: rs(16),
-    height: rs(16),
+    width: rs(14),
+    height: rs(14),
   },
 
   supportInfo: {
     alignItems: 'center',
-    marginTop: rs(30),
-    paddingTop: rs(20),
+    marginTop: rs(24),
+    paddingTop: rs(16),
     borderTopWidth: 1,
     borderTopColor: '#eee',
   },
 
   supportHours: {
-    fontSize: fontScale(rs(13)),
+    fontSize: fontScale(rs(12)),
     color: '#000',
   },
 
   responseTime: {
-    fontSize: fontScale(rs(13)),
+    fontSize: fontScale(rs(12)),
     color: '#000',
-    marginTop: rs(6),
+    marginTop: rs(5),
   },
 });

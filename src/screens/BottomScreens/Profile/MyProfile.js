@@ -16,15 +16,13 @@ import { useNavigation } from '@react-navigation/native';
 import { useColor } from '../../../util/ColorSwitcher';
 
 const { width, height } = Dimensions.get('window');
-const rs = size => (width / 375) * size;
 
-// Platform detection
+// Swiggy-style tighter scaling
+const rs = size => (width / 400) * size;
+
 const isIOS = Platform.OS === 'ios';
 
-// Responsive font scaling
-const fontScale = size => {
-  return isIOS ? size * 0.95 : size;
-};
+const fontScale = size => (isIOS ? size * 0.95 : size);
 
 const MyProfile = () => {
   const navigation = useNavigation();
@@ -35,8 +33,7 @@ const MyProfile = () => {
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
 
-  const isValidEmail = value =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  const isValidEmail = value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
   const handleSave = () => {
     if (!name.trim()) return Alert.alert('Enter name');
@@ -71,7 +68,7 @@ const MyProfile = () => {
           style={[
             styles.input,
             multiline && {
-              height: rs(80),
+              height: rs(70),
               textAlignVertical: 'top',
             },
           ]}
@@ -92,9 +89,12 @@ const MyProfile = () => {
     <View style={styles.container}>
       <StatusBar backgroundColor={bgColor} barStyle="light-content" />
 
-      {/* Header */}
+      {/* Header - Swiggy compact style */}
       <View style={[styles.header, { backgroundColor: bgColor }]}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconBtn}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.iconBtn}
+        >
           <Image
             source={require('../../../assets/back.png')}
             style={[styles.icon, { tintColor: bgColor }]}
@@ -111,7 +111,7 @@ const MyProfile = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* Profile Image */}
+        {/* Profile Image - Reduced size */}
         <View style={styles.profileWrapper}>
           <View style={styles.imageBorder}>
             <Image
@@ -123,7 +123,7 @@ const MyProfile = () => {
           <TouchableOpacity style={styles.cameraIcon}>
             <Image
               source={require('../../../assets/camera.png')}
-              style={{ width: rs(18), height: rs(18) }}
+              style={{ width: rs(16), height: rs(16) }}
             />
           </TouchableOpacity>
         </View>
@@ -163,7 +163,10 @@ const MyProfile = () => {
             multiline
           />
 
-          <TouchableOpacity style={[styles.saveBtn, { backgroundColor: bgColor }]} onPress={handleSave}>
+          <TouchableOpacity
+            style={[styles.saveBtn, { backgroundColor: bgColor }]}
+            onPress={handleSave}
+          >
             <Text style={[styles.saveText, { color: textColor }]}>Save</Text>
           </TouchableOpacity>
         </View>
@@ -181,140 +184,118 @@ const styles = StyleSheet.create({
   },
 
   scrollContent: {
-    paddingBottom: isIOS ? rs(100) : rs(90),
-    paddingHorizontal: rs(20),
-    paddingTop: rs(10),
+    paddingBottom: isIOS ? rs(80) : rs(70),
+    paddingHorizontal: rs(13),
+    paddingTop: rs(8),
   },
 
-  /* Header */
+  /* Header - Swiggy compact */
   header: {
-    height: isIOS ? rs(100) : rs(90),
+    height: isIOS ? rs(90) : rs(82),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: rs(18),
+    paddingHorizontal: rs(16),
     justifyContent: 'space-between',
-    paddingTop: isIOS ? rs(50) : rs(30),
+    paddingTop: isIOS ? rs(44) : rs(26),
     paddingBottom: rs(0),
   },
   headerTitle: {
     color: '#fff',
-    fontSize: fontScale(rs(20)),
+    fontSize: fontScale(rs(16)),
     fontWeight: '700',
     textAlign: 'center',
     flex: 1,
     marginHorizontal: rs(10),
   },
   iconBtn: {
-    width: rs(40),
-    height: rs(40),
-    borderRadius: rs(12),
+    width: rs(36),
+    height: rs(36),
+    borderRadius: rs(10),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
   },
   icon: {
-    width: rs(20),
-    height: rs(20),
+    width: rs(18),
+    height: rs(18),
   },
 
   profileWrapper: {
     alignItems: 'center',
-    marginTop: rs(20),
-    marginBottom: rs(30),
+    marginTop: rs(16),
+    marginBottom: rs(24),
   },
 
   imageBorder: {
-    width: rs(110),
-    height: rs(110),
-    borderRadius: rs(55),
-    borderWidth: 3,
+    width: rs(90),
+    height: rs(90),
+    borderRadius: rs(45),
+    borderWidth: 2,
     borderColor: '#F2A365',
     alignItems: 'center',
     justifyContent: 'center',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
   },
 
   profileImage: {
-    width: rs(95),
-    height: rs(95),
-    borderRadius: rs(47.5),
+    width: rs(78),
+    height: rs(78),
+    borderRadius: rs(39),
   },
 
   cameraIcon: {
     position: 'absolute',
-    right: width / 2 - rs(55),
-    bottom: rs(5),
+    right: width / 2 - rs(45),
+    bottom: rs(4),
     backgroundColor: '#fff',
-    width: rs(32),
-    height: rs(32),
-    borderRadius: rs(16),
+    width: rs(28),
+    height: rs(28),
+    borderRadius: rs(14),
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 3,
+    elevation: 2,
   },
 
   form: {},
 
   label: {
-    fontSize: fontScale(rs(14)),
+    fontSize: fontScale(rs(13)),
     fontWeight: '500',
-    marginBottom: rs(6),
-    marginTop: rs(10),
+    marginBottom: rs(5),
+    marginTop: rs(8),
   },
 
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F5F5F5',
-    borderRadius: rs(10),
-    paddingHorizontal: rs(12),
+    borderRadius: rs(9),
+    paddingHorizontal: rs(11),
   },
 
   input: {
     flex: 1,
-    fontSize: fontScale(rs(14)),
-    paddingVertical: rs(12),
+    fontSize: fontScale(rs(13)),
+    paddingVertical: rs(11),
     color: '#000',
   },
 
   clear: {
-    fontSize: rs(16),
+    fontSize: rs(14),
     color: '#999',
-    paddingLeft: rs(8),
+    paddingLeft: rs(6),
   },
 
   saveBtn: {
-    height: rs(50),
-    borderRadius: rs(12),
+    height: rs(44),
+    borderRadius: rs(10),
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: rs(30),
-    marginBottom: rs(40),
+    marginTop: rs(24),
+    marginBottom: rs(32),
   },
 
   saveText: {
-    fontSize: fontScale(rs(16)),
+    fontSize: fontScale(rs(14)),
     fontWeight: '600',
   },
 });

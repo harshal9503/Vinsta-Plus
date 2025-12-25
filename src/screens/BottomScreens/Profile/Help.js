@@ -13,16 +13,12 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { useColor } from '../../../util/ColorSwitcher';
 
-const { width, height } = Dimensions.get('window');
-const rs = size => (width / 375) * size;
+const { width } = Dimensions.get('window');
+const rs = size => (width / 400) * size;
 
-// Platform detection
 const isIOS = Platform.OS === 'ios';
 
-// Responsive font scaling
-const fontScale = size => {
-  return isIOS ? size * 0.95 : size;
-};
+const fontScale = size => (isIOS ? size * 0.95 : size);
 
 const HelpScreen = () => {
   const navigation = useNavigation();
@@ -34,7 +30,10 @@ const HelpScreen = () => {
 
       {/* Header */}
       <View style={[styles.header, { backgroundColor: bgColor }]}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconBtn}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.iconBtn}
+        >
           <Image
             source={require('../../../assets/back.png')}
             style={[styles.icon, { tintColor: bgColor }]}
@@ -42,11 +41,11 @@ const HelpScreen = () => {
         </TouchableOpacity>
 
         <Text style={styles.headerTitle}>Help</Text>
-        <View style={{ width: rs(40) }} />
+        <View style={{ width: rs(32) }} />
       </View>
 
-      <ScrollView 
-        contentContainerStyle={styles.content} 
+      <ScrollView
+        contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
         <Text style={styles.title}>Help & Support</Text>
@@ -82,26 +81,26 @@ const styles = StyleSheet.create({
 
   /* Header */
   header: {
-    height: isIOS ? rs(100) : rs(90),
+    height: isIOS ? rs(90) : rs(82),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: rs(18),
+    paddingHorizontal: rs(14),
     justifyContent: 'space-between',
-    paddingTop: isIOS ? rs(50) : rs(30),
-    paddingBottom: rs(0),
+    paddingTop: isIOS ? rs(44) : rs(26),
+    paddingBottom: 0,
   },
   headerTitle: {
     color: '#fff',
-    fontSize: fontScale(rs(20)),
+    fontSize: fontScale(rs(16)),
     fontWeight: '700',
     textAlign: 'center',
     flex: 1,
-    marginHorizontal: rs(10),
+    marginHorizontal: rs(8),
   },
   iconBtn: {
-    width: rs(40),
-    height: rs(40),
-    borderRadius: rs(12),
+    width: rs(34),
+    height: rs(34),
+    borderRadius: rs(10),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
@@ -118,41 +117,42 @@ const styles = StyleSheet.create({
     }),
   },
   icon: {
-    width: rs(20),
-    height: rs(20),
+    width: rs(16),
+    height: rs(16),
+    resizeMode: 'contain',
   },
 
   content: {
-    padding: rs(20),
-    paddingBottom: isIOS ? rs(100) : rs(90),
-    paddingTop: rs(10),
+    paddingHorizontal: rs(16),
+    paddingBottom: isIOS ? rs(80) : rs(70),
+    paddingTop: rs(8),
   },
 
   title: {
-    fontSize: fontScale(rs(22)),
-    marginBottom: rs(15),
+    fontSize: fontScale(rs(17)),
+    marginBottom: rs(10),
     color: '#000',
-    fontWeight: 'bold',
+    fontWeight: '700',
   },
 
   paragraph: {
-    fontSize: fontScale(rs(14)),
-    marginBottom: rs(20),
-    lineHeight: rs(22),
+    fontSize: fontScale(rs(11.5)),
+    marginBottom: rs(14),
+    lineHeight: rs(18),
     color: '#444',
   },
 
   box: {
-    padding: rs(16),
-    borderRadius: rs(12),
-    marginBottom: rs(12),
+    padding: rs(12),
+    borderRadius: rs(10),
+    marginBottom: rs(8),
     backgroundColor: '#F7F7F7',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 1.5 },
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
       },
       android: {
         elevation: 2,
@@ -161,9 +161,9 @@ const styles = StyleSheet.create({
   },
 
   boxText: {
-    fontSize: fontScale(rs(14)),
+    fontSize: fontScale(rs(11.5)),
     color: '#171717ff',
     fontWeight: '700',
-    marginLeft: rs(8),
+    marginLeft: rs(4),
   },
 });

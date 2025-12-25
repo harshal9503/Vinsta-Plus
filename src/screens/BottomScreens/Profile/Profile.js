@@ -16,8 +16,8 @@ import { useColor } from '../../../util/ColorSwitcher';
 
 const { width, height } = Dimensions.get('window');
 
-// Responsive sizing
-const responsiveSize = size => (width / 375) * size;
+// Swiggy-style tighter scaling
+const responsiveSize = size => (width / 400) * size;
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -80,12 +80,6 @@ const Profile = () => {
       label: 'Refer To Earn',
       route: 'Refertoearn',
     },
-    // {
-    //   id: 5,
-    //   icon: require('../../../assets/dark.png'),
-    //   label: 'Dark Mode',
-    //   route: 'DarkMode',
-    // },
     {
       id: 6,
       icon: require('../../../assets/support.png'),
@@ -97,7 +91,7 @@ const Profile = () => {
       icon: require('../../../assets/help.png'),
       label: 'Help',
       route: 'Help',
-    }, // Added Help here
+    },
     {
       id: 8,
       icon: require('../../../assets/settings.png'),
@@ -150,7 +144,7 @@ const Profile = () => {
             <TouchableOpacity
               key={item.id}
               style={styles.topOption}
-              onPress={() => handleNavigation(item.route)} // use route from array
+              onPress={() => handleNavigation(item.route)}
               activeOpacity={0.8}
             >
               <View style={styles.topIconContainer}>
@@ -199,7 +193,7 @@ const Profile = () => {
             style={styles.optionRow}
             onPress={() =>
               openPopup('Are you sure you want to logout?', () =>
-                navigation.navigate('SignIn'),
+                navigation.navigate('Login'),
               )
             }
             activeOpacity={0.7}
@@ -221,38 +215,10 @@ const Profile = () => {
               </Text>
             </View>
           </TouchableOpacity>
-
-          {/* Delete Account Option */}
-          {/* <TouchableOpacity
-            style={styles.optionRow}
-            onPress={() =>
-              openPopup('Are you sure you want to delete your account?', () =>
-                navigation.navigate('SignIn'),
-              )
-            }
-            activeOpacity={0.7}
-          >
-            <View style={styles.optionLeft}>
-              <View
-                style={[
-                  styles.optionIconContainer,
-                  { backgroundColor: '#E5393515' },
-                ]}
-              >
-                <Image
-                  source={require('../../../assets/delete.png')}
-                  style={[styles.optionIcon, { tintColor: '#E53935' }]}
-                />
-              </View>
-              <Text style={[styles.optionLabel, { color: '#E53935' }]}>
-                Delete Account
-              </Text>
-            </View>
-          </TouchableOpacity> */}
         </View>
 
         {/* Extra padding for bottom tab */}
-        <View style={{ height: responsiveSize(80) }} />
+        <View style={{ height: responsiveSize(72) }} />
       </ScrollView>
 
       {/* Popup Modal */}
@@ -309,128 +275,135 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom:
-      Platform.OS === 'ios' ? responsiveSize(100) : responsiveSize(90),
+      Platform.OS === 'ios' ? responsiveSize(80) : responsiveSize(70),
+    paddingHorizontal: responsiveSize(13),
+    paddingTop: responsiveSize(8),
   },
 
-  /* HEADER */
+  /* HEADER - Swiggy compact */
   header: {
-    height: Platform.OS === 'ios' ? responsiveSize(100) : responsiveSize(90),
+    height: Platform.OS === 'ios' ? responsiveSize(90) : responsiveSize(82),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: responsiveSize(18),
-    justifyContent: 'space-between',
-    paddingTop: Platform.OS === 'ios' ? responsiveSize(50) : responsiveSize(30),
-    paddingBottom: responsiveSize(0),
+    paddingHorizontal: responsiveSize(16),
+    justifyContent: 'center',
+    paddingTop: Platform.OS === 'ios' ? responsiveSize(44) : responsiveSize(26),
+    paddingBottom: 0,
   },
   headerTitle: {
     color: '#fff',
-    fontSize: responsiveSize(20),
+    fontSize: responsiveSize(16),
     fontWeight: '700',
     textAlign: 'center',
     flex: 1,
-    marginHorizontal: responsiveSize(10),
   },
 
-  // Profile Header Section
+  // Profile Header Section - Reduced sizes
   profileHeader: {
     width: '100%',
-    paddingTop: responsiveSize(15),
-    paddingBottom: responsiveSize(15),
+    paddingTop: responsiveSize(12),
+    paddingBottom: responsiveSize(12),
     backgroundColor: '#FFFFFF',
   },
   userRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: responsiveSize(20),
+    paddingHorizontal: responsiveSize(13),
   },
   userImage: {
-    width: responsiveSize(85),
-    height: responsiveSize(85),
-    borderRadius: responsiveSize(42.5),
-    borderWidth: 3,
+    width: responsiveSize(70),
+    height: responsiveSize(70),
+    borderRadius: responsiveSize(35),
+    borderWidth: 2,
     borderColor: '#FFFFFF',
     backgroundColor: '#F0F0F0',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  userInfo: {
-    flex: 1,
-    marginLeft: responsiveSize(15),
-  },
-  userName: {
-    fontSize: responsiveSize(22),
-    fontWeight: '700',
-    color: '#333333',
-    marginBottom: responsiveSize(4),
-  },
-  userEmail: {
-    fontSize: responsiveSize(14),
-    color: '#666666',
-    marginBottom: responsiveSize(2),
-    fontWeight: '500',
-  },
-  userPhone: {
-    fontSize: responsiveSize(14),
-    color: '#666666',
-    fontWeight: '500',
-  },
-
-  // Top Options Grid
-  topOptionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: responsiveSize(15),
-    marginTop: responsiveSize(10),
-    marginBottom: responsiveSize(20),
-  },
-  topOption: {
-    width: width * 0.21,
-    alignItems: 'center',
-  },
-  topIconContainer: {
-    width: responsiveSize(60),
-    height: responsiveSize(60),
-    borderRadius: responsiveSize(16),
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: responsiveSize(8),
     ...Platform.select({
       ios: {
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
+      },
+    }),
+  },
+  userInfo: {
+    flex: 1,
+    marginLeft: responsiveSize(12),
+  },
+  userName: {
+    fontSize: responsiveSize(18),
+    fontWeight: '700',
+    color: '#333333',
+    marginBottom: responsiveSize(3),
+  },
+  userEmail: {
+    fontSize: responsiveSize(12),
+    color: '#666666',
+    marginBottom: responsiveSize(1.5),
+    fontWeight: '500',
+  },
+  userPhone: {
+    fontSize: responsiveSize(12),
+    color: '#666666',
+    fontWeight: '500',
+  },
+
+  // Top Options Grid - Compact
+  topOptionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: responsiveSize(13),
+    marginTop: responsiveSize(8),
+    marginBottom: responsiveSize(16),
+  },
+  topOption: {
+    width: width * 0.22,
+    alignItems: 'center',
+  },
+  topIconContainer: {
+    width: responsiveSize(52),
+    height: responsiveSize(52),
+    borderRadius: responsiveSize(14),
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: responsiveSize(6),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 2,
       },
     }),
   },
   topIcon: {
-    width: responsiveSize(26),
-    height: responsiveSize(26),
+    width: responsiveSize(22),
+    height: responsiveSize(22),
   },
   topLabel: {
-    fontSize: responsiveSize(11.9),
+    fontSize: responsiveSize(11),
     color: '#333333',
     fontWeight: '500',
     textAlign: 'center',
   },
 
-  // Bottom Options List
+  // Bottom Options List - Compact
   bottomSection: {
-    marginTop: responsiveSize(5),
-    paddingHorizontal: responsiveSize(20),
+    marginTop: responsiveSize(4),
+    paddingHorizontal: responsiveSize(13),
   },
   optionRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: responsiveSize(16),
+    paddingVertical: responsiveSize(13),
     borderBottomWidth: 1,
     borderBottomColor: '#F0F0F0',
   },
@@ -440,61 +413,61 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   optionIconContainer: {
-    width: responsiveSize(44),
-    height: responsiveSize(44),
-    borderRadius: responsiveSize(12),
+    width: responsiveSize(38),
+    height: responsiveSize(38),
+    borderRadius: responsiveSize(10),
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: responsiveSize(15),
+    marginRight: responsiveSize(12),
   },
   optionIcon: {
-    width: responsiveSize(22),
-    height: responsiveSize(22),
+    width: responsiveSize(19),
+    height: responsiveSize(19),
   },
   optionLabel: {
-    fontSize: responsiveSize(16),
+    fontSize: responsiveSize(14),
     color: '#333333',
     fontWeight: '600',
     flex: 1,
   },
   arrowIcon: {
-    width: responsiveSize(16),
-    height: responsiveSize(16),
+    width: responsiveSize(14),
+    height: responsiveSize(14),
   },
 
-  // Popup Modal Styles
+  // Popup Modal Styles - Compact
   popupOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: responsiveSize(20),
+    paddingHorizontal: responsiveSize(16),
   },
   popupBox: {
-    width: width * 0.85,
+    width: width * 0.88,
     backgroundColor: '#FFFFFF',
-    borderRadius: responsiveSize(16),
-    padding: responsiveSize(25),
+    borderRadius: responsiveSize(14),
+    padding: responsiveSize(20),
     alignItems: 'center',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.2,
-        shadowRadius: 8,
+        shadowOpacity: 0.15,
+        shadowRadius: 6,
       },
       android: {
-        elevation: 8,
+        elevation: 6,
       },
     }),
   },
   popupText: {
-    fontSize: responsiveSize(16),
+    fontSize: responsiveSize(14),
     textAlign: 'center',
-    marginBottom: responsiveSize(25),
+    marginBottom: responsiveSize(20),
     color: '#333333',
     fontWeight: '500',
-    lineHeight: responsiveSize(22),
+    lineHeight: responsiveSize(19),
   },
   popupButtonsContainer: {
     flexDirection: 'row',
@@ -502,21 +475,19 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   popupButton: {
-    borderRadius: responsiveSize(10),
-    paddingVertical: responsiveSize(12),
-    paddingHorizontal: responsiveSize(20),
-    minWidth: responsiveSize(100),
+    borderRadius: responsiveSize(9),
+    paddingVertical: responsiveSize(10),
+    paddingHorizontal: responsiveSize(16),
+    minWidth: responsiveSize(85),
     alignItems: 'center',
   },
   popupCancelButton: {
     backgroundColor: '#F0F0F0',
-    marginRight: responsiveSize(10),
+    marginRight: responsiveSize(8),
   },
-  popupConfirmButton: {
-    // Background color is set inline with bgColor
-  },
+  popupConfirmButton: {},
   popupButtonText: {
-    fontSize: responsiveSize(14),
+    fontSize: responsiveSize(13),
     fontWeight: '600',
   },
 });

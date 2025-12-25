@@ -7,30 +7,49 @@ import {
   Image,
   Dimensions,
   StatusBar,
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useColor } from '../../../util/ColorSwitcher';
 
 const { width, height } = Dimensions.get('window');
-const rs = size => (width / 375) * size;
+
+// Swiggy-style tighter scaling
+const rs = size => (width / 400) * size;
+
+const isIOS = Platform.OS === 'ios';
 
 const settingsData = [
   { id: 1, title: 'Account Setting', icon: require('../../../assets/ac.png') },
-  { id: 2, title: "Sound's and voice", icon: require('../../../assets/sound.png') },
+  {
+    id: 2,
+    title: "Sound's and voice",
+    icon: require('../../../assets/sound.png'),
+  },
   { id: 3, title: 'Language', icon: require('../../../assets/language.png') },
-  { id: 4, title: 'Notification Setting', icon: require('../../../assets/notisetting.png') },
-  { id: 5, title: 'Account management', icon: require('../../../assets/acmanage.png') },
+  {
+    id: 4,
+    title: 'Notification Setting',
+    icon: require('../../../assets/notisetting.png'),
+  },
+  {
+    id: 5,
+    title: 'Account management',
+    icon: require('../../../assets/acmanage.png'),
+  },
   { id: 6, title: 'About us', icon: require('../../../assets/aboutus.png') },
   { id: 7, title: 'Share app', icon: require('../../../assets/share1.png') },
 ];
 
 const Settings = () => {
   const navigation = useNavigation();
+  const { bgColor, textColor } = useColor();
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
 
-      {/* Header */}
+      {/* Header - Swiggy compact style */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
@@ -39,7 +58,7 @@ const Settings = () => {
           />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Setting's</Text>
-        <View style={{ width: 24 }} />
+        <View style={{ width: rs(32) }} />
       </View>
 
       {/* List */}
@@ -77,33 +96,36 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 
-  /* Header */
+  /* Header - Swiggy compact */
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: height * 0.06,
-    paddingBottom: rs(15),
-    paddingHorizontal: rs(16),
+    paddingTop: isIOS ? rs(44) : rs(26),
+    paddingBottom: rs(12),
+    paddingHorizontal: rs(13),
   },
   backIcon: {
-    width: rs(22),
-    height: rs(22),
+    width: rs(18),
+    height: rs(18),
     tintColor: '#000',
   },
   headerTitle: {
-    fontSize: rs(20),
+    fontSize: rs(16),
     fontWeight: '600',
     color: '#000',
+    flex: 1,
+    textAlign: 'center',
+    marginHorizontal: rs(8),
   },
 
-  /* Rows */
+  /* Rows - Compact Swiggy style */
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: rs(14),
-    paddingHorizontal: rs(16),
+    paddingVertical: rs(12),
+    paddingHorizontal: rs(13),
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
@@ -112,34 +134,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   rowIcon: {
-    width: rs(22),
-    height: rs(22),
+    width: rs(19),
+    height: rs(19),
     tintColor: '#000',
-    marginRight: rs(14),
+    marginRight: rs(12),
   },
   rowText: {
-    fontSize: rs(15),
+    fontSize: rs(13.5),
     color: '#000',
+    flex: 1,
   },
   arrow: {
-    width: rs(20),
-    height: rs(20),
+    width: rs(16),
+    height: rs(16),
     tintColor: '#8b8b8bff',
   },
 
-  /* Logout */
+  /* Logout - Compact */
   logoutRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: rs(16),
-    paddingHorizontal: rs(16),
+    paddingVertical: rs(14),
+    paddingHorizontal: rs(13),
     borderTopWidth: 1,
     borderTopColor: '#eee',
   },
   logoutText: {
-    fontSize: rs(15),
+    fontSize: rs(13.5),
     color: '#d32f2f',
-    marginLeft: rs(14),
+    marginLeft: rs(12),
     fontWeight: '500',
   },
 });

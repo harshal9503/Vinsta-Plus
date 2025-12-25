@@ -11,7 +11,10 @@ import {
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
-const responsiveSize = size => (width / 375) * size;
+
+// compact sizing (a bit smaller than 375 base)
+const BASE_WIDTH = 400;
+const responsiveSize = size => (width / BASE_WIDTH) * size;
 
 const RatingModal = ({
   visible,
@@ -22,7 +25,7 @@ const RatingModal = ({
   setReviewText,
   onSubmit,
   bgColor,
-  orderData
+  orderData,
 }) => {
   return (
     <Modal
@@ -35,24 +38,23 @@ const RatingModal = ({
         <View style={styles.modalContainer}>
           {/* Header */}
           <View style={styles.modalHeader}>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={onClose}
               activeOpacity={0.7}
               hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
             >
-              {/* <Image
-                source={require('../../../assets/back.png')}
-                style={styles.modalBackIcon}
-              /> */}
+              {/* optional back icon */}
             </TouchableOpacity>
             <Text style={styles.modalTitle}>Leave a Review</Text>
-            <View style={{ width: responsiveSize(20) }} />
+            <View style={{ width: responsiveSize(18) }} />
           </View>
 
           {/* Order Card */}
           <View style={styles.reviewCard}>
             <Image
-              source={orderData?.image || require('../../../assets/mobile2.png')}
+              source={
+                orderData?.image || require('../../../assets/mobile2.png')
+              }
               style={styles.foodImg}
             />
             <View style={styles.reviewCardContent}>
@@ -66,9 +68,7 @@ const RatingModal = ({
                 Sold By: {orderData?.soldBy || 'Store Name'}
               </Text>
             </View>
-            <Text style={styles.price}>
-              {orderData?.price || '₹ 50000.00'}
-            </Text>
+            <Text style={styles.price}>{orderData?.price || '₹ 50000.00'}</Text>
           </View>
 
           {/* Rating Section */}
@@ -79,7 +79,7 @@ const RatingModal = ({
 
           {/* Stars Row */}
           <View style={styles.starRow}>
-            {[1, 2, 3, 4, 5].map((star) => (
+            {[1, 2, 3, 4, 5].map(star => (
               <TouchableOpacity
                 key={star}
                 onPress={() => onStarPress(star === selectedStars ? 0 : star)}
@@ -91,7 +91,7 @@ const RatingModal = ({
                     styles.starRatingIcon,
                     selectedStars >= star
                       ? { tintColor: bgColor }
-                      : { tintColor: '#000' }
+                      : { tintColor: '#000' },
                   ]}
                 />
               </TouchableOpacity>
@@ -106,7 +106,7 @@ const RatingModal = ({
               placeholderTextColor="#999"
               value={reviewText}
               onChangeText={setReviewText}
-              multiline={true}
+              multiline
               numberOfLines={4}
               textAlignVertical="top"
             />
@@ -144,137 +144,138 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     backgroundColor: '#fff',
-    borderTopLeftRadius: responsiveSize(24),
-    borderTopRightRadius: responsiveSize(24),
-    padding: responsiveSize(20),
-    paddingTop: responsiveSize(24),
-    paddingBottom: responsiveSize(30),
-    maxHeight: height * 0.85,
+    borderTopLeftRadius: responsiveSize(20),
+    borderTopRightRadius: responsiveSize(20),
+    paddingHorizontal: responsiveSize(16),
+    paddingTop: responsiveSize(18),
+    paddingBottom: responsiveSize(22),
+    maxHeight: height * 0.8,
   },
   modalHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: responsiveSize(20),
-    paddingHorizontal: responsiveSize(4),
-  },
-  modalBackIcon: {
-    width: responsiveSize(20),
-    height: responsiveSize(20),
-    resizeMode: 'contain',
-    tintColor: '#000',
+    marginBottom: responsiveSize(14),
+    paddingHorizontal: responsiveSize(2),
   },
   modalTitle: {
-    fontSize: responsiveSize(18),
+    fontSize: responsiveSize(14),
     fontWeight: '700',
     color: '#000',
     textAlign: 'center',
     flex: 1,
-    marginLeft: responsiveSize(20),
+    marginLeft: responsiveSize(16),
   },
+
   reviewCard: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#f8f8f8',
-    padding: responsiveSize(14),
-    borderRadius: responsiveSize(12),
-    marginBottom: responsiveSize(24),
+    padding: responsiveSize(10),
+    borderRadius: responsiveSize(10),
+    marginBottom: responsiveSize(18),
     borderWidth: 1,
     borderColor: '#eee',
   },
   foodImg: {
-    width: responsiveSize(60),
-    height: responsiveSize(60),
-    borderRadius: responsiveSize(8),
-    marginRight: responsiveSize(12),
+    width: responsiveSize(48),
+    height: responsiveSize(48),
+    borderRadius: responsiveSize(6),
+    marginRight: responsiveSize(9),
+    resizeMode: 'contain',
   },
   reviewCardContent: {
     flex: 1,
     justifyContent: 'center',
   },
   orderId: {
-    fontSize: responsiveSize(12),
+    fontSize: responsiveSize(10.5),
     fontWeight: '600',
-    marginBottom: responsiveSize(4),
+    marginBottom: responsiveSize(2),
   },
   orderTitle: {
-    fontSize: responsiveSize(16),
+    fontSize: responsiveSize(13),
     fontWeight: '700',
     color: '#000',
-    marginBottom: responsiveSize(4),
+    marginBottom: responsiveSize(2),
   },
   orderMeta: {
-    fontSize: responsiveSize(12),
+    fontSize: responsiveSize(10.5),
     color: '#666',
     fontWeight: '500',
   },
   price: {
-    fontSize: responsiveSize(16),
+    fontSize: responsiveSize(13),
     fontWeight: '700',
     color: '#000',
   },
+
   howText: {
-    fontSize: responsiveSize(18),
+    fontSize: responsiveSize(14),
     fontWeight: '700',
     color: '#000',
     textAlign: 'center',
-    marginBottom: responsiveSize(6),
+    marginBottom: responsiveSize(4),
   },
   subHowText: {
-    fontSize: responsiveSize(14),
+    fontSize: responsiveSize(11.5),
     color: '#666',
     textAlign: 'center',
-    marginBottom: responsiveSize(24),
+    marginBottom: responsiveSize(18),
     fontWeight: '500',
-    lineHeight: responsiveSize(20),
+    lineHeight: responsiveSize(16),
   },
+
   starRow: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: responsiveSize(28),
-    gap: responsiveSize(6),
+    marginBottom: responsiveSize(20),
+    gap: responsiveSize(4),
   },
   starRatingIcon: {
-    width: responsiveSize(28),
-    height: responsiveSize(28),
+    width: responsiveSize(20),
+    height: responsiveSize(20),
     resizeMode: 'contain',
   },
+
   inputContainer: {
-    marginBottom: responsiveSize(28),
+    marginBottom: responsiveSize(20),
   },
   inputBox: {
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: responsiveSize(12),
-    padding: responsiveSize(14),
-    height: responsiveSize(120),
-    fontSize: responsiveSize(14),
+    borderRadius: responsiveSize(10),
+    paddingHorizontal: responsiveSize(10),
+    paddingVertical: responsiveSize(8),
+    height: responsiveSize(96),
+    fontSize: responsiveSize(11.5),
     color: '#000',
     backgroundColor: '#fff',
     textAlignVertical: 'top',
     fontWeight: '500',
-    lineHeight: responsiveSize(20),
+    lineHeight: responsiveSize(16),
   },
+
   modalBtnRow: {
     flexDirection: 'row',
-    gap: responsiveSize(12),
-    marginHorizontal: responsiveSize(4),
+    gap: responsiveSize(9),
+    marginHorizontal: responsiveSize(2),
   },
   modalCancelBtn: {
     flex: 1,
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: responsiveSize(10),
-    paddingVertical: responsiveSize(15),
+    borderRadius: responsiveSize(8),
+    paddingVertical: responsiveSize(11),
     alignItems: 'center',
     justifyContent: 'center',
   },
   modalSubmitBtn: {
     flex: 1,
-    borderRadius: responsiveSize(10),
-    paddingVertical: responsiveSize(15),
+    borderRadius: responsiveSize(8),
+    paddingVertical: responsiveSize(11),
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 2,
@@ -284,12 +285,12 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   cancelText: {
-    fontSize: responsiveSize(14),
+    fontSize: responsiveSize(11.5),
     fontWeight: '600',
     color: '#666',
   },
   submitText: {
-    fontSize: responsiveSize(14),
+    fontSize: responsiveSize(11.5),
     fontWeight: '600',
     color: '#fff',
   },

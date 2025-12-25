@@ -12,12 +12,12 @@ import {
   Platform,
 } from 'react-native';
 import { useColor } from '../../../util/ColorSwitcher';
-import RatingModal from '../Order/RatingModal'; // Adjust the path as needed
+import RatingModal from '../Order/RatingModal';
 
 const { width, height } = Dimensions.get('window');
 
-// Responsive sizing
-const responsiveSize = size => (width / 375) * size;
+// Slightly reduced responsive sizing
+const responsiveSize = size => (width / 400) * size;
 
 export default function MyOrdersScreen({ navigation }) {
   const { bgColor, textColor } = useColor();
@@ -115,32 +115,35 @@ export default function MyOrdersScreen({ navigation }) {
 
   const handleSubmitRating = () => {
     if (selectedStars === 0) {
-      Alert.alert('Please select a rating', 'Tap on the stars to rate this order.');
+      Alert.alert(
+        'Please select a rating',
+        'Tap on the stars to rate this order.',
+      );
       return;
     }
 
     Alert.alert(
       'Thank You!',
-      `You rated ${selectedOrder?.name} with ${selectedStars} star${selectedStars > 1 ? 's' : ''}.${reviewText ? '\n\nReview: ' + reviewText : ''}`,
+      `You rated ${selectedOrder?.name} with ${selectedStars} star${
+        selectedStars > 1 ? 's' : ''
+      }.${reviewText ? '\n\nReview: ' + reviewText : ''}`,
       [
         {
           text: 'OK',
           onPress: () => {
-            // Here you would typically send the rating to your backend
             console.log('Rating submitted:', {
               orderId: selectedOrder?.id,
               stars: selectedStars,
               review: reviewText,
             });
-            
-            // Reset and close
+
             setRatingModalVisible(false);
             setSelectedStars(0);
             setReviewText('');
             setSelectedOrder(null);
           },
         },
-      ]
+      ],
     );
   };
 
@@ -155,7 +158,7 @@ export default function MyOrdersScreen({ navigation }) {
     <View style={styles.container}>
       <StatusBar backgroundColor={bgColor} barStyle="light-content" />
 
-      {/* Header - Same as Cart screen */}
+      {/* Header */}
       <View style={[styles.header, { backgroundColor: bgColor }]}>
         <Text style={styles.headerTitle}>My Orders</Text>
       </View>
@@ -306,7 +309,7 @@ export default function MyOrdersScreen({ navigation }) {
             ))}
 
         {/* Extra padding for bottom tab */}
-        <View style={{ height: responsiveSize(80) }} />
+        <View style={{ height: responsiveSize(64) }} />
       </ScrollView>
 
       {/* Rating Modal */}
@@ -333,45 +336,46 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
+  scrollContent: {
+    paddingTop: responsiveSize(10),
+  },
   header: {
-    height: Platform.OS === 'ios' ? responsiveSize(100) : responsiveSize(90),
+    height: Platform.OS === 'ios' ? responsiveSize(90) : responsiveSize(82),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: responsiveSize(18),
+    paddingHorizontal: responsiveSize(14),
     justifyContent: 'space-between',
-    paddingTop: Platform.OS === 'ios' ? responsiveSize(50) : responsiveSize(30),
-    paddingBottom: responsiveSize(0),
+    paddingTop: Platform.OS === 'ios' ? responsiveSize(44) : responsiveSize(26),
+    paddingBottom: 0,
   },
   headerTitle: {
     color: '#fff',
-    fontSize: responsiveSize(20),
+    fontSize: responsiveSize(16),
     fontWeight: '700',
     textAlign: 'center',
     flex: 1,
-    marginHorizontal: responsiveSize(10),
+    marginHorizontal: responsiveSize(8),
   },
 
   /* TAB SWITCHER */
   tabsContainer: {
     flexDirection: 'row',
-    marginHorizontal: responsiveSize(15),
-    marginTop: responsiveSize(15),
+    marginHorizontal: responsiveSize(12),
+    marginTop: responsiveSize(10),
     backgroundColor: '#F3F6FB',
-    borderRadius: responsiveSize(12),
+    borderRadius: responsiveSize(10),
     overflow: 'hidden',
-    minHeight: responsiveSize(50),
+    minHeight: responsiveSize(40),
   },
   tabButton: {
     flex: 1,
-    paddingVertical: responsiveSize(15),
+    paddingVertical: responsiveSize(10),
     alignItems: 'center',
     justifyContent: 'center',
   },
-  tabActive: {
-    // Background color handled inline with bgColor
-  },
+  tabActive: {},
   tabText: {
-    fontSize: responsiveSize(14),
+    fontSize: responsiveSize(11.5),
     color: '#222',
     fontWeight: '600',
     textAlign: 'center',
@@ -384,54 +388,55 @@ const styles = StyleSheet.create({
   orderCard: {
     flexDirection: 'row',
     backgroundColor: '#fff',
-    marginHorizontal: responsiveSize(15),
-    marginVertical: responsiveSize(8),
-    borderRadius: responsiveSize(16),
-    padding: responsiveSize(15),
+    marginHorizontal: responsiveSize(12),
+    marginVertical: responsiveSize(6),
+    borderRadius: responsiveSize(12),
+    padding: responsiveSize(11),
     borderWidth: 1,
     borderColor: '#e0e0e0',
-    elevation: 2,
+    elevation: 1,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
   },
   productImage: {
-    width: responsiveSize(70),
-    height: responsiveSize(70),
-    borderRadius: responsiveSize(8),
+    width: responsiveSize(56),
+    height: responsiveSize(56),
+    borderRadius: responsiveSize(6),
+    resizeMode: 'contain',
   },
   orderContent: {
     flex: 1,
-    marginLeft: responsiveSize(12),
+    marginLeft: responsiveSize(9),
     justifyContent: 'space-between',
   },
   orderId: {
-    fontSize: responsiveSize(12),
+    fontSize: responsiveSize(10.5),
     fontWeight: '600',
-    marginBottom: responsiveSize(4),
+    marginBottom: responsiveSize(3),
   },
   productName: {
-    fontSize: responsiveSize(16),
+    fontSize: responsiveSize(13),
     fontWeight: '700',
     color: '#000',
     marginBottom: responsiveSize(2),
   },
   productNameLink: {
-    fontSize: responsiveSize(16),
+    fontSize: responsiveSize(13),
     fontWeight: '700',
     marginBottom: responsiveSize(2),
     textDecorationLine: 'underline',
   },
   productPrice: {
-    fontSize: responsiveSize(16),
+    fontSize: responsiveSize(13),
     fontWeight: '700',
     marginBottom: responsiveSize(4),
   },
   soldBy: {
-    fontSize: responsiveSize(12),
+    fontSize: responsiveSize(10.5),
     color: '#666',
-    marginBottom: responsiveSize(8),
+    marginBottom: responsiveSize(6),
   },
   soldByText: {
     color: '#666',
@@ -439,86 +444,86 @@ const styles = StyleSheet.create({
   deliveredStatus: {
     color: '#34A853',
     fontWeight: '600',
-    fontSize: responsiveSize(12),
+    fontSize: responsiveSize(10.5),
   },
   arrivalRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: responsiveSize(12),
+    marginBottom: responsiveSize(8),
     flexWrap: 'wrap',
   },
   estimateLabel: {
-    fontSize: responsiveSize(12),
+    fontSize: responsiveSize(10.5),
     color: '#666',
   },
   estimateTime: {
-    fontSize: responsiveSize(14),
+    fontSize: responsiveSize(11.5),
     color: '#000',
-    marginLeft: responsiveSize(4),
+    marginLeft: responsiveSize(3),
     fontWeight: '600',
   },
   orderStatus: {
-    fontSize: responsiveSize(12),
+    fontSize: responsiveSize(10.5),
     fontWeight: '700',
-    marginLeft: responsiveSize(12),
+    marginLeft: responsiveSize(8),
   },
   buttonsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: responsiveSize(10),
+    gap: responsiveSize(6),
   },
   rateButton: {
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: responsiveSize(8),
-    paddingHorizontal: responsiveSize(16),
-    paddingVertical: responsiveSize(10),
+    borderRadius: responsiveSize(7),
+    paddingHorizontal: responsiveSize(12),
+    paddingVertical: responsiveSize(7),
     flex: 1,
     alignItems: 'center',
   },
   rateText: {
     color: '#000',
     fontWeight: '600',
-    fontSize: responsiveSize(13),
+    fontSize: responsiveSize(11),
   },
   reorderButton: {
-    borderRadius: responsiveSize(8),
-    paddingHorizontal: responsiveSize(16),
-    paddingVertical: responsiveSize(10),
+    borderRadius: responsiveSize(7),
+    paddingHorizontal: responsiveSize(12),
+    paddingVertical: responsiveSize(7),
     flex: 1,
     alignItems: 'center',
   },
   reorderText: {
     color: '#fff',
     fontWeight: '600',
-    fontSize: responsiveSize(13),
+    fontSize: responsiveSize(11),
   },
   cancelButton: {
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: responsiveSize(8),
-    paddingHorizontal: responsiveSize(12),
-    paddingVertical: responsiveSize(10),
+    borderRadius: responsiveSize(7),
+    paddingHorizontal: responsiveSize(10),
+    paddingVertical: responsiveSize(7),
     flex: 1,
     alignItems: 'center',
   },
   cancelText: {
     color: '#000',
     fontWeight: '600',
-    fontSize: responsiveSize(12),
+    fontSize: responsiveSize(10),
   },
   trackButton: {
-    borderRadius: responsiveSize(8),
-    paddingHorizontal: responsiveSize(12),
-    paddingVertical: responsiveSize(10),
+    borderRadius: responsiveSize(7),
+    paddingHorizontal: responsiveSize(10),
+    paddingVertical: responsiveSize(7),
     flex: 1,
     alignItems: 'center',
   },
   trackText: {
     color: '#fff',
     fontWeight: '600',
-    fontSize: responsiveSize(12),
+    fontSize: responsiveSize(10),
   },
 });
