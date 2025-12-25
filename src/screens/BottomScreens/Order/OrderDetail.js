@@ -9,13 +9,18 @@ import {
   Dimensions,
   Modal,
   Linking,
-  Platform
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useColor } from '../../../util/ColorSwitcher';
 import { ScrollView } from 'react-native-gesture-handler';
 
 const { height, width } = Dimensions.get('window');
+
+// compact scaling based on 375 width
+const BASE_WIDTH = 375;
+const scale = width / BASE_WIDTH;
+const rs = size => size * scale;
 
 const OrderDetail = ({ route }) => {
   const navigation = useNavigation();
@@ -38,7 +43,7 @@ const OrderDetail = ({ route }) => {
         translucent
       />
 
-      {/* ================= Header ================= */}
+      {/* Header */}
       <View style={[styles.header, { backgroundColor: '#fff' }]}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -56,12 +61,15 @@ const OrderDetail = ({ route }) => {
             Order Detail
           </Text>
         </View>
-        
+
         <View style={styles.headerSpacer} />
       </View>
 
-      <ScrollView style={styles.scrollArea} contentContainerStyle={{ paddingBottom: 20 }}>
-        {/* ================= PHONE CARD ================= */}
+      <ScrollView
+        style={styles.scrollArea}
+        contentContainerStyle={{ paddingBottom: rs(16) }}
+      >
+        {/* Phone Card */}
         <View style={styles.orderContent}>
           <Image
             source={order?.image || require('../../../assets/mobile2.png')}
@@ -80,9 +88,7 @@ const OrderDetail = ({ route }) => {
             <View style={styles.soldRow}>
               <Text style={[styles.soldBy, { color: bgColor }]}>
                 Sold By:{' '}
-                <Text style={{ color: '#919291' }}>
-                  {order?.soldBy}
-                </Text>
+                <Text style={{ color: '#919291' }}>{order?.soldBy}</Text>
               </Text>
 
               <Text style={styles.dot}>•</Text>
@@ -92,9 +98,7 @@ const OrderDetail = ({ route }) => {
                   styles.status,
                   {
                     color:
-                      order?.status === 'Delivered'
-                        ? '#34A853'
-                        : '#FFA500',
+                      order?.status === 'Delivered' ? '#34A853' : '#FFA500',
                   },
                 ]}
               >
@@ -104,7 +108,7 @@ const OrderDetail = ({ route }) => {
           </View>
         </View>
 
-        {/* ================= DETAILS CARD (SEPARATE) ================= */}
+        {/* Details Card */}
         <View style={[styles.detailsCard, { backgroundColor: '#f8f8f8' }]}>
           <Text style={[styles.detailsTitle, { color: '#000' }]}>Details</Text>
 
@@ -120,13 +124,17 @@ const OrderDetail = ({ route }) => {
               />
 
               <View>
-                <Text style={[styles.userId, { color: '#c0bfbf' }]}>ID: DKS-501F9</Text>
-                <Text style={[styles.userName, { color: '#000' }]}>Mann Sharma</Text>
+                <Text style={[styles.userId, { color: '#c0bfbf' }]}>
+                  ID: DKS-501F9
+                </Text>
+                <Text style={[styles.userName, { color: '#000' }]}>
+                  Mann Sharma
+                </Text>
               </View>
             </View>
 
-            <TouchableOpacity 
-              style={[styles.callBtn, { backgroundColor: bgColor }]} 
+            <TouchableOpacity
+              style={[styles.callBtn, { backgroundColor: bgColor }]}
               onPress={handleCall}
               activeOpacity={0.85}
             >
@@ -139,95 +147,114 @@ const OrderDetail = ({ route }) => {
           </View>
         </View>
 
-        {/* ================= ORDER ITEM CARD ================= */}
+        {/* Order Items title */}
         <View style={styles.orderTitleContainer}>
-          <Text style={[styles.orderTitle, { color: '#000' }]}>Orders Item's</Text>
+          <Text style={[styles.orderTitle, { color: '#000' }]}>
+            Orders Item's
+          </Text>
         </View>
 
+        {/* Order Item Card 1 */}
         <View style={[styles.orderCard, { backgroundColor: '#fff' }]}>
-          {/* Left Image */}
           <Image
             source={require('../../../assets/mobile3.png')}
             style={styles.itemImage}
           />
 
-          {/* Middle Content */}
           <View style={styles.itemContent}>
-            <Text style={[styles.itemName, { color: '#000' }]}>I Phone 17 Plus</Text>
+            <Text style={[styles.itemName, { color: '#000' }]}>
+              I Phone 17 Plus
+            </Text>
 
             <Text style={[styles.soldByText, { color: '#6B7280' }]}>
-              Sold By : <Text style={[styles.storeName, { color: bgColor }]}>Grocery Store</Text>
+              Sold By :{' '}
+              <Text style={[styles.storeName, { color: bgColor }]}>
+                Grocery Store
+              </Text>
             </Text>
 
             <View style={styles.bottomRow}>
               <Text style={[styles.price, { color: '#000' }]}>₹124050.00</Text>
 
-              {/* Quantity Controls */}
               <View style={styles.qtyContainer}>
-                <TouchableOpacity style={[styles.qtyBtn, { borderColor: bgColor }]}>
+                <TouchableOpacity
+                  style={[styles.qtyBtn, { borderColor: bgColor }]}
+                >
                   <Text style={[styles.qtyBtnText, { color: bgColor }]}>−</Text>
                 </TouchableOpacity>
 
                 <Text style={[styles.qtyText, { color: '#000' }]}>02</Text>
 
-                <TouchableOpacity style={[styles.qtyBtnDark, { backgroundColor: bgColor }]}>
-                  <Text style={[styles.qtyBtnTextDark, { color: textColor }]}>+</Text>
+                <TouchableOpacity
+                  style={[styles.qtyBtnDark, { backgroundColor: bgColor }]}
+                >
+                  <Text style={[styles.qtyBtnTextDark, { color: textColor }]}>
+                    +
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
 
-          {/* Close Icon */}
           <TouchableOpacity style={styles.closeBtn}>
             <Text style={[styles.closeText, { color: bgColor }]}>✕</Text>
           </TouchableOpacity>
         </View>
 
-        {/* ================= ORDER ITEM CARD 2 ================= */}
+        {/* Order Item Card 2 */}
         <View style={[styles.orderCard, { backgroundColor: '#fff' }]}>
-          {/* Left Image */}
           <Image
             source={require('../../../assets/mobile3.png')}
             style={styles.itemImage}
           />
 
-          {/* Middle Content */}
           <View style={styles.itemContent}>
-            <Text style={[styles.itemName, { color: '#000' }]}>I Phone 17 Plus</Text>
+            <Text style={[styles.itemName, { color: '#000' }]}>
+              I Phone 17 Plus
+            </Text>
 
             <Text style={[styles.soldByText, { color: '#6B7280' }]}>
-              Sold By : <Text style={[styles.storeName, { color: bgColor }]}>Grocery Store</Text>
+              Sold By :{' '}
+              <Text style={[styles.storeName, { color: bgColor }]}>
+                Grocery Store
+              </Text>
             </Text>
 
             <View style={styles.bottomRow}>
               <Text style={[styles.price, { color: '#000' }]}>₹124050.00</Text>
 
-              {/* Quantity Controls */}
               <View style={styles.qtyContainer}>
-                <TouchableOpacity style={[styles.qtyBtn, { borderColor: bgColor }]}>
+                <TouchableOpacity
+                  style={[styles.qtyBtn, { borderColor: bgColor }]}
+                >
                   <Text style={[styles.qtyBtnText, { color: bgColor }]}>−</Text>
                 </TouchableOpacity>
 
                 <Text style={[styles.qtyText, { color: '#000' }]}>02</Text>
 
-                <TouchableOpacity style={[styles.qtyBtnDark, { backgroundColor: bgColor }]}>
-                  <Text style={[styles.qtyBtnTextDark, { color: textColor }]}>+</Text>
+                <TouchableOpacity
+                  style={[styles.qtyBtnDark, { backgroundColor: bgColor }]}
+                >
+                  <Text style={[styles.qtyBtnTextDark, { color: textColor }]}>
+                    +
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
 
-          {/* Close Icon */}
           <TouchableOpacity style={styles.closeBtn}>
             <Text style={[styles.closeText, { color: bgColor }]}>✕</Text>
           </TouchableOpacity>
         </View>
 
-        {/* ================= Bottom Section ================= */}
+        {/* Bottom Section */}
         <View style={styles.bottomcontainer}>
           <View style={styles.totalRow}>
             <Text style={[styles.totalText, { color: '#000' }]}>Total</Text>
-            <Text style={[styles.amountText, { color: '#000' }]}>₹ 59890.00</Text>
+            <Text style={[styles.amountText, { color: '#000' }]}>
+              ₹ 59890.00
+            </Text>
           </View>
 
           <View style={styles.buttonRow}>
@@ -235,13 +262,31 @@ const OrderDetail = ({ route }) => {
               style={[styles.button, styles.returnButton]}
               onPress={() => setShowReturnPopup(true)}
             >
-              <Text style={[styles.buttonText, styles.returnButtonText, { color: '#000' }]}>
+              <Text
+                style={[
+                  styles.buttonText,
+                  styles.returnButtonText,
+                  { color: '#000' },
+                ]}
+              >
                 RETURN ORDER
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.button, styles.reorderButton, { backgroundColor: bgColor }]}>
-              <Text style={[styles.buttonText, styles.reorderButtonText, { color: textColor }]}>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                styles.reorderButton,
+                { backgroundColor: bgColor },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.buttonText,
+                  styles.reorderButtonText,
+                  { color: textColor },
+                ]}
+              >
                 RE-ORDER
               </Text>
             </TouchableOpacity>
@@ -249,41 +294,49 @@ const OrderDetail = ({ route }) => {
         </View>
       </ScrollView>
 
-      {/* ================= RETURN ORDER POPUP ================= */}
+      {/* Return Order Popup */}
       <Modal transparent visible={showReturnPopup} animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={[styles.modalCard, { backgroundColor: '#fff' }]}>
-            {/* Icon */}
             <View style={[styles.iconCircle, { backgroundColor: bgColor }]}>
               <Image
                 source={require('../../../assets/wallet.png')}
-                style={{ width: 28, height: 28, tintColor: textColor }}
+                style={{
+                  width: rs(22),
+                  height: rs(22),
+                  tintColor: textColor,
+                  resizeMode: 'contain',
+                }}
               />
             </View>
 
-            <Text style={[styles.modalTitle, { color: '#000' }]}>Return Order</Text>
+            <Text style={[styles.modalTitle, { color: '#000' }]}>
+              Return Order
+            </Text>
 
             <Text style={[styles.modalDesc, { color: '#666' }]}>
               Order send back are only allowed for damaged items. Continue if
               your order is damaged
             </Text>
 
-            {/* Buttons */}
             <TouchableOpacity
               style={[styles.keepBtn, { backgroundColor: '#F58220' }]}
               onPress={() => setShowReturnPopup(false)}
             >
-              <Text style={[styles.keepText, { color: '#fff' }]}>Keep order</Text>
+              <Text style={[styles.keepText, { color: '#fff' }]}>
+                Keep order
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[styles.sendBtn, { backgroundColor: '#EFEFEF' }]}
               onPress={() => {
                 setShowReturnPopup(false);
-                // navigation.navigate('ReturnOrder'); // optional
               }}
             >
-              <Text style={[styles.sendText, { color: '#555' }]}>Send Back</Text>
+              <Text style={[styles.sendText, { color: '#555' }]}>
+                Send Back
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -303,48 +356,48 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  /* ---------- Header ---------- */
+
+  /* Header */
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
-    paddingHorizontal: 20,
-    paddingBottom: 15,
+    paddingTop: Platform.OS === 'ios' ? rs(52) : rs(36),
+    paddingHorizontal: rs(14),
+    paddingBottom: rs(10),
     backgroundColor: '#fff',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 1.5 },
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
   iconBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
+    width: rs(32),
+    height: rs(32),
+    borderRadius: rs(10),
     justifyContent: 'center',
     alignItems: 'center',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 1.5 },
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
   backIcon: {
-    width: 20,
-    height: 20,
-    resizeMode: 'contain',
+    width: rs(16),
+    height: rs(16),
   },
   headerTitleContainer: {
     flex: 1,
@@ -352,30 +405,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerText: {
-    fontSize: 18,
+    fontSize: rs(14),
     fontWeight: '700',
     fontFamily: 'Figtree-Bold',
     textAlign: 'center',
   },
   headerSpacer: {
-    width: 40,
+    width: rs(32),
   },
 
-  /* ---------- Phone Card ---------- */
+  /* Phone Card */
   orderContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 15,
+    padding: rs(11),
     backgroundColor: '#fff',
-    marginHorizontal: 20,
-    marginVertical: 15,
-    borderRadius: 12,
+    marginHorizontal: rs(14),
+    marginVertical: rs(11),
+    borderRadius: rs(10),
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 1.5 },
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
       },
       android: {
         elevation: 2,
@@ -383,68 +436,68 @@ const styles = StyleSheet.create({
     }),
   },
   productImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 8,
+    width: rs(64),
+    height: rs(64),
+    borderRadius: rs(6),
     resizeMode: 'contain',
   },
   orderText: {
     flex: 1,
-    paddingLeft: 15,
+    paddingLeft: rs(10),
   },
   orderId: {
-    fontSize: 14,
+    fontSize: rs(11),
     fontWeight: '600',
     fontFamily: 'Figtree-SemiBold',
-    marginBottom: 4,
+    marginBottom: rs(2),
   },
   productName: {
-    fontSize: 16,
+    fontSize: rs(13),
     fontWeight: '700',
     fontFamily: 'Figtree-Bold',
-    marginBottom: 4,
+    marginBottom: rs(2),
   },
   soldRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 4,
+    marginTop: rs(3),
   },
   soldBy: {
-    fontSize: 13,
+    fontSize: rs(11),
     fontWeight: '500',
     fontFamily: 'Figtree-Medium',
   },
   dot: {
-    fontSize: 22,
-    lineHeight: 18,
+    fontSize: rs(16),
+    lineHeight: rs(14),
     color: '#C4C4C4',
-    marginHorizontal: 8,
+    marginHorizontal: rs(6),
   },
   status: {
-    fontSize: 13,
+    fontSize: rs(11),
     fontWeight: '500',
     fontFamily: 'Figtree-Medium',
   },
 
-  /* ---------- Details Card ---------- */
+  /* Details Card */
   detailsCard: {
-    marginHorizontal: 20,
-    paddingHorizontal: 18,
-    paddingVertical: 18,
-    borderRadius: 14,
-    marginBottom: 20,
+    marginHorizontal: rs(14),
+    paddingHorizontal: rs(13),
+    paddingVertical: rs(13),
+    borderRadius: rs(11),
+    marginBottom: rs(14),
   },
   detailsTitle: {
-    fontSize: 16,
+    fontSize: rs(13),
     fontWeight: '600',
     fontFamily: 'Figtree-SemiBold',
-    marginBottom: 6,
+    marginBottom: rs(4),
   },
   addressText: {
-    fontSize: 15,
+    fontSize: rs(11.5),
     fontFamily: 'Figtree-Regular',
-    lineHeight: 20,
-    marginBottom: 14,
+    lineHeight: rs(16),
+    marginBottom: rs(10),
   },
   userRow: {
     flexDirection: 'row',
@@ -457,74 +510,74 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   userAvatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    marginRight: 12,
+    width: rs(44),
+    height: rs(44),
+    borderRadius: rs(22),
+    marginRight: rs(9),
   },
   userId: {
-    fontSize: 13,
+    fontSize: rs(10.5),
     fontFamily: 'Figtree-Regular',
-    marginBottom: 2,
+    marginBottom: rs(1),
   },
   userName: {
-    fontSize: 16,
+    fontSize: rs(13),
     fontWeight: '600',
     fontFamily: 'Figtree-SemiBold',
   },
   callBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 10,
+    paddingHorizontal: rs(12),
+    paddingVertical: rs(8),
+    borderRadius: rs(8),
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 1.5 },
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
   callIcon: {
-    width: 16,
-    height: 16,
-    resizeMode: 'contain',
-    marginRight: 6,
+    width: rs(13),
+    height: rs(13),
+    marginRight: rs(4),
   },
   callText: {
-    fontSize: 14,
+    fontSize: rs(11.5),
     fontWeight: '600',
     fontFamily: 'Figtree-SemiBold',
   },
 
-  /* ---------- Order Item Card ---------- */
+  /* Order Item Card */
   orderTitleContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 5,
-    marginBottom: 10,
+    paddingHorizontal: rs(14),
+    paddingVertical: rs(4),
+    marginBottom: rs(6),
   },
   orderTitle: {
-    fontSize: 16,
+    fontSize: rs(13),
     fontWeight: '600',
     fontFamily: 'Figtree-SemiBold',
   },
   orderCard: {
     flexDirection: 'row',
-    borderRadius: 16,
-    padding: 15,
-    marginHorizontal: 20,
-    marginBottom: 15,
+    borderRadius: rs(12),
+    padding: rs(11),
+    marginHorizontal: rs(14),
+    marginBottom: rs(11),
+    backgroundColor: '#fff',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 1.5 },
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
       },
       android: {
         elevation: 2,
@@ -532,26 +585,26 @@ const styles = StyleSheet.create({
     }),
   },
   itemImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 12,
+    width: rs(64),
+    height: rs(64),
+    borderRadius: rs(9),
     resizeMode: 'contain',
     backgroundColor: '#F3F3F3',
   },
   itemContent: {
     flex: 1,
-    paddingLeft: 14,
+    paddingLeft: rs(10),
   },
   itemName: {
-    fontSize: 16,
+    fontSize: rs(13),
     fontWeight: '700',
     fontFamily: 'Figtree-Bold',
-    marginBottom: 4,
+    marginBottom: rs(2),
   },
   soldByText: {
-    fontSize: 13,
+    fontSize: rs(11),
     fontFamily: 'Figtree-Medium',
-    marginBottom: 10,
+    marginBottom: rs(7),
   },
   storeName: {
     fontWeight: '500',
@@ -563,7 +616,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   price: {
-    fontSize: 16,
+    fontSize: rs(13),
     fontWeight: '700',
     fontFamily: 'Figtree-Bold',
   },
@@ -572,66 +625,66 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   qtyBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: rs(26),
+    height: rs(26),
+    borderRadius: rs(13),
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   qtyBtnText: {
-    fontSize: 18,
+    fontSize: rs(14),
     fontWeight: '600',
     fontFamily: 'Figtree-SemiBold',
   },
   qtyText: {
-    marginHorizontal: 12,
-    fontSize: 15,
+    marginHorizontal: rs(9),
+    fontSize: rs(12.5),
     fontWeight: '600',
     fontFamily: 'Figtree-SemiBold',
   },
   qtyBtnDark: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: rs(26),
+    height: rs(26),
+    borderRadius: rs(13),
     justifyContent: 'center',
     alignItems: 'center',
   },
   qtyBtnTextDark: {
-    fontSize: 18,
+    fontSize: rs(14),
     fontWeight: '600',
     fontFamily: 'Figtree-SemiBold',
   },
   closeBtn: {
     position: 'absolute',
-    top: 10,
-    right: 10,
+    top: rs(7),
+    right: rs(7),
   },
   closeText: {
-    fontSize: 18,
+    fontSize: rs(14),
     fontWeight: '600',
     fontFamily: 'Figtree-SemiBold',
   },
 
-  /* ---------- Bottom Section ---------- */
+  /* Bottom Section */
   bottomcontainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingHorizontal: rs(14),
+    paddingVertical: rs(14),
     backgroundColor: '#fff',
-    marginTop: 10,
+    marginTop: rs(6),
   },
   totalRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: rs(13),
   },
   totalText: {
-    fontSize: 16,
+    fontSize: rs(13),
     fontFamily: 'Figtree-SemiBold',
     fontWeight: '600',
   },
   amountText: {
-    fontSize: 18,
+    fontSize: rs(15),
     fontWeight: '700',
     fontFamily: 'Figtree-Bold',
   },
@@ -641,19 +694,19 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    paddingVertical: 16,
-    borderRadius: 10,
+    paddingVertical: rs(11),
+    borderRadius: rs(8),
     alignItems: 'center',
-    marginHorizontal: 5,
+    marginHorizontal: rs(4),
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 1.5 },
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
@@ -662,11 +715,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
   },
-  reorderButton: {
-    backgroundColor: '#1E3A8A',
-  },
+  reorderButton: {},
   buttonText: {
-    fontSize: 14,
+    fontSize: rs(11.5),
     fontWeight: '600',
     fontFamily: 'Figtree-SemiBold',
   },
@@ -677,19 +728,19 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 
-  /* ---------- Return Order Popup ---------- */
+  /* Return Order Popup */
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: rs(16),
   },
   modalCard: {
     width: '100%',
     maxWidth: width * 0.85,
-    borderRadius: 20,
-    padding: 24,
+    borderRadius: rs(16),
+    padding: rs(18),
     alignItems: 'center',
     elevation: 5,
     shadowColor: '#000',
@@ -698,48 +749,48 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   iconCircle: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
+    width: rs(52),
+    height: rs(52),
+    borderRadius: rs(26),
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: rs(11),
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: rs(14),
     fontWeight: '700',
     fontFamily: 'Figtree-Bold',
-    marginBottom: 10,
+    marginBottom: rs(7),
     textAlign: 'center',
   },
   modalDesc: {
-    fontSize: 14,
+    fontSize: rs(11.5),
     fontFamily: 'Figtree-Medium',
     textAlign: 'center',
-    marginBottom: 20,
-    lineHeight: 20,
+    marginBottom: rs(14),
+    lineHeight: rs(16),
   },
   keepBtn: {
     width: '100%',
-    paddingVertical: 14,
-    borderRadius: 10,
-    marginBottom: 12,
+    paddingVertical: rs(11),
+    borderRadius: rs(8),
+    marginBottom: rs(9),
     alignItems: 'center',
   },
   keepText: {
     fontWeight: '600',
     fontFamily: 'Figtree-SemiBold',
-    fontSize: 16,
+    fontSize: rs(12.5),
   },
   sendBtn: {
     width: '100%',
-    paddingVertical: 14,
-    borderRadius: 10,
+    paddingVertical: rs(11),
+    borderRadius: rs(8),
     alignItems: 'center',
   },
   sendText: {
     fontWeight: '600',
     fontFamily: 'Figtree-SemiBold',
-    fontSize: 16,
+    fontSize: rs(12.5),
   },
 });

@@ -15,15 +15,13 @@ import { useNavigation } from '@react-navigation/native';
 import { useColor } from '../../../util/ColorSwitcher';
 
 const { width, height } = Dimensions.get('window');
-const rs = size => (width / 375) * size;
 
-// Platform detection
+// Swiggy-style tighter scaling
+const rs = size => (width / 400) * size;
+
 const isIOS = Platform.OS === 'ios';
 
-// Responsive font scaling
-const fontScale = size => {
-  return isIOS ? size * 0.95 : size;
-};
+const fontScale = size => (isIOS ? size * 0.95 : size);
 
 const ReferToEarn = () => {
   const navigation = useNavigation();
@@ -48,7 +46,10 @@ const ReferToEarn = () => {
 
       {/* Header */}
       <View style={[styles.header, { backgroundColor: bgColor }]}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconBtn}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.iconBtn}
+        >
           <Image
             source={require('../../../assets/back.png')}
             style={[styles.icon, { tintColor: bgColor }]}
@@ -59,7 +60,7 @@ const ReferToEarn = () => {
         <View style={{ width: rs(40) }} />
       </View>
 
-      <ScrollView 
+      <ScrollView
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
@@ -81,7 +82,7 @@ const ReferToEarn = () => {
               <TouchableOpacity onPress={handleShare}>
                 <Image
                   source={require('../../../assets/share1.png')}
-                  style={[styles.icon, { marginLeft: rs(12) }]}
+                  style={[styles.icon, { marginLeft: rs(10) }]}
                 />
               </TouchableOpacity>
             </View>
@@ -95,7 +96,9 @@ const ReferToEarn = () => {
               source={require('../../../assets/whatsapp.png')}
               style={styles.whatsappIcon}
             />
-            <Text style={[styles.whatsappText, { color: textColor }]}>Invite Via Whatsapp</Text>
+            <Text style={[styles.whatsappText, { color: textColor }]}>
+              Invite Via Whatsapp
+            </Text>
           </TouchableOpacity>
 
           <View style={styles.infoRow}>
@@ -140,28 +143,28 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 
-  /* Header */
+  /* Header - Swiggy compact */
   header: {
-    height: isIOS ? rs(100) : rs(90),
+    height: isIOS ? rs(90) : rs(82),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: rs(18),
+    paddingHorizontal: rs(16),
     justifyContent: 'space-between',
-    paddingTop: isIOS ? rs(50) : rs(30),
+    paddingTop: isIOS ? rs(44) : rs(26),
     paddingBottom: rs(0),
   },
   headerTitle: {
     color: '#fff',
-    fontSize: fontScale(rs(20)),
+    fontSize: fontScale(rs(16)),
     fontWeight: '700',
     textAlign: 'center',
     flex: 1,
     marginHorizontal: rs(10),
   },
   iconBtn: {
-    width: rs(40),
-    height: rs(40),
-    borderRadius: rs(12),
+    width: rs(36),
+    height: rs(36),
+    borderRadius: rs(10),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
@@ -170,65 +173,65 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowRadius: 3,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
   icon: {
-    width: rs(20),
-    height: rs(20),
+    width: rs(18),
+    height: rs(18),
   },
 
   content: {
-    paddingHorizontal: rs(20),
-    paddingBottom: isIOS ? rs(100) : rs(90),
-    paddingTop: rs(10),
+    paddingHorizontal: rs(13),
+    paddingBottom: isIOS ? rs(80) : rs(70),
+    paddingTop: rs(8),
   },
 
   card: {
     backgroundColor: '#fff',
-    borderRadius: rs(14),
-    padding: rs(16),
-    elevation: 3,
-    marginTop: rs(10),
+    borderRadius: rs(12),
+    padding: rs(13),
+    elevation: 2,
+    marginTop: rs(8),
     ...Platform.select({
       ios: {
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
 
   cardTitle: {
-    fontSize: fontScale(rs(14)),
+    fontSize: fontScale(rs(13)),
     fontWeight: '500',
-    marginBottom: rs(10),
+    marginBottom: rs(8),
   },
 
   codeBox: {
     borderWidth: 1,
     borderStyle: 'dashed',
     borderColor: '#ccc',
-    borderRadius: rs(10),
-    paddingHorizontal: rs(14),
-    paddingVertical: rs(12),
+    borderRadius: rs(9),
+    paddingHorizontal: rs(12),
+    paddingVertical: rs(10),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
 
   codeText: {
-    fontSize: fontScale(rs(16)),
+    fontSize: fontScale(rs(14)),
     fontWeight: '600',
-    letterSpacing: 1,
+    letterSpacing: 0.8,
   },
 
   iconRow: {
@@ -237,28 +240,28 @@ const styles = StyleSheet.create({
   },
 
   icon: {
-    width: rs(20),
-    height: rs(20),
+    width: rs(18),
+    height: rs(18),
     tintColor: '#000',
   },
 
   whatsappBtn: {
-    borderRadius: rs(12),
-    height: rs(50),
-    marginTop: rs(18),
+    borderRadius: rs(10),
+    height: rs(44),
+    marginTop: rs(14),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
 
   whatsappIcon: {
-    width: rs(22),
-    height: rs(22),
-    marginRight: rs(10),
+    width: rs(19),
+    height: rs(19),
+    marginRight: rs(8),
   },
 
   whatsappText: {
-    fontSize: fontScale(rs(15)),
+    fontSize: fontScale(rs(13)),
     fontWeight: '600',
   },
 
@@ -266,54 +269,54 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: rs(14),
+    marginTop: rs(12),
   },
 
   infoText: {
-    fontSize: fontScale(rs(13)),
+    fontSize: fontScale(rs(12)),
     color: '#444',
   },
 
   helpIcon: {
-    width: rs(18),
-    height: rs(18),
+    width: rs(16),
+    height: rs(16),
     tintColor: '#F57C00',
   },
 
   bottomRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: rs(25),
+    marginTop: rs(20),
   },
 
   bottomCard: {
     width: '48%',
     backgroundColor: '#fff',
-    borderRadius: rs(14),
-    paddingVertical: rs(18),
+    borderRadius: rs(12),
+    paddingVertical: rs(15),
     alignItems: 'center',
-    elevation: 3,
+    elevation: 2,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
 
   bottomImage: {
-    width: rs(45),
-    height: rs(45),
-    marginBottom: rs(10),
+    width: rs(38),
+    height: rs(38),
+    marginBottom: rs(8),
   },
 
   bottomText: {
-    fontSize: fontScale(rs(14)),
+    fontSize: fontScale(rs(12.5)),
     fontWeight: '500',
   },
 });

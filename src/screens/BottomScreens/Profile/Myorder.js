@@ -1,43 +1,38 @@
 import React from 'react';
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
+import {
+  View,
+  Text,
+  StyleSheet,
   Image,
-  TouchableOpacity, 
-  ScrollView, 
+  TouchableOpacity,
+  ScrollView,
   Dimensions,
   StatusBar,
-  Platform 
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useColor } from '../../../util/ColorSwitcher';
 
-const { height, width } = Dimensions.get('window');
-const responsiveSize = size => (width / 375) * size;
+const { width } = Dimensions.get('window');
 
-// Platform detection
+// slightly smaller base than 375 for a tighter Swiggy-like look
+const responsiveSize = size => (width / 400) * size;
+
 const isIOS = Platform.OS === 'ios';
 
-// Responsive font scaling
-const fontScale = size => {
-  return isIOS ? size * 0.95 : size;
-};
+const fontScale = size => (isIOS ? size * 0.95 : size);
 
-// Scale size for dimensions
-const scaleSize = size => {
-  return isIOS ? size * 1.02 : size;
-};
+const scaleSize = size => (isIOS ? size * 1.02 : size);
 
 const MyOrder = () => {
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
   const { bgColor, textColor } = useColor();
 
   return (
     <View style={[styles.container, { backgroundColor: '#FFFFFF' }]}>
       <StatusBar backgroundColor={bgColor} barStyle="light-content" />
 
-      {/* Header - Same as Address */}
+      {/* Header - Swiggy style compact */}
       <View style={[styles.header, { backgroundColor: bgColor }]}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -55,26 +50,30 @@ const MyOrder = () => {
       </View>
 
       {/* Orders */}
-      <ScrollView 
+      <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         {/* Card 1 */}
         <View style={styles.card}>
-          <Text style={[styles.orderTitle, { color: bgColor }]}>Order #12345</Text>
+          <Text style={[styles.orderTitle, { color: bgColor }]}>
+            Order #12345
+          </Text>
           <Text style={styles.text}>Status: Delivered</Text>
           <Text style={styles.text}>Date: 25 Oct 2025</Text>
         </View>
 
         {/* Card 2 */}
         <View style={styles.card}>
-          <Text style={[styles.orderTitle, { color: bgColor }]}>Order #67890</Text>
+          <Text style={[styles.orderTitle, { color: bgColor }]}>
+            Order #67890
+          </Text>
           <Text style={styles.text}>Status: In Transit</Text>
           <Text style={styles.text}>Date: 27 Oct 2025</Text>
         </View>
 
         {/* Extra padding for bottom tab */}
-        <View style={{ height: responsiveSize(80) }} />
+        <View style={{ height: responsiveSize(72) }} />
       </ScrollView>
     </View>
   );
@@ -87,33 +86,33 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: isIOS ? responsiveSize(100) : responsiveSize(90),
-    paddingHorizontal: responsiveSize(16),
-    paddingTop: responsiveSize(10),
+    paddingBottom: isIOS ? responsiveSize(80) : responsiveSize(70),
+    paddingHorizontal: responsiveSize(13),
+    paddingTop: responsiveSize(8),
   },
 
-  /* HEADER - Exact same as Address reference */
+  /* HEADER - Compact Swiggy style */
   header: {
-    height: isIOS ? responsiveSize(100) : responsiveSize(90),
+    height: isIOS ? responsiveSize(90) : responsiveSize(82),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: responsiveSize(18),
+    paddingHorizontal: responsiveSize(16),
     justifyContent: 'space-between',
-    paddingTop: isIOS ? responsiveSize(50) : responsiveSize(30),
-    paddingBottom: responsiveSize(0),
+    paddingTop: isIOS ? responsiveSize(44) : responsiveSize(26),
+    paddingBottom: 0,
   },
   headerTitle: {
     color: '#fff',
-    fontSize: responsiveSize(20),
+    fontSize: fontScale(responsiveSize(16)),
     fontWeight: '700',
     textAlign: 'center',
     flex: 1,
     marginHorizontal: responsiveSize(10),
   },
   iconBtn: {
-    width: responsiveSize(40),
-    height: responsiveSize(40),
-    borderRadius: responsiveSize(12),
+    width: responsiveSize(36),
+    height: responsiveSize(36),
+    borderRadius: responsiveSize(10),
     justifyContent: 'center',
     alignItems: 'center',
     ...Platform.select({
@@ -121,45 +120,45 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowRadius: 3,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
   icon: {
-    width: responsiveSize(20),
-    height: responsiveSize(20),
+    width: responsiveSize(18),
+    height: responsiveSize(18),
   },
 
-  /* Order Card - Enhanced with shadows */
+  /* Order Card - Swiggy-style compact with reduced sizes */
   card: {
     backgroundColor: '#f9f9f9',
-    padding: responsiveSize(16),
-    borderRadius: scaleSize(responsiveSize(14)),
-    marginBottom: responsiveSize(14),
+    padding: responsiveSize(13),
+    borderRadius: scaleSize(responsiveSize(12)),
+    marginBottom: responsiveSize(12),
     ...Platform.select({
       ios: {
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.08,
-        shadowRadius: 4,
+        shadowRadius: 3,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
 
   orderTitle: {
-    fontSize: fontScale(responsiveSize(16)),
+    fontSize: fontScale(responsiveSize(15)),
     fontWeight: '700',
-    marginBottom: responsiveSize(6),
+    marginBottom: responsiveSize(4),
   },
 
   text: {
-    fontSize: fontScale(responsiveSize(14)),
+    fontSize: fontScale(responsiveSize(12.5)),
     color: '#333',
     marginBottom: responsiveSize(2),
   },

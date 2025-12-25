@@ -15,16 +15,12 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { useColor } from '../../../util/ColorSwitcher';
 
-const { width, height } = Dimensions.get('window');
-const rs = size => (width / 375) * size;
+const { width } = Dimensions.get('window');
+const rs = size => (width / 400) * size;
 
-// Platform detection
 const isIOS = Platform.OS === 'ios';
 
-// Responsive font scaling
-const fontScale = size => {
-  return isIOS ? size * 0.95 : size;
-};
+const fontScale = size => (isIOS ? size * 0.95 : size);
 
 export default function FavouritesScreen({ navigation }) {
   const useNav = useNavigation();
@@ -80,11 +76,11 @@ export default function FavouritesScreen({ navigation }) {
     },
   ];
 
-  const handleAddToCart = (item) => {
+  const handleAddToCart = item => {
     Alert.alert('Added to Cart', `${item.name} added to your cart!`);
   };
 
-  const handleRemoveFromFavourites = (item) => {
+  const handleRemoveFromFavourites = item => {
     setSelectedItem(item);
     setShowRemoveModal(true);
   };
@@ -100,7 +96,7 @@ export default function FavouritesScreen({ navigation }) {
     setSelectedItem(null);
   };
 
-  const handleItemPress = (item) => {
+  const handleItemPress = item => {
     navigation.navigate('ProductDetail', { product: item });
   };
 
@@ -110,7 +106,10 @@ export default function FavouritesScreen({ navigation }) {
 
       {/* Header */}
       <View style={[styles.header, { backgroundColor: bgColor }]}>
-        <TouchableOpacity onPress={() => useNav.goBack()} style={styles.iconBtn}>
+        <TouchableOpacity
+          onPress={() => useNav.goBack()}
+          style={styles.iconBtn}
+        >
           <Image
             source={require('../../../assets/back.png')}
             style={[styles.icon, { tintColor: bgColor }]}
@@ -118,7 +117,7 @@ export default function FavouritesScreen({ navigation }) {
         </TouchableOpacity>
 
         <Text style={styles.headerTitle}>Favourites</Text>
-        <View style={{ width: rs(40) }} />
+        <View style={{ width: rs(32) }} />
       </View>
 
       <ScrollView
@@ -133,27 +132,26 @@ export default function FavouritesScreen({ navigation }) {
             activeOpacity={0.8}
           >
             <Image source={item.image} style={styles.productImage} />
-            
+
             <View style={styles.productInfo}>
               <Text style={[styles.brandName, { color: bgColor }]}>
                 {item.brand}
               </Text>
-              
+
               <Text style={styles.productName} numberOfLines={2}>
                 {item.name}
               </Text>
-              
+
               <View style={styles.priceContainer}>
                 <Text style={styles.currentPrice}>{item.price}</Text>
                 <Text style={styles.originalPrice}>{item.originalPrice}</Text>
-               
               </View>
             </View>
 
             <View style={styles.actionButtons}>
               <TouchableOpacity
                 style={[styles.addToCartBtn, { backgroundColor: bgColor }]}
-                onPress={(e) => {
+                onPress={e => {
                   e.stopPropagation();
                   handleAddToCart(item);
                 }}
@@ -163,7 +161,7 @@ export default function FavouritesScreen({ navigation }) {
 
               <TouchableOpacity
                 style={styles.removeBtn}
-                onPress={(e) => {
+                onPress={e => {
                   e.stopPropagation();
                   handleRemoveFromFavourites(item);
                 }}
@@ -177,14 +175,13 @@ export default function FavouritesScreen({ navigation }) {
           </TouchableOpacity>
         ))}
 
-        {/* Extra padding for bottom tab */}
-        <View style={{ height: isIOS ? rs(100) : rs(90) }} />
+        <View style={{ height: isIOS ? rs(80) : rs(70) }} />
       </ScrollView>
 
       {/* Remove Confirmation Modal */}
       <Modal
         animationType="fade"
-        transparent={true}
+        transparent
         visible={showRemoveModal}
         onRequestClose={closeModal}
       >
@@ -198,7 +195,7 @@ export default function FavouritesScreen({ navigation }) {
             <Text style={styles.modalMessage}>
               {selectedItem?.name} will be removed from your favourites list
             </Text>
-            
+
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={styles.modalCancelButton}
@@ -207,7 +204,10 @@ export default function FavouritesScreen({ navigation }) {
                 <Text style={styles.modalCancelText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.modalConfirmButton, { backgroundColor: '#d32f2f' }]}
+                style={[
+                  styles.modalConfirmButton,
+                  { backgroundColor: '#d32f2f' },
+                ]}
                 onPress={confirmRemove}
               >
                 <Text style={styles.modalConfirmText}>Remove</Text>
@@ -228,26 +228,26 @@ const styles = StyleSheet.create({
 
   /* Header */
   header: {
-    height: isIOS ? rs(100) : rs(90),
+    height: isIOS ? rs(90) : rs(82),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: rs(18),
+    paddingHorizontal: rs(14),
     justifyContent: 'space-between',
-    paddingTop: isIOS ? rs(50) : rs(30),
-    paddingBottom: rs(0),
+    paddingTop: isIOS ? rs(44) : rs(26),
+    paddingBottom: 0,
   },
   headerTitle: {
     color: '#fff',
-    fontSize: fontScale(rs(20)),
+    fontSize: fontScale(rs(16)),
     fontWeight: '700',
     textAlign: 'center',
     flex: 1,
-    marginHorizontal: rs(10),
+    marginHorizontal: rs(8),
   },
   iconBtn: {
-    width: rs(40),
-    height: rs(40),
-    borderRadius: rs(12),
+    width: rs(34),
+    height: rs(34),
+    borderRadius: rs(10),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
@@ -264,31 +264,32 @@ const styles = StyleSheet.create({
     }),
   },
   icon: {
-    width: rs(20),
-    height: rs(20),
+    width: rs(16),
+    height: rs(16),
+    resizeMode: 'contain',
   },
 
   scrollContent: {
-    paddingHorizontal: rs(15),
-    paddingBottom: isIOS ? rs(100) : rs(90),
-    paddingTop: rs(10),
+    paddingHorizontal: rs(13),
+    paddingBottom: isIOS ? rs(80) : rs(70),
+    paddingTop: rs(8),
   },
 
   /* FAVOURITES CARDS */
   favouriteCard: {
     flexDirection: 'row',
     backgroundColor: '#fff',
-    marginVertical: rs(8),
-    borderRadius: rs(16),
-    padding: rs(15),
+    marginVertical: rs(6),
+    borderRadius: rs(12),
+    padding: rs(11),
     borderWidth: 1,
     borderColor: '#e0e0e0',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 1.5 },
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
       },
       android: {
         elevation: 2,
@@ -296,51 +297,52 @@ const styles = StyleSheet.create({
     }),
   },
   productImage: {
-    width: rs(80),
-    height: rs(80),
-    borderRadius: rs(10),
-    marginRight: rs(12),
+    width: rs(64),
+    height: rs(64),
+    borderRadius: rs(8),
+    marginRight: rs(10),
+    resizeMode: 'contain',
   },
   productInfo: {
     flex: 1,
     justifyContent: 'space-between',
   },
   brandName: {
-    fontSize: fontScale(rs(12)),
+    fontSize: fontScale(rs(11.5)),
     fontWeight: '600',
-    marginBottom: rs(4),
+    marginBottom: rs(2),
   },
   productName: {
-    fontSize: fontScale(rs(16)),
+    fontSize: fontScale(rs(13)),
     fontWeight: '700',
     color: '#000',
-    lineHeight: rs(22),
-    marginBottom: rs(8),
+    lineHeight: rs(18),
+    marginBottom: rs(4),
   },
   priceContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   currentPrice: {
-    fontSize: fontScale(rs(16)),
+    fontSize: fontScale(rs(13)),
     fontWeight: '700',
     color: '#000',
-    marginRight: rs(8),
+    marginRight: rs(6),
   },
   originalPrice: {
-    fontSize: fontScale(rs(14)),
+    fontSize: fontScale(rs(11.5)),
     color: '#999',
     textDecorationLine: 'line-through',
-    marginRight: rs(8),
+    marginRight: rs(6),
   },
   discountBadge: {
     backgroundColor: '#4CAF50',
-    paddingHorizontal: rs(8),
-    paddingVertical: rs(4),
-    borderRadius: rs(6),
+    paddingHorizontal: rs(6),
+    paddingVertical: rs(3),
+    borderRadius: rs(5),
   },
   discountText: {
-    fontSize: fontScale(rs(10)),
+    fontSize: fontScale(rs(9.5)),
     color: '#fff',
     fontWeight: '600',
   },
@@ -348,33 +350,34 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-    paddingLeft: rs(10),
+    paddingLeft: rs(8),
   },
   addToCartBtn: {
-    borderRadius: rs(8),
-    paddingVertical: rs(10),
-    paddingHorizontal: rs(16),
-    marginBottom: rs(8),
+    borderRadius: rs(7),
+    paddingVertical: rs(7),
+    paddingHorizontal: rs(12),
+    marginBottom: rs(6),
     alignItems: 'center',
-    minWidth: rs(60),
+    minWidth: rs(52),
   },
   addToCartText: {
     color: '#fff',
-    fontSize: fontScale(rs(12)),
+    fontSize: fontScale(rs(11)),
     fontWeight: '600',
   },
   removeBtn: {
-    width: rs(36),
-    height: rs(36),
-    borderRadius: rs(18),
+    width: rs(30),
+    height: rs(30),
+    borderRadius: rs(15),
     backgroundColor: '#ffebee',
     justifyContent: 'center',
     alignItems: 'center',
   },
   deleteIcon: {
-    width: rs(18),
-    height: rs(18),
+    width: rs(14),
+    height: rs(14),
     tintColor: '#d32f2f',
+    resizeMode: 'contain',
   },
 
   /* MODAL STYLES */
@@ -383,74 +386,75 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: rs(20),
+    padding: rs(18),
   },
   modalContainer: {
     width: '100%',
-    maxWidth: rs(320),
+    maxWidth: rs(300),
     backgroundColor: '#fff',
-    borderRadius: rs(16),
-    padding: rs(24),
+    borderRadius: rs(14),
+    padding: rs(18),
     alignItems: 'center',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.2,
-        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.18,
+        shadowRadius: 6,
       },
       android: {
-        elevation: 8,
+        elevation: 6,
       },
     }),
   },
   modalIcon: {
-    width: rs(48),
-    height: rs(48),
+    width: rs(40),
+    height: rs(40),
     tintColor: '#d32f2f',
-    marginBottom: rs(12),
+    marginBottom: rs(10),
+    resizeMode: 'contain',
   },
   modalTitle: {
-    fontSize: fontScale(rs(18)),
+    fontSize: fontScale(rs(14)),
     fontWeight: '700',
     color: '#000',
-    marginBottom: rs(8),
+    marginBottom: rs(6),
     textAlign: 'center',
   },
   modalMessage: {
-    fontSize: fontScale(rs(14)),
+    fontSize: fontScale(rs(12)),
     color: '#666',
     textAlign: 'center',
-    marginBottom: rs(24),
-    lineHeight: rs(20),
+    marginBottom: rs(18),
+    lineHeight: rs(16),
   },
   modalButtons: {
     flexDirection: 'row',
-    gap: rs(12),
+    gap: rs(10),
     width: '100%',
   },
   modalCancelButton: {
     flex: 1,
     backgroundColor: '#f8f8f8',
-    borderRadius: rs(10),
-    paddingVertical: rs(14),
+    borderRadius: rs(9),
+    paddingVertical: rs(10),
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#e0e0e0',
   },
   modalCancelText: {
-    fontSize: fontScale(rs(14)),
+    fontSize: fontScale(rs(12)),
     fontWeight: '600',
     color: '#666',
   },
   modalConfirmButton: {
     flex: 1,
-    borderRadius: rs(10),
-    paddingVertical: rs(14),
+    borderRadius: rs(9),
+    paddingVertical: rs(10),
     alignItems: 'center',
   },
   modalConfirmText: {
-    fontSize: fontScale(rs(14)),
+    fontSize: fontScale(rs(12)),
     fontWeight: '600',
     color: '#fff',
   },

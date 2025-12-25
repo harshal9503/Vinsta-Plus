@@ -8,9 +8,7 @@ import {
   StatusBar,
   Modal,
   TextInput,
-  KeyboardAvoidingView,
   Platform,
-  Alert,
   StyleSheet,
   Dimensions,
 } from 'react-native';
@@ -18,20 +16,14 @@ import { useNavigation } from '@react-navigation/native';
 import { useColor } from '../../../util/ColorSwitcher';
 
 const { width, height } = Dimensions.get('window');
-const responsiveSize = size => (width / 375) * size;
 
-// Platform detection
+// slightly smaller base
+const responsiveSize = size => (width / 400) * size;
+
 const isIOS = Platform.OS === 'ios';
 
-// Responsive font scaling
-const fontScale = size => {
-  return isIOS ? size * 0.95 : size;
-};
-
-// Scale size for dimensions
-const scaleSize = size => {
-  return isIOS ? size * 1.02 : size;
-};
+const fontScale = size => (isIOS ? size * 0.95 : size);
+const scaleSize = size => (isIOS ? size * 1.02 : size);
 
 const Address = () => {
   const navigation = useNavigation();
@@ -53,8 +45,7 @@ const Address = () => {
       type: 'Office',
       icon: require('../../../assets/office.png'),
       name: 'Vinsta Plus Application',
-      address:
-        '789 Corporate Avenue, Scheme 54, Vijay Nagar, Indore M.P.',
+      address: '789 Corporate Avenue, Scheme 54, Vijay Nagar, Indore M.P.',
       landmark: 'Behind City Mall',
       phone: '+91 98765 43210',
     },
@@ -93,10 +84,10 @@ const Address = () => {
 
         <Text style={styles.headerTitle}>My Addresses</Text>
 
-        <View style={{ width: responsiveSize(40) }} />
+        <View style={{ width: responsiveSize(32) }} />
       </View>
 
-      <ScrollView 
+      <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
@@ -104,7 +95,6 @@ const Address = () => {
 
         {addresses.map(item => (
           <View key={item.id} style={styles.card}>
-            {/* Left Content */}
             <View style={styles.cardContent}>
               <View style={styles.titleRow}>
                 <Image source={item.icon} style={styles.typeIcon} />
@@ -114,12 +104,12 @@ const Address = () => {
               <Text style={styles.name}>{item.name}</Text>
               <Text style={styles.text}>{item.address}</Text>
               <Text style={styles.landmark}>
-                Landmark: <Text style={styles.landmarkText}>{item.landmark}</Text>
+                Landmark:{' '}
+                <Text style={styles.landmarkText}>{item.landmark}</Text>
               </Text>
               <Text style={styles.phone}>{item.phone}</Text>
             </View>
 
-            {/* Delete Strip */}
             <TouchableOpacity
               style={styles.deleteStrip}
               onPress={() => handleDeletePress(item.id)}
@@ -137,11 +127,12 @@ const Address = () => {
           style={[styles.addBtn, { backgroundColor: bgColor }]}
           onPress={() => setIsAddModalVisible(true)}
         >
-          <Text style={[styles.addText, { color: textColor }]}>+ Add New Address</Text>
+          <Text style={[styles.addText, { color: textColor }]}>
+            + Add New Address
+          </Text>
         </TouchableOpacity>
 
-        {/* Extra padding for bottom tab */}
-        <View style={{ height: responsiveSize(80) }} />
+        <View style={{ height: responsiveSize(64) }} />
       </ScrollView>
 
       {/* Delete Modal */}
@@ -162,14 +153,9 @@ const Address = () => {
       </Modal>
 
       {/* Add Address Bottom Sheet */}
-      <Modal
-        visible={isAddModalVisible}
-        animationType="slide"
-        transparent
-      >
+      <Modal visible={isAddModalVisible} animationType="slide" transparent>
         <View style={styles.bottomOverlay}>
           <View style={styles.bottomSheet}>
-            {/* Header */}
             <View style={styles.sheetHeader}>
               <Text style={styles.sheetTitle}>Add New Address</Text>
               <TouchableOpacity
@@ -187,7 +173,7 @@ const Address = () => {
               <Text style={styles.label}>Phone Number *</Text>
               <View style={styles.phoneRow}>
                 <View style={styles.countryCode}>
-                  <Text>+91</Text>
+                  <Text style={styles.phoneCodeText}>+91</Text>
                 </View>
                 <TextInput
                   style={styles.phoneInput}
@@ -197,13 +183,22 @@ const Address = () => {
               </View>
 
               <Text style={styles.label}>House/Flat/Block No. *</Text>
-              <TextInput style={styles.input} placeholder="Enter house/flat/block no." />
+              <TextInput
+                style={styles.input}
+                placeholder="Enter house/flat/block no."
+              />
 
               <Text style={styles.label}>Area/Street/Sector *</Text>
-              <TextInput style={styles.input} placeholder="Enter area/street/sector" />
+              <TextInput
+                style={styles.input}
+                placeholder="Enter area/street/sector"
+              />
 
               <Text style={styles.label}>Landmark (Optional)</Text>
-              <TextInput style={styles.input} placeholder="E.g. Near City Mall" />
+              <TextInput
+                style={styles.input}
+                placeholder="E.g. Near City Mall"
+              />
 
               <Text style={styles.label}>City *</Text>
               <TextInput style={styles.input} placeholder="Enter city" />
@@ -224,13 +219,19 @@ const Address = () => {
                     onPress={() => setAddressType(type)}
                     style={[
                       styles.typeBox,
-                      addressType === type && [styles.typeBoxActive, { borderColor: bgColor }],
+                      addressType === type && [
+                        styles.typeBoxActive,
+                        { borderColor: bgColor },
+                      ],
                     ]}
                   >
                     <Text
                       style={[
                         styles.typeText2,
-                        addressType === type && [styles.typeTextActive, { color: bgColor }],
+                        addressType === type && [
+                          styles.typeTextActive,
+                          { color: bgColor },
+                        ],
                       ]}
                     >
                       {type}
@@ -239,8 +240,12 @@ const Address = () => {
                 ))}
               </View>
 
-              <TouchableOpacity style={[styles.saveBtnLarge, { backgroundColor: bgColor }]}>
-                <Text style={[styles.saveBtnText, { color: textColor }]}>Save Address</Text>
+              <TouchableOpacity
+                style={[styles.saveBtnLarge, { backgroundColor: bgColor }]}
+              >
+                <Text style={[styles.saveBtnText, { color: textColor }]}>
+                  Save Address
+                </Text>
               </TouchableOpacity>
             </ScrollView>
           </View>
@@ -256,37 +261,33 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  scrollView: {
-    flex: 1,
-  },
   scrollContent: {
-    paddingBottom: isIOS ? responsiveSize(100) : responsiveSize(90),
-    paddingHorizontal: responsiveSize(16),
-    paddingTop: responsiveSize(10),
+    paddingBottom: isIOS ? responsiveSize(80) : responsiveSize(70),
+    paddingHorizontal: responsiveSize(14),
+    paddingTop: responsiveSize(8),
   },
 
-  /* HEADER - Same as reference */
   header: {
-    height: isIOS ? responsiveSize(100) : responsiveSize(90),
+    height: isIOS ? responsiveSize(90) : responsiveSize(82),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: responsiveSize(18),
+    paddingHorizontal: responsiveSize(14),
     justifyContent: 'space-between',
-    paddingTop: isIOS ? responsiveSize(50) : responsiveSize(30),
-    paddingBottom: responsiveSize(0),
+    paddingTop: isIOS ? responsiveSize(44) : responsiveSize(26),
+    paddingBottom: 0,
   },
   headerTitle: {
     color: '#fff',
-    fontSize: responsiveSize(20),
+    fontSize: responsiveSize(16),
     fontWeight: '700',
     textAlign: 'center',
     flex: 1,
-    marginHorizontal: responsiveSize(10),
+    marginHorizontal: responsiveSize(8),
   },
   iconBtn: {
-    width: responsiveSize(40),
-    height: responsiveSize(40),
-    borderRadius: responsiveSize(12),
+    width: responsiveSize(34),
+    height: responsiveSize(34),
+    borderRadius: responsiveSize(10),
     justifyContent: 'center',
     alignItems: 'center',
     ...Platform.select({
@@ -302,73 +303,75 @@ const styles = StyleSheet.create({
     }),
   },
   icon: {
-    width: responsiveSize(20),
-    height: responsiveSize(20),
+    width: responsiveSize(16),
+    height: responsiveSize(16),
+    resizeMode: 'contain',
   },
 
   sectionTitle: {
-    fontSize: fontScale(responsiveSize(16)),
+    fontSize: fontScale(responsiveSize(13)),
     fontWeight: '600',
-    marginBottom: responsiveSize(12),
+    marginBottom: responsiveSize(10),
   },
 
   card: {
     flexDirection: 'row',
     backgroundColor: '#F7F7F7',
-    borderRadius: scaleSize(responsiveSize(14)),
-    marginBottom: responsiveSize(14),
+    borderRadius: scaleSize(responsiveSize(12)),
+    marginBottom: responsiveSize(10),
     overflow: 'hidden',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
 
   cardContent: {
     flex: 1,
-    padding: responsiveSize(14),
+    padding: responsiveSize(11),
   },
 
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: responsiveSize(6),
+    marginBottom: responsiveSize(4),
   },
 
   typeIcon: {
-    width: responsiveSize(18),
-    height: responsiveSize(18),
-    marginRight: responsiveSize(6),
+    width: responsiveSize(15),
+    height: responsiveSize(15),
+    marginRight: responsiveSize(5),
+    resizeMode: 'contain',
   },
 
   typeText: {
-    fontSize: fontScale(responsiveSize(15)),
+    fontSize: fontScale(responsiveSize(12.5)),
     fontWeight: '600',
     color: '#15305F',
   },
 
   name: {
-    fontSize: fontScale(responsiveSize(15)),
+    fontSize: fontScale(responsiveSize(12.5)),
     fontWeight: '600',
-    marginBottom: responsiveSize(4),
+    marginBottom: responsiveSize(3),
   },
 
   text: {
-    fontSize: fontScale(responsiveSize(14)),
+    fontSize: fontScale(responsiveSize(11.5)),
     color: '#333',
-    lineHeight: responsiveSize(20),
+    lineHeight: responsiveSize(16),
   },
 
   landmark: {
-    marginTop: responsiveSize(6),
-    fontSize: fontScale(responsiveSize(13)),
+    marginTop: responsiveSize(4),
+    fontSize: fontScale(responsiveSize(11)),
     fontStyle: 'italic',
   },
 
@@ -377,33 +380,34 @@ const styles = StyleSheet.create({
   },
 
   phone: {
-    marginTop: responsiveSize(6),
-    fontSize: fontScale(responsiveSize(14)),
+    marginTop: responsiveSize(4),
+    fontSize: fontScale(responsiveSize(11.5)),
     fontWeight: '500',
   },
 
   deleteStrip: {
-    width: responsiveSize(56),
+    width: responsiveSize(48),
     backgroundColor: '#FFE6E6',
     justifyContent: 'center',
     alignItems: 'center',
   },
 
   deleteIcon: {
-    width: responsiveSize(22),
-    height: responsiveSize(22),
+    width: responsiveSize(18),
+    height: responsiveSize(18),
     tintColor: '#E53935',
+    resizeMode: 'contain',
   },
 
   addBtn: {
-    paddingVertical: responsiveSize(14),
+    paddingVertical: responsiveSize(11),
     borderRadius: scaleSize(responsiveSize(10)),
     alignItems: 'center',
-    marginTop: responsiveSize(24),
+    marginTop: responsiveSize(18),
   },
 
   addText: {
-    fontSize: fontScale(responsiveSize(16)),
+    fontSize: fontScale(responsiveSize(13)),
     fontWeight: '600',
     letterSpacing: 0.3,
   },
@@ -418,13 +422,13 @@ const styles = StyleSheet.create({
   popup: {
     width: '80%',
     backgroundColor: '#fff',
-    padding: responsiveSize(20),
-    borderRadius: responsiveSize(12),
+    padding: responsiveSize(16),
+    borderRadius: responsiveSize(10),
   },
 
   popupText: {
-    fontSize: fontScale(responsiveSize(16)),
-    marginBottom: responsiveSize(16),
+    fontSize: fontScale(responsiveSize(13)),
+    marginBottom: responsiveSize(12),
   },
 
   row: {
@@ -433,12 +437,12 @@ const styles = StyleSheet.create({
   },
 
   yes: {
-    fontSize: fontScale(responsiveSize(16)),
+    fontSize: fontScale(responsiveSize(13)),
     color: 'red',
   },
 
   no: {
-    fontSize: fontScale(responsiveSize(16)),
+    fontSize: fontScale(responsiveSize(13)),
     color: '#007AFF',
   },
 
@@ -450,9 +454,9 @@ const styles = StyleSheet.create({
 
   bottomSheet: {
     backgroundColor: '#fff',
-    borderTopLeftRadius: responsiveSize(24),
-    borderTopRightRadius: responsiveSize(24),
-    padding: responsiveSize(16),
+    borderTopLeftRadius: responsiveSize(20),
+    borderTopRightRadius: responsiveSize(20),
+    padding: responsiveSize(14),
     maxHeight: '90%',
   },
 
@@ -460,64 +464,70 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: responsiveSize(10),
+    marginBottom: responsiveSize(8),
   },
 
   sheetTitle: {
-    fontSize: fontScale(responsiveSize(18)),
+    fontSize: fontScale(responsiveSize(15)),
     fontWeight: '600',
   },
 
   close: {
-    fontSize: responsiveSize(22),
+    fontSize: responsiveSize(18),
   },
 
   label: {
-    fontSize: fontScale(responsiveSize(14)),
+    fontSize: fontScale(responsiveSize(12)),
     fontWeight: '500',
-    marginTop: responsiveSize(14),
+    marginTop: responsiveSize(11),
   },
 
   input: {
     backgroundColor: '#F3F3F3',
     borderRadius: scaleSize(responsiveSize(10)),
-    padding: responsiveSize(12),
-    marginTop: responsiveSize(6),
+    padding: responsiveSize(10),
+    marginTop: responsiveSize(5),
+    fontSize: fontScale(responsiveSize(11.5)),
   },
 
   phoneRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: responsiveSize(6),
+    marginTop: responsiveSize(5),
   },
 
   countryCode: {
     backgroundColor: '#F3F3F3',
-    padding: responsiveSize(12),
+    padding: responsiveSize(10),
     borderRadius: scaleSize(responsiveSize(10)),
-    marginRight: responsiveSize(8),
+    marginRight: responsiveSize(7),
+  },
+
+  phoneCodeText: {
+    fontSize: fontScale(responsiveSize(11.5)),
   },
 
   phoneInput: {
     flex: 1,
     backgroundColor: '#F3F3F3',
-    padding: responsiveSize(12),
+    padding: responsiveSize(10),
     borderRadius: scaleSize(responsiveSize(10)),
+    fontSize: fontScale(responsiveSize(11.5)),
   },
 
   typeRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: responsiveSize(12),
+    marginTop: responsiveSize(10),
   },
 
   typeBox: {
     flex: 1,
     backgroundColor: '#F3F3F3',
-    paddingVertical: responsiveSize(14),
-    borderRadius: scaleSize(responsiveSize(14)),
+    paddingVertical: responsiveSize(11),
+    borderRadius: scaleSize(responsiveSize(12)),
     alignItems: 'center',
-    marginHorizontal: responsiveSize(4),
+    marginHorizontal: responsiveSize(3),
   },
 
   typeBoxActive: {
@@ -525,7 +535,7 @@ const styles = StyleSheet.create({
   },
 
   typeText2: {
-    fontSize: fontScale(responsiveSize(15)),
+    fontSize: fontScale(responsiveSize(12.5)),
     color: '#666',
   },
 
@@ -534,14 +544,14 @@ const styles = StyleSheet.create({
   },
 
   saveBtnLarge: {
-    paddingVertical: responsiveSize(16),
-    borderRadius: scaleSize(responsiveSize(14)),
+    paddingVertical: responsiveSize(13),
+    borderRadius: scaleSize(responsiveSize(12)),
     alignItems: 'center',
-    marginVertical: responsiveSize(24),
+    marginVertical: responsiveSize(18),
   },
 
   saveBtnText: {
-    fontSize: fontScale(responsiveSize(18)),
+    fontSize: fontScale(responsiveSize(14)),
     fontWeight: '600',
     letterSpacing: 0.3,
   },
